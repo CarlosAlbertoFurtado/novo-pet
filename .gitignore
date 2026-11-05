@@ -1,0 +1,22 @@
+# Dependências
+node_modules/
+**/node_modules/
+
+# Variáveis de ambiente e credenciais (CRÍTICO: nunca versionar)
+.env
+**/.env
+.env.local
+.env.*.local
+*.env
+
+# Uploads temporários e logs
+uploads/
+**/uploads/
+*.log
+npm-debug.log*
+
+# Sistema operacional e IDEs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

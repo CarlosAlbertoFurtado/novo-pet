@@ -1,0 +1,612 @@
+/**
+ * Tradutor de Ração - Controlador Principal da Aplicação (app.js)
+ */
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Instancia o analisador com a configuração de espécies
+  const analyzer = new TradutorRacaoAnalyzer(SPECIES_CONFIG);
+
+  // Elementos do DOM
+  const form = document.getElementById("racaoForm");
+  const fileInput = document.getElementById("fotoRotuloInput");
+  const dropzone = document.getElementById("dropzoneArea");
+  const previewContainer = document.getElementById("previewContainer");
+  const previewImage = document.getElementById("previewImage");
+  const scanLaser = document.getElementById("scanLaser");
+  const btnRemoveImage = document.getElementById("btnRemoveImage");
+
+  const porteGroup = document.getElementById("porteGroup");
+  const porteRadios = document.querySelectorAll('input[name="size"]');
+  const idadeRadios = document.querySelectorAll('input[name="age"]');
+  const speciesRadios = document.querySelectorAll('input[name="species"]');
+  const obsCards = document.querySelectorAll(".obs-card");
+
+  const toggleManualFields = document.getElementById("toggleManualFields");
+  const manualFieldsContainer = document.getElementById("manualFieldsContainer");
+  const accordionArrow = document.getElementById("accordionArrow");
+
+  const inputProteina = document.getElementById("inputProteina");
+  const inputGordura = document.getElementById("inputGordura");
+  const inputCinzas = document.getElementById("inputCinzas");
+  const inputPrimeiroIngrediente = document.getElementById("inputPrimeiroIngrediente");
+
+  const processingModal = document.getElementById("processingModal");
+  const resultSection = document.getElementById("resultSection");
+  const formSection = document.getElementById("formSection");
+  const heroSection = document.getElementById("heroSection");
+
+  const btnNovaAnalise = document.getElementById("btnNovaAnalise");
+  const btnPrintReport = document.getElementById("btnPrintReport");
+  const presetButtons = document.querySelectorAll(".btn-preset");
+
+  // Estado da aplicação
+  let currentFile = null;
+  let activePresetKey = null;
+
+  // ==========================================
+  // 1. CONTROLE DE ESPÉCIE & PORTE
+  // ==========================================
+  speciesRadios.forEach(radio => {
+    radio.addEventListener("change", (e) => {
+      const selectedSpecies = e.target.value;
+      if (selectedSpecies === "cao") {
+        porteGroup.style.display = "block";
+      } else {
+        porteGroup.style.display = "none";
+      }
+    });
+  });
+
+  // Segmented control styling para porte e idade
+  document.querySelectorAll(".segmented-control").forEach(control => {
+    const labels = control.querySelectorAll("label");
+    labels.forEach(label => {
+      label.addEventListener("click", () => {
+        labels.forEach(l => l.classList.remove("active"));
+        label.classList.add("active");
+      });
+    });
+  });
+
+  // ==========================================
+  // 2. PERGUNTA DE OBSERVAÇÃO (PELO & FEZES)
+  // ==========================================
+  obsCards.forEach(card => {
+    card.addEventListener("click", () => {
+      obsCards.forEach(c => c.classList.remove("active"));
+      card.classList.add("active");
+      const radio = card.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
+    });
+  });
+
+  // ==========================================
+  // 3. UPLOAD DE FOTO & DRAG AND DROP
+  // ==========================================
+  function handleImageFile(file) {
+    if (!file || !file.type.startsWith("image/")) {
+      alert("Por favor, selecione um arquivo de imagem válido (JPG, PNG ou WEBP).");
+      return;
+    }
+    currentFile = file;
+    activePresetKey = null;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      previewImage.src = e.target.result;
+      dropzone.style.display = "none";
+      previewContainer.style.display = "block";
+      scanLaser.style.display = "block";
+
+      // Simulação rápida de extração OCR caso os campos manuais estejam vazios
+      if (!inputProteina.value && !inputGordura.value) {
+        // Se a espécie for cão, define valores médios sugeridos de leitura caso o tutor não digite
+        const isCat = document.querySelector('input[name="species"]:checked')?.value === "gato";
+        inputProteina.value = isCat ? 32 : 24;
+        inputGordura.value = isCat ? 14 : 12;
+        inputCinzas.value = 8.5;
+        inputPrimeiroIngrediente.value = "Farinha de vísceras de frango";
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  fileInput.addEventListener("change", (e) => {
+    if (e.target.files && e.target.files[0]) {
+      handleImageFile(e.target.files[0]);
+    }
+  });
+
+  // Drag and drop events
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropzone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.classList.add("drag-over");
+    });
+  });
+
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropzone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.classList.remove("drag-over");
+    });
+  });
+
+  dropzone.addEventListener('drop', (e) => {
+    const dt = e.dataTransfer;
+    if (dt.files && dt.files[0]) {
+      handleImageFile(dt.files[0]);
+    }
+  });
+
+  btnRemoveImage.addEventListener("click", () => {
+    currentFile = null;
+    activePresetKey = null;
+    fileInput.value = "";
+    previewImage.src = "";
+    previewContainer.style.display = "none";
+    scanLaser.style.display = "none";
+    dropzone.style.display = "block";
+  });
+
+  // ==========================================
+  // 4. TESTE RÁPIDO COM PRESETS (1 CLIQUE)
+  // ==========================================
+  presetButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const presetKey = btn.getAttribute("data-preset");
+      const presetData = EXEMPLOS_ROTULOS[presetKey];
+      if (!presetData) return;
+
+      activePresetKey = presetKey;
+      currentFile = { name: `${presetKey}.jpg` };
+
+      // Gera um card de imagem ilustrativo SVG do rótulo para preview
+      const svgLabel = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="300" viewBox="0 0 600 300">
+        <rect width="600" height="300" fill="%23f8fafc" stroke="%23cbd5e1" stroke-width="4"/>
+        <rect x="20" y="20" width="560" height="40" fill="%230f172a" rx="6"/>
+        <text x="300" y="46" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">NÍVEIS DE GARANTIA - ${presetData.nome.toUpperCase()}</text>
+        <text x="40" y="95" font-family="Arial, sans-serif" font-size="14" fill="%23334155">• Umidade (máx.): 100 g/kg (10,0%)</text>
+        <text x="40" y="125" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="%230d9488">• Proteína Bruta (mín.): ${presetData.rotulo.proteina * 10} g/kg (${presetData.rotulo.proteina}%)</text>
+        <text x="40" y="155" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="%230d9488">• Extrato Etéreo / Gordura (mín.): ${presetData.rotulo.gordura * 10} g/kg (${presetData.rotulo.gordura}%)</text>
+        <text x="40" y="185" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="%23e11d48">• Matéria Mineral / Cinzas (máx.): ${presetData.rotulo.cinzas * 10} g/kg (${presetData.rotulo.cinzas}%)</text>
+        <text x="40" y="215" font-family="Arial, sans-serif" font-size="14" fill="%23334155">• Matéria Fibrosa (máx.): ${presetData.rotulo.fibra * 10} g/kg (${presetData.rotulo.fibra}%)</text>
+        <text x="40" y="255" font-family="Arial, sans-serif" font-size="12" fill="%2364748b">1º Ingrediente: ${presetData.rotulo.primeiroIngrediente}</text>
+      </svg>`;
+
+      previewImage.src = svgLabel;
+      dropzone.style.display = "none";
+      previewContainer.style.display = "block";
+      scanLaser.style.display = "block";
+
+      // Seta espécie
+      const speciesRadio = document.querySelector(`input[name="species"][value="${presetData.species}"]`);
+      if (speciesRadio) {
+        speciesRadio.checked = true;
+        speciesRadio.dispatchEvent(new Event("change"));
+      }
+
+      // Seta porte (se cão)
+      if (presetData.species === "cao" && presetData.size) {
+        const porteRadio = document.querySelector(`input[name="size"][value="${presetData.size}"]`);
+        if (porteRadio) {
+          porteRadio.checked = true;
+          document.querySelectorAll("#porteControl label").forEach(l => l.classList.remove("active"));
+          porteRadio.closest("label")?.classList.add("active");
+        }
+      }
+
+      // Seta idade
+      const ageRadio = document.querySelector(`input[name="age"][value="${presetData.age}"]`);
+      if (ageRadio) {
+        ageRadio.checked = true;
+        document.querySelectorAll("#idadeControl label").forEach(l => l.classList.remove("active"));
+        ageRadio.closest("label")?.classList.add("active");
+      }
+
+      // Seta observação
+      const obsCard = document.querySelector(`.obs-card[data-obs="${presetData.observation}"]`);
+      if (obsCard) {
+        obsCard.click();
+      }
+
+      // Preenche campos manuais
+      inputProteina.value = presetData.rotulo.proteina;
+      inputGordura.value = presetData.rotulo.gordura;
+      inputCinzas.value = presetData.rotulo.cinzas;
+      inputPrimeiroIngrediente.value = presetData.rotulo.primeiroIngrediente;
+
+      // Scroll suave até o formulário
+      formSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  // ==========================================
+  // 5. ACORDEÃO DE DADOS MANUAIS
+  // ==========================================
+  let isAccordionOpen = true; // Deixamos aberto para clareza e transparência
+  toggleManualFields.addEventListener("click", () => {
+    isAccordionOpen = !isAccordionOpen;
+    manualFieldsContainer.style.display = isAccordionOpen ? "grid" : "none";
+    accordionArrow.textContent = isAccordionOpen ? "▼" : "▶";
+  });
+
+  // ==========================================
+  // 6. SUBMISSÃO DO FORMULÁRIO E ANÁLISE IA
+  // ==========================================
+
+  // URL do backend (em desenvolvimento usa localhost:3001)
+  const BACKEND_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:3001'
+    : ''; // Em produção, configurar o domínio real
+
+  /**
+   * Verifica se o backend está disponível e com API key configurada
+   */
+  async function checkBackendReady() {
+    try {
+      const resp = await fetch(`${BACKEND_URL}/api/analysis/status`, { signal: AbortSignal.timeout(3000) });
+      if (!resp.ok) return false;
+      const data = await resp.json();
+      return data.ready === true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Envia imagem real para o backend e retorna a análise da IA Gemini
+   */
+  async function analisarViaBackend(file, species, size, age, observation) {
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('species', species);
+    formData.append('size', size || '');
+    formData.append('age', age);
+    formData.append('observation', observation);
+
+    const resp = await fetch(`${BACKEND_URL}/api/analysis/label`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!resp.ok) {
+      const errData = await resp.json().catch(() => ({ error: 'Erro de conexão com o servidor.' }));
+      throw new Error(errData.error || `Erro HTTP ${resp.status}`);
+    }
+
+    return await resp.json();
+  }
+
+  /**
+   * Converte a resposta markdown da IA Gemini para o formato de resultado do frontend
+   */
+  function parseGeminiResponse(analysisText, species, size, age, observation) {
+    // Determinar cor do semáforo a partir do texto
+    let semaforoCor = 'amarelo';
+    const textoLower = analysisText.toLowerCase();
+    if (textoLower.includes('semáforo verde') || textoLower.includes('verde')) {
+      semaforoCor = 'verde';
+    } else if (textoLower.includes('semáforo vermelho') || textoLower.includes('vermelho')) {
+      semaforoCor = 'vermelho';
+    }
+
+    // Extrair seções do markdown
+    const sections = {};
+    const sectionRegex = /##\s+(.+)\n([\s\S]*?)(?=\n##\s|$)/g;
+    let match;
+    while ((match = sectionRegex.exec(analysisText)) !== null) {
+      sections[match[1].trim().toLowerCase()] = match[2].trim();
+    }
+
+    // Extrair valores numéricos de "O que o Rótulo Diz"
+    const rotuloText = sections['o que o rótulo diz'] || '';
+    const proteinaMatch = rotuloText.match(/prote[ií]na[^:]*:\s*(\d+[\.,]?\d*)\s*%/i);
+    const gorduraMatch = rotuloText.match(/gordura[^:]*:\s*(\d+[\.,]?\d*)\s*%/i);
+    const cinzasMatch = rotuloText.match(/(cinzas|matéria mineral|mineral)[^:]*:\s*(\d+[\.,]?\d*)\s*%/i);
+    const ingredienteMatch = rotuloText.match(/(?:primeiro|1º)\s+ingrediente[^:]*:\s*(.+)/i);
+
+    const proteina = proteinaMatch ? parseFloat(proteinaMatch[1].replace(',', '.')) : 0;
+    const gordura = gorduraMatch ? parseFloat(gorduraMatch[1].replace(',', '.')) : 0;
+    const cinzas = cinzasMatch ? parseFloat(cinzasMatch[2].replace(',', '.')) : 0;
+    const ingrediente = ingredienteMatch ? ingredienteMatch[1].trim() : 'Não identificado';
+
+    // Usar o analyzer local para gerar o resultado estruturado com os valores extraídos pela IA
+    const resultado = analyzer.analisar({
+      species,
+      size,
+      age,
+      observation,
+      labelData: {
+        proteina,
+        gordura,
+        cinzas,
+        primeiroIngrediente: ingrediente,
+        ingredientesTexto: ingrediente
+      }
+    });
+
+    // Sobrescrever o semáforo com o veredito da IA se diferente
+    if (semaforoCor !== resultado.semaforo.cor) {
+      resultado.semaforo.cor = semaforoCor;
+      const titulosMap = {
+        verde: 'Qualidade Adequada',
+        amarelo: 'Pontos de Atenção',
+        vermelho: 'Sinais Preocupantes'
+      };
+      resultado.semaforo.titulo = titulosMap[semaforoCor] || resultado.semaforo.titulo;
+    }
+
+    // Enriquecer descrição do semáforo com contexto da IA
+    const semaforoSection = sections['semáforo de qualidade'] || '';
+    if (semaforoSection) {
+      resultado.semaforo.descricao = semaforoSection.replace(/^[*_-]+\s*/gm, '').slice(0, 300);
+    }
+
+    // Sobrescrever o aviso de honestidade com o da IA
+    const avisoSection = sections['aviso importante'] || '';
+    if (avisoSection) {
+      resultado.declaracaoHonestidade = avisoSection.replace(/^[*_-]+\s*/gm, '').slice(0, 500);
+    }
+
+    // Enriquecer sugestões com dados da IA
+    const sugestoesSection = sections['o que você pode fazer'] || '';
+    if (sugestoesSection) {
+      const bullets = sugestoesSection.split(/\n[-*•]\s+/).filter(Boolean);
+      if (bullets.length > 0) {
+        resultado.oQueVocePodeFazer = bullets.slice(0, 4).map((text, i) => {
+          const clean = text.replace(/^[*_]+|[*_]+$/g, '').trim();
+          const parts = clean.split(/[:.]\s+/);
+          return {
+            titulo: parts[0] || `Sugestão ${i + 1}`,
+            texto: parts.slice(1).join('. ').trim() || clean
+          };
+        });
+      }
+    }
+
+    return resultado;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Validação da foto obrigatória (Item 2 dos Requisitos: "Upload da foto do rótulo (obrigatório)")
+    if (!currentFile) {
+      alert("Atenção: O upload da foto do rótulo é obrigatório.\n\nPor favor, envie uma foto do verso da embalagem ou selecione um dos exemplos clínicos de teste acima.");
+      dropzone.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    // Coleta dados
+    const species = document.querySelector('input[name="species"]:checked')?.value || "cao";
+    const size = document.querySelector('input[name="size"]:checked')?.value || "medio";
+    const age = document.querySelector('input[name="age"]:checked')?.value || "adulto";
+    const observation = document.querySelector('input[name="observation"]:checked')?.value || "normais";
+
+    // Mapear valores do frontend para o formato esperado pelo backend
+    const obsMap = { normais: 'normal', leve: 'leve', grave: 'grave' };
+    const backendObs = obsMap[observation] || 'normal';
+
+    const labelData = {
+      proteina: parseFloat(inputProteina.value) || 0,
+      gordura: parseFloat(inputGordura.value) || 0,
+      cinzas: parseFloat(inputCinzas.value) || 0,
+      primeiroIngrediente: inputPrimeiroIngrediente.value || ""
+    };
+
+    // Caso o preset traga o texto dos ingredientes
+    if (activePresetKey && EXEMPLOS_ROTULOS[activePresetKey]) {
+      labelData.ingredientesTexto = EXEMPLOS_ROTULOS[activePresetKey].rotulo.ingredientesTexto;
+    } else {
+      labelData.ingredientesTexto = labelData.primeiroIngrediente;
+    }
+
+    // Se nenhum valor foi preenchido, define valores padrão para não falhar
+    if (!labelData.proteina) labelData.proteina = species === "gato" ? 30 : 22;
+    if (!labelData.gordura) labelData.gordura = species === "gato" ? 15 : 12;
+    if (!labelData.cinzas) labelData.cinzas = 8.0;
+
+    // Determinar se deve usar backend (imagem real) ou análise local (preset)
+    const isRealImage = currentFile instanceof File;
+    let useBackend = false;
+
+    if (isRealImage) {
+      useBackend = await checkBackendReady();
+    }
+
+    if (useBackend) {
+      // ── MODO BACKEND: IA Gemini analisa a imagem real ──
+      processingModal.style.display = "flex";
+      const steps = [
+        document.getElementById("pstep1"),
+        document.getElementById("pstep2"),
+        document.getElementById("pstep3"),
+        document.getElementById("pstep4")
+      ];
+
+      // Ativar steps progressivamente durante a chamada real à API
+      steps.forEach(s => {
+        s.classList.remove("active");
+        s.innerHTML = `<span>○</span> ${s.textContent.replace(/^[✓○]\s*/, '')}`;
+      });
+
+      // Step 1: Enviando imagem
+      steps[0].classList.add("active");
+      steps[0].innerHTML = `<span>✓</span> ${steps[0].textContent.replace(/^[✓○]\s*/, '')}`;
+
+      try {
+        // Step 2: Processando com IA
+        setTimeout(() => {
+          steps[1].classList.add("active");
+          steps[1].innerHTML = `<span>✓</span> ${steps[1].textContent.replace(/^[✓○]\s*/, '')}`;
+        }, 500);
+
+        const response = await analisarViaBackend(currentFile, species, size, age, backendObs);
+
+        // Step 3: Montando análise
+        steps[2].classList.add("active");
+        steps[2].innerHTML = `<span>✓</span> ${steps[2].textContent.replace(/^[✓○]\s*/, '')}`;
+
+        await new Promise(r => setTimeout(r, 300));
+
+        // Step 4: Preparando veredito
+        steps[3].classList.add("active");
+        steps[3].innerHTML = `<span>✓</span> ${steps[3].textContent.replace(/^[✓○]\s*/, '')}`;
+
+        await new Promise(r => setTimeout(r, 300));
+
+        processingModal.style.display = "none";
+
+        // Converter resposta da IA para formato do resultado
+        const resultado = parseGeminiResponse(response.analysis, species, size, age, observation);
+        renderizarResultado(resultado);
+
+      } catch (err) {
+        processingModal.style.display = "none";
+        console.error('[BACKEND ERROR]', err);
+        alert(`Erro na análise por IA: ${err.message}\n\nUsando análise local como alternativa.`);
+
+        // Fallback: usar análise local
+        iniciarProcessamento(() => {
+          const resultado = analyzer.analisar({ species, size, age, observation, labelData });
+          renderizarResultado(resultado);
+        });
+      }
+    } else {
+      // ── MODO LOCAL: Análise baseada em regras (presets e fallback) ──
+      iniciarProcessamento(() => {
+        const resultado = analyzer.analisar({
+          species,
+          size,
+          age,
+          observation,
+          labelData
+        });
+
+        renderizarResultado(resultado);
+      });
+    }
+  });
+
+  function iniciarProcessamento(callback) {
+    processingModal.style.display = "flex";
+
+    const steps = [
+      document.getElementById("pstep1"),
+      document.getElementById("pstep2"),
+      document.getElementById("pstep3"),
+      document.getElementById("pstep4")
+    ];
+
+    steps.forEach((s, i) => {
+      s.classList.remove("active");
+      s.innerHTML = `<span>○</span> ${s.textContent.replace(/^[✓○]\s*/, '')}`;
+    });
+
+    let currentStep = 0;
+    const interval = setInterval(() => {
+      if (currentStep < steps.length) {
+        steps[currentStep].classList.add("active");
+        steps[currentStep].innerHTML = `<span>✓</span> ${steps[currentStep].textContent.replace(/^[✓○]\s*/, '')}`;
+        currentStep++;
+      } else {
+        clearInterval(interval);
+        setTimeout(() => {
+          processingModal.style.display = "none";
+          callback();
+        }, 350);
+      }
+    }, 300);
+  }
+
+  // ==========================================
+  // 7. RENDERIZAÇÃO DO VEREDITO
+  // ==========================================
+  function renderizarResultado(res) {
+    // 1. Atualizar Semáforo
+    const semaphoreCard = document.getElementById("semaphoreCard");
+    const semaphoreBadge = document.getElementById("semaphoreBadge");
+    const semaphoreTitle = document.getElementById("semaphoreTitle");
+    const semaphoreDesc = document.getElementById("semaphoreDesc");
+
+    semaphoreCard.className = `semaphore-card ${res.semaforo.cor}`;
+    semaphoreBadge.textContent = `Semáforo ${res.semaforo.cor.toUpperCase()}`;
+    semaphoreTitle.textContent = res.semaforo.titulo;
+    semaphoreDesc.textContent = res.semaforo.descricao;
+
+    // 2. "O que o rótulo diz" (Níveis de Garantia)
+    document.getElementById("valProteina").textContent = res.oQueORotuloDiz.proteina.valor;
+    const tagProteina = document.getElementById("tagProteina");
+    tagProteina.className = `nutrient-status-tag ${res.oQueORotuloDiz.proteina.status}`;
+    tagProteina.textContent = res.oQueORotuloDiz.proteina.status === "ideal" ? "Adequado" : (res.oQueORotuloDiz.proteina.status === "atencao" ? "Atenção" : "Baixo");
+    document.getElementById("descProteina").textContent = res.oQueORotuloDiz.proteina.explicacao;
+
+    document.getElementById("valGordura").textContent = res.oQueORotuloDiz.gordura.valor;
+    const tagGordura = document.getElementById("tagGordura");
+    tagGordura.className = `nutrient-status-tag ${res.oQueORotuloDiz.gordura.status}`;
+    tagGordura.textContent = res.oQueORotuloDiz.gordura.status === "ideal" ? "Equilibrado" : "Atenção";
+    document.getElementById("descGordura").textContent = res.oQueORotuloDiz.gordura.explicacao;
+
+    document.getElementById("valCinzas").textContent = res.oQueORotuloDiz.cinzas.valor;
+    const tagCinzas = document.getElementById("tagCinzas");
+    tagCinzas.className = `nutrient-status-tag ${res.oQueORotuloDiz.cinzas.status}`;
+    tagCinzas.textContent = res.oQueORotuloDiz.cinzas.status === "ideal" ? "Controlado" : (res.oQueORotuloDiz.cinzas.status === "alerta" ? "Alerta Alto (>10%)" : "Intermediário");
+    document.getElementById("descCinzas").textContent = res.oQueORotuloDiz.cinzas.explicacao;
+
+    document.getElementById("valPrimeiroIngrediente").textContent = res.oQueORotuloDiz.primeiroIngrediente.valor;
+    const tagIngrediente = document.getElementById("tagPrimeiroIngrediente");
+    tagIngrediente.className = `nutrient-status-tag ${res.oQueORotuloDiz.primeiroIngrediente.status}`;
+    tagIngrediente.textContent = res.oQueORotuloDiz.primeiroIngrediente.status === "qualidade_inferior" ? "Qualidade Inferior" : (res.oQueORotuloDiz.primeiroIngrediente.status === "qualidade_nobre" ? "Fonte Nobre" : "Padrão");
+    document.getElementById("descPrimeiroIngrediente").textContent = res.oQueORotuloDiz.primeiroIngrediente.explicacao;
+
+    document.getElementById("descAditivos").textContent = res.oQueORotuloDiz.aditivos.explicacao;
+
+    // 3. "O que observar no seu pet" (Integração com Pelo e Fezes)
+    const alertBox = document.getElementById("petObservationAlertBox");
+    alertBox.className = `pet-observation-alert-box ${res.oQueObservarNoSeuPet.tipo}`;
+    document.getElementById("obsAlertTitle").textContent = res.oQueObservarNoSeuPet.titulo;
+    document.getElementById("obsAlertText").textContent = res.oQueObservarNoSeuPet.mensagem;
+    
+    const obsIconMap = {
+      normal: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`,
+      atencao: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`,
+      urgente: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`
+    };
+    document.getElementById("obsAlertIcon").innerHTML = obsIconMap[res.oQueObservarNoSeuPet.tipo] || obsIconMap.normal;
+
+    // 4. "O que você pode fazer" (Sugestões Práticas)
+    const actionContainer = document.getElementById("actionCardsContainer");
+    actionContainer.innerHTML = "";
+    res.oQueVocePodeFazer.forEach(sugestao => {
+      const card = document.createElement("div");
+      card.className = "action-card-item";
+      card.innerHTML = `
+        <h4>${sugestao.titulo}</h4>
+        <p>${sugestao.texto}</p>
+      `;
+      actionContainer.appendChild(card);
+    });
+
+    // 5. Declaração de Honestidade & Aviso Legal
+    document.getElementById("honestyText").textContent = res.declaracaoHonestidade;
+
+    // Exibir seção e scroll suave
+    resultSection.style.display = "block";
+    resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // ==========================================
+  // 8. BOTÕES AUXILIARES
+  // ==========================================
+  btnNovaAnalise.addEventListener("click", () => {
+    resultSection.style.display = "none";
+    heroSection.scrollIntoView({ behavior: "smooth" });
+  });
+
+  btnPrintReport.addEventListener("click", () => {
+    window.print();
+  });
+});
