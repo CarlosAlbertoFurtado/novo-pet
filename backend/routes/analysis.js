@@ -22,7 +22,7 @@ export function createAnalysisRouter() {
   const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
-      fileSize: parseInt(process.env.MAX_FILE_SIZE, 10) || 3 * 1024 * 1024,
+      fileSize: parseInt(process.env.MAX_FILE_SIZE, 10) || 10 * 1024 * 1024,
       files: 1,           // Apenas 1 arquivo por vez
       fields: 10,         // Máximo de 10 campos texto
       fieldSize: 500,     // Máximo de 500 bytes por campo texto

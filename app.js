@@ -257,11 +257,72 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /**
+   * Redimensiona e comprime imagens pesadas de smartphone no navegador
+   * Evita estouro de payload de 4.5MB da Vercel e acelera envio em 4G/5G
+   */
+  async function comprimirImagemSeNecessario(file) {
+    if (!file || !(file instanceof File)) return file;
+    // Se o arquivo já for leve (abaixo de 1.2MB), envia direto
+    if (file.size <= 1.2 * 1024 * 1024 && (file.type === "image/jpeg" || file.type === "image/webp")) {
+      return file;
+    }
+
+    return new Promise((resolve) => {
+      const img = new Image();
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 1600; // Resolução ideal para OCR do Gemini
+
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              resolve(file); // Fallback caso canvas falhe
+              return;
+            }
+            const cleanName = (file.name || "rotulo").replace(/\.[^/.]+$/, "") + ".jpg";
+            const compressedFile = new File([blob], cleanName, {
+              type: "image/jpeg",
+              lastModified: Date.now()
+            });
+            console.log(`[CLIENT] Foto otimizada: ${(file.size / 1024 / 1024).toFixed(2)}MB → ${(compressedFile.size / 1024).toFixed(0)}KB`);
+            resolve(compressedFile);
+          }, "image/jpeg", 0.85);
+        };
+        img.onerror = () => resolve(file);
+        img.src = e.target.result;
+      };
+      reader.onerror = () => resolve(file);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /**
    * Envia imagem real para o backend e retorna a análise da IA Gemini
    */
   async function analisarViaBackend(file, species, size, age, observation) {
+    const fileToSend = await comprimirImagemSeNecessario(file);
+
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('image', fileToSend);
     formData.append('species', species);
     formData.append('size', size || '');
     formData.append('age', age);

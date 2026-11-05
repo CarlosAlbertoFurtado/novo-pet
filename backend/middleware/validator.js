@@ -93,7 +93,7 @@ export function validateImageFile(file) {
   }
 
   // Verificar tamanho (double-check além do Multer)
-  const maxSize = parseInt(process.env.MAX_FILE_SIZE, 10) || 3 * 1024 * 1024;
+  const maxSize = parseInt(process.env.MAX_FILE_SIZE, 10) || 10 * 1024 * 1024;
   if (file.size > maxSize) {
     return { valid: false, error: `Imagem muito grande. Limite: ${Math.floor(maxSize / 1024 / 1024)}MB.` };
   }
