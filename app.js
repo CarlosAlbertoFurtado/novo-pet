@@ -281,18 +281,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /**
-   * Converte a resposta markdown da IA Gemini para o formato de resultado do frontend
+   * Converte a resposta markdown do Raio-X da IA Gemini para o formato de resultado do frontend
    */
   function parseGeminiResponse(analysisText, species, size, age, observation) {
-    // Determinar cor do semáforo a partir do texto
-    let semaforoCor = 'amarelo';
-    const textoLower = analysisText.toLowerCase();
-    if (textoLower.includes('semáforo verde') || textoLower.includes('verde')) {
-      semaforoCor = 'verde';
-    } else if (textoLower.includes('semáforo vermelho') || textoLower.includes('vermelho')) {
-      semaforoCor = 'vermelho';
-    }
-
     // Extrair seções do markdown
     const sections = {};
     const sectionRegex = /##\s+(.+)\n([\s\S]*?)(?=\n##\s|$)/g;
@@ -301,71 +292,144 @@ document.addEventListener("DOMContentLoaded", () => {
       sections[match[1].trim().toLowerCase()] = match[2].trim();
     }
 
-    // Extrair valores numéricos de "O que o Rótulo Diz"
-    const rotuloText = sections['o que o rótulo diz'] || '';
-    const proteinaMatch = rotuloText.match(/prote[ií]na[^:]*:\s*(\d+[\.,]?\d*)\s*%/i);
-    const gorduraMatch = rotuloText.match(/gordura[^:]*:\s*(\d+[\.,]?\d*)\s*%/i);
-    const cinzasMatch = rotuloText.match(/(cinzas|matéria mineral|mineral)[^:]*:\s*(\d+[\.,]?\d*)\s*%/i);
-    const ingredienteMatch = rotuloText.match(/(?:primeiro|1º)\s+ingrediente[^:]*:\s*(.+)/i);
+    // ── 1. NOTA GERAL (0-10) ──
+    const notaSection = sections['nota geral da ração'] || '';
+    const notaMatch = notaSection.match(/NOTA:\s*(\d+[\.,]?\d*)\s*\/\s*10/i) 
+      || notaSection.match(/(\d+[\.,]?\d*)\s*\/\s*10/i);
+    const nota = notaMatch ? parseFloat(notaMatch[1].replace(',', '.')) : null;
+    const notaResumo = notaSection.replace(/NOTA:\s*\d+[\.,]?\d*\s*\/\s*10/i, '').replace(/^\s*[-–—]\s*/gm, '').trim().split('\n')[0] || '';
+
+    // ── 2. CLASSIFICAÇÃO COMERCIAL ──
+    const classSection = sections['classificação comercial'] || '';
+    let classificacao = 'standard';
+    const classLower = classSection.toLowerCase();
+    if (classLower.includes('super premium') || classLower.includes('superpremium')) {
+      classificacao = 'super-premium';
+    } else if (classLower.includes('premium')) {
+      classificacao = 'premium';
+    } else if (classLower.includes('econômica') || classLower.includes('economica')) {
+      classificacao = 'economica';
+    }
+    const classificacaoTexto = classSection.replace(/^\*\*.*?\*\*\s*/gm, '').slice(0, 500);
+
+    // ── 3. SEMÁFORO ──
+    const semaforoSection = sections['semáforo de qualidade'] || '';
+    let semaforoCor = 'amarelo';
+    const semaforoLower = semaforoSection.toLowerCase();
+    if (semaforoLower.includes('🟢') || semaforoLower.includes('verde')) {
+      semaforoCor = 'verde';
+    } else if (semaforoLower.includes('🔴') || semaforoLower.includes('vermelho')) {
+      semaforoCor = 'vermelho';
+    }
+    const semaforoDesc = semaforoSection
+      .replace(/🟢|🟡|🔴/g, '')
+      .replace(/VERDE|AMARELO|VERMELHO/gi, '')
+      .replace(/^\s*[\(\)]*\s*/gm, '')
+      .trim()
+      .slice(0, 400);
+
+    // ── 4. RAIO-X DOS INGREDIENTES ──
+    const raioxSection = sections['raio-x dos ingredientes'] || '';
+    const ingredientLines = raioxSection.split('\n').filter(l => l.trim().startsWith('-') || l.trim().startsWith('*') || l.trim().startsWith('•'));
+    const ingredientesAnalisados = ingredientLines.map(line => {
+      const clean = line.replace(/^[\s\-*•]+/, '').trim();
+      let status = 'neutro';
+      if (clean.includes('✅')) status = 'positivo';
+      else if (clean.includes('🚫')) status = 'negativo';
+      else if (clean.includes('⚠️')) status = 'atencao';
+      const text = clean.replace(/[✅⚠️🚫]/g, '').trim();
+      const parts = text.split(/[:–—]\s*/);
+      return {
+        nome: parts[0]?.replace(/\*\*/g, '').trim() || text,
+        status,
+        explicacao: parts.slice(1).join(': ').trim() || ''
+      };
+    }).filter(i => i.nome.length > 1);
+
+    // ── 5. NÍVEIS DE GARANTIA ──
+    const niveisSection = sections['níveis de garantia — decodificados'] || sections['níveis de garantia - decodificados'] || '';
+    // Extrair valores da tabela ou texto
+    const proteinaMatch = niveisSection.match(/prote[ií]na[^|]*\|\s*(\d+[\.,]?\d*)\s*%/i)
+      || analysisText.match(/prote[ií]na[^:]*(?:mín|min)[^:]*:\s*(\d+[\.,]?\d*)\s*%/i)
+      || analysisText.match(/prote[ií]na\s*bruta[^:]*:\s*(\d+[\.,]?\d*)\s*%/i);
+    const gorduraMatch = niveisSection.match(/(?:extrato\s*et[ée]reo|gordura)[^|]*\|\s*(\d+[\.,]?\d*)\s*%/i)
+      || analysisText.match(/(?:extrato\s*et[ée]reo|gordura)[^:]*(?:mín|min)[^:]*:\s*(\d+[\.,]?\d*)\s*%/i);
+    const cinzasMatch = niveisSection.match(/(?:matéria\s*mineral|cinzas)[^|]*\|\s*(\d+[\.,]?\d*)\s*%/i)
+      || analysisText.match(/(?:matéria\s*mineral|cinzas)[^:]*(?:máx|max)[^:]*:\s*(\d+[\.,]?\d*)\s*%/i);
+    const fibrosaMatch = niveisSection.match(/(?:matéria\s*fibrosa|fibra)[^|]*\|\s*(\d+[\.,]?\d*)\s*%/i)
+      || analysisText.match(/(?:matéria\s*fibrosa|fibra)[^:]*:\s*(\d+[\.,]?\d*)\s*%/i);
+    const umidadeMatch = niveisSection.match(/umidade[^|]*\|\s*(\d+[\.,]?\d*)\s*%/i)
+      || analysisText.match(/umidade[^:]*:\s*(\d+[\.,]?\d*)\s*%/i);
 
     const proteina = proteinaMatch ? parseFloat(proteinaMatch[1].replace(',', '.')) : 0;
     const gordura = gorduraMatch ? parseFloat(gorduraMatch[1].replace(',', '.')) : 0;
-    const cinzas = cinzasMatch ? parseFloat(cinzasMatch[2].replace(',', '.')) : 0;
-    const ingrediente = ingredienteMatch ? ingredienteMatch[1].trim() : 'Não identificado';
+    const cinzas = cinzasMatch ? parseFloat(cinzasMatch[1].replace(',', '.')) : 0;
+    const fibrosa = fibrosaMatch ? parseFloat(fibrosaMatch[1].replace(',', '.')) : 0;
+    const umidade = umidadeMatch ? parseFloat(umidadeMatch[1].replace(',', '.')) : 0;
 
-    // Usar o analyzer local para gerar o resultado estruturado com os valores extraídos pela IA
+    // ── 6. QUALIDADE DA PROTEÍNA ──
+    const qualProtSection = sections['qualidade da proteína'] || '';
+
+    // ── 7. OBSERVAR NO PET ──
+    const obsSection = sections['o que observar no seu pet (30 dias)'] || sections['o que observar no seu pet'] || '';
+    let obsTipo = 'normal';
+    if (observation === 'grave') obsTipo = 'urgente';
+    else if (observation === 'leve') obsTipo = 'atencao';
+
+    // ── 8. VEREDITO DE CUSTO-BENEFÍCIO ──
+    const veredictSection = sections['veredito de custo-benefício'] || sections['veredito de custo-beneficio'] || '';
+
+    // ── 9. SUGESTÕES PRÁTICAS ──
+    const sugestoesSection = sections['sugestões práticas'] || sections['o que você pode fazer'] || '';
+    const sugestoes = [];
+    if (sugestoesSection) {
+      const bullets = sugestoesSection.split(/\n[-*•]\s+|\n\d+\.\s+/).filter(Boolean);
+      bullets.slice(0, 4).forEach((text, i) => {
+        const clean = text.replace(/^\*\*|\*\*$/g, '').replace(/^[*_]+|[*_]+$/g, '').trim();
+        const parts = clean.split(/[:–—.]\s+/);
+        sugestoes.push({
+          titulo: (parts[0] || `Sugestão ${i + 1}`).replace(/\*\*/g, ''),
+          texto: parts.slice(1).join('. ').trim() || clean
+        });
+      });
+    }
+
+    // ── 10. AVISO LEGAL ──
+    const avisoSection = sections['aviso legal'] || sections['aviso importante'] || '';
+
+    // Usar o analyzer local como base de resultado estruturado
+    const ingredienteMatch2 = analysisText.match(/(?:primeiro|1º)\s+ingrediente[^:]*:\s*(.+)/i);
+    const ingrediente = ingredienteMatch2 ? ingredienteMatch2[1].trim() : 'Não identificado';
+
     const resultado = analyzer.analisar({
-      species,
-      size,
-      age,
-      observation,
+      species, size, age, observation,
       labelData: {
-        proteina,
-        gordura,
-        cinzas,
+        proteina, gordura, cinzas,
         primeiroIngrediente: ingrediente,
         ingredientesTexto: ingrediente
       }
     });
 
-    // Sobrescrever o semáforo com o veredito da IA se diferente
-    if (semaforoCor !== resultado.semaforo.cor) {
-      resultado.semaforo.cor = semaforoCor;
-      const titulosMap = {
-        verde: 'Qualidade Adequada',
-        amarelo: 'Pontos de Atenção',
-        vermelho: 'Sinais Preocupantes'
-      };
-      resultado.semaforo.titulo = titulosMap[semaforoCor] || resultado.semaforo.titulo;
-    }
+    // ── SOBRESCREVER com dados ricos da IA ──
+    resultado.notaGeral = nota;
+    resultado.notaResumo = notaResumo;
+    resultado.classificacao = classificacao;
+    resultado.classificacaoTexto = classificacaoTexto;
+    resultado.semaforo.cor = semaforoCor;
+    resultado.semaforo.titulo = { verde: 'Qualidade Adequada', amarelo: 'Pontos de Atenção', vermelho: 'Sinais Preocupantes' }[semaforoCor];
+    resultado.semaforo.descricao = semaforoDesc;
+    resultado.ingredientesAnalisados = ingredientesAnalisados;
+    resultado.niveisGarantia = { proteina, gordura, cinzas, fibrosa, umidade };
+    resultado.qualidadeProteina = qualProtSection;
+    resultado.observacaoPet = obsSection;
+    resultado.oQueObservarNoSeuPet.mensagem = obsSection.slice(0, 600) || resultado.oQueObservarNoSeuPet.mensagem;
+    resultado.oQueObservarNoSeuPet.tipo = obsTipo;
+    resultado.veredict = veredictSection;
+    if (sugestoes.length > 0) resultado.oQueVocePodeFazer = sugestoes;
+    if (avisoSection) resultado.declaracaoHonestidade = avisoSection.replace(/^[*_"-]+\s*/gm, '').slice(0, 500);
 
-    // Enriquecer descrição do semáforo com contexto da IA
-    const semaforoSection = sections['semáforo de qualidade'] || '';
-    if (semaforoSection) {
-      resultado.semaforo.descricao = semaforoSection.replace(/^[*_-]+\s*/gm, '').slice(0, 300);
-    }
-
-    // Sobrescrever o aviso de honestidade com o da IA
-    const avisoSection = sections['aviso importante'] || '';
-    if (avisoSection) {
-      resultado.declaracaoHonestidade = avisoSection.replace(/^[*_-]+\s*/gm, '').slice(0, 500);
-    }
-
-    // Enriquecer sugestões com dados da IA
-    const sugestoesSection = sections['o que você pode fazer'] || '';
-    if (sugestoesSection) {
-      const bullets = sugestoesSection.split(/\n[-*•]\s+/).filter(Boolean);
-      if (bullets.length > 0) {
-        resultado.oQueVocePodeFazer = bullets.slice(0, 4).map((text, i) => {
-          const clean = text.replace(/^[*_]+|[*_]+$/g, '').trim();
-          const parts = clean.split(/[:.]\s+/);
-          return {
-            titulo: parts[0] || `Sugestão ${i + 1}`,
-            texto: parts.slice(1).join('. ').trim() || clean
-          };
-        });
-      }
-    }
+    // Preservar a análise completa em markdown para uso futuro
+    resultado._rawAnalysis = analysisText;
 
     return resultado;
   }
@@ -523,10 +587,55 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================
-  // 7. RENDERIZAÇÃO DO VEREDITO
+  // 7. RENDERIZAÇÃO DO VEREDITO (v2 — Raio-X)
   // ==========================================
   function renderizarResultado(res) {
-    // 1. Atualizar Semáforo
+    // 1. Nota Geral (se disponível da IA)
+    const notaCard = document.getElementById("notaGeralCard");
+    if (notaCard && res.notaGeral !== null && res.notaGeral !== undefined) {
+      notaCard.style.display = "flex";
+      const notaValor = document.getElementById("notaGeralValor");
+      const notaLabel = document.getElementById("notaGeralLabel");
+      const notaResumo = document.getElementById("notaGeralResumo");
+      const notaBar = document.getElementById("notaGeralBar");
+
+      if (notaValor) notaValor.textContent = res.notaGeral.toFixed(1);
+      if (notaLabel) {
+        let label = 'Analisando...';
+        if (res.notaGeral >= 8) label = 'Excelente';
+        else if (res.notaGeral >= 6) label = 'Boa';
+        else if (res.notaGeral >= 4) label = 'Regular';
+        else if (res.notaGeral >= 2) label = 'Fraca';
+        else label = 'Preocupante';
+        notaLabel.textContent = label;
+      }
+      if (notaResumo) notaResumo.textContent = res.notaResumo || '';
+      if (notaBar) {
+        notaBar.style.width = `${(res.notaGeral / 10) * 100}%`;
+        if (res.notaGeral >= 7) notaBar.className = 'nota-bar-fill verde';
+        else if (res.notaGeral >= 4) notaBar.className = 'nota-bar-fill amarelo';
+        else notaBar.className = 'nota-bar-fill vermelho';
+      }
+
+      // Classificação Comercial
+      const classTag = document.getElementById("classificacaoTag");
+      const classTexto = document.getElementById("classificacaoTexto");
+      if (classTag) {
+        const classNames = {
+          'economica': 'Econômica',
+          'standard': 'Standard',
+          'premium': 'Premium',
+          'super-premium': 'Super Premium'
+        };
+        classTag.textContent = classNames[res.classificacao] || 'Standard';
+        classTag.className = `classificacao-tag ${res.classificacao}`;
+      }
+      if (classTexto) classTexto.textContent = res.classificacaoTexto || '';
+    } else if (notaCard) {
+      notaCard.style.display = "none";
+    }
+
+    // 2. Semáforo
     const semaphoreCard = document.getElementById("semaphoreCard");
     const semaphoreBadge = document.getElementById("semaphoreBadge");
     const semaphoreTitle = document.getElementById("semaphoreTitle");
@@ -537,7 +646,32 @@ document.addEventListener("DOMContentLoaded", () => {
     semaphoreTitle.textContent = res.semaforo.titulo;
     semaphoreDesc.textContent = res.semaforo.descricao;
 
-    // 2. "O que o rótulo diz" (Níveis de Garantia)
+    // 3. Raio-X dos Ingredientes (se disponível)
+    const raioxContainer = document.getElementById("raioxIngredientesContainer");
+    if (raioxContainer && res.ingredientesAnalisados && res.ingredientesAnalisados.length > 0) {
+      raioxContainer.style.display = "block";
+      const raioxList = document.getElementById("raioxIngredientesList");
+      if (raioxList) {
+        raioxList.innerHTML = "";
+        res.ingredientesAnalisados.forEach(ing => {
+          const item = document.createElement("div");
+          item.className = `raiox-ingrediente-item ${ing.status}`;
+          const iconMap = { positivo: '✅', atencao: '⚠️', negativo: '🚫', neutro: '➖' };
+          item.innerHTML = `
+            <span class="raiox-icon">${iconMap[ing.status] || '➖'}</span>
+            <div class="raiox-info">
+              <strong>${ing.nome}</strong>
+              ${ing.explicacao ? `<span>${ing.explicacao}</span>` : ''}
+            </div>
+          `;
+          raioxList.appendChild(item);
+        });
+      }
+    } else if (raioxContainer) {
+      raioxContainer.style.display = "none";
+    }
+
+    // 4. "O que o rótulo diz" (Níveis de Garantia)
     document.getElementById("valProteina").textContent = res.oQueORotuloDiz.proteina.valor;
     const tagProteina = document.getElementById("tagProteina");
     tagProteina.className = `nutrient-status-tag ${res.oQueORotuloDiz.proteina.status}`;
@@ -564,7 +698,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("descAditivos").textContent = res.oQueORotuloDiz.aditivos.explicacao;
 
-    // 3. "O que observar no seu pet" (Integração com Pelo e Fezes)
+    // 5. Qualidade da Proteína (se disponível)
+    const qualProtCard = document.getElementById("qualidadeProteinaCard");
+    if (qualProtCard && res.qualidadeProteina) {
+      qualProtCard.style.display = "block";
+      const qualProtText = document.getElementById("qualidadeProteinaText");
+      if (qualProtText) {
+        // Converter markdown simples para HTML
+        let htmlText = res.qualidadeProteina
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n[-*•]\s+/g, '<br>• ')
+          .replace(/\n/g, '<br>');
+        qualProtText.innerHTML = htmlText;
+      }
+    } else if (qualProtCard) {
+      qualProtCard.style.display = "none";
+    }
+
+    // 6. "O que observar no seu pet"
     const alertBox = document.getElementById("petObservationAlertBox");
     alertBox.className = `pet-observation-alert-box ${res.oQueObservarNoSeuPet.tipo}`;
     document.getElementById("obsAlertTitle").textContent = res.oQueObservarNoSeuPet.titulo;
@@ -577,7 +728,23 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     document.getElementById("obsAlertIcon").innerHTML = obsIconMap[res.oQueObservarNoSeuPet.tipo] || obsIconMap.normal;
 
-    // 4. "O que você pode fazer" (Sugestões Práticas)
+    // 7. Veredito de Custo-Benefício (se disponível)
+    const veredictCard = document.getElementById("veredictCustoBeneficioCard");
+    if (veredictCard && res.veredict) {
+      veredictCard.style.display = "block";
+      const veredictText = document.getElementById("veredictCustoBeneficioText");
+      if (veredictText) {
+        let htmlText = res.veredict
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n[-*•]\s+/g, '<br>• ')
+          .replace(/\n/g, '<br>');
+        veredictText.innerHTML = htmlText;
+      }
+    } else if (veredictCard) {
+      veredictCard.style.display = "none";
+    }
+
+    // 8. "O que você pode fazer" (Sugestões Práticas)
     const actionContainer = document.getElementById("actionCardsContainer");
     actionContainer.innerHTML = "";
     res.oQueVocePodeFazer.forEach(sugestao => {
@@ -590,13 +757,14 @@ document.addEventListener("DOMContentLoaded", () => {
       actionContainer.appendChild(card);
     });
 
-    // 5. Declaração de Honestidade & Aviso Legal
+    // 9. Declaração de Honestidade & Aviso Legal
     document.getElementById("honestyText").textContent = res.declaracaoHonestidade;
 
     // Exibir seção e scroll suave
     resultSection.style.display = "block";
     resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+
 
   // ==========================================
   // 8. BOTÕES AUXILIARES

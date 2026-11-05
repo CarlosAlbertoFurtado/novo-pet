@@ -395,8 +395,8 @@
       <!-- Barra Superior de Ações Mobile -->
       <div class="result-top-bar">
         <div>
-          <span class="report-badge-meta">Relatório de Avaliação Nutricional</span>
-          <h2 class="result-main-heading">Veredito da Rotulagem</h2>
+          <span class="report-badge-meta">Raio-X Nutricional Completo</span>
+          <h2 class="result-main-heading">Veredito da Ração</h2>
         </div>
         <div class="result-actions">
           <button type="button" class="btn-secondary" id="btnNovaAnalise">
@@ -408,6 +408,28 @@
             Imprimir / PDF
           </button>
         </div>
+      </div>
+
+      <!-- ★ NOTA GERAL & CLASSIFICAÇÃO COMERCIAL (IA) ★ -->
+      <div class="nota-geral-card" id="notaGeralCard" style="display:none;">
+        <div class="nota-geral-score-area">
+          <div class="nota-geral-circle">
+            <span class="nota-geral-valor" id="notaGeralValor">--</span>
+            <span class="nota-geral-de">/10</span>
+          </div>
+          <div class="nota-geral-meta">
+            <span class="nota-geral-label" id="notaGeralLabel">Analisando...</span>
+            <p class="nota-geral-resumo" id="notaGeralResumo"></p>
+          </div>
+        </div>
+        <div class="nota-bar-track">
+          <div class="nota-bar-fill verde" id="notaGeralBar" style="width:0%"></div>
+        </div>
+        <div class="classificacao-area">
+          <span class="classificacao-label">Classificação Comercial:</span>
+          <span class="classificacao-tag standard" id="classificacaoTag">Standard</span>
+        </div>
+        <p class="classificacao-texto" id="classificacaoTexto"></p>
       </div>
 
       <!-- 1. SEMÁFORO DE QUALIDADE TÉCNICA -->
@@ -487,6 +509,32 @@
           </div>
         </div>
 
+        <!-- ★ RAIO-X DOS INGREDIENTES (IA) ★ -->
+        <div class="result-card raiox-card" id="raioxIngredientesContainer" style="display:none;">
+          <div class="result-card-header">
+            <span class="result-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+            </span>
+            <h3 class="result-card-title">Raio-X dos Ingredientes</h3>
+          </div>
+          <div class="raiox-ingredientes-list" id="raioxIngredientesList">
+            <!-- Gerado dinamicamente pelo JS -->
+          </div>
+        </div>
+
+        <!-- ★ QUALIDADE DA PROTEÍNA (IA) ★ -->
+        <div class="result-card qualidade-proteina-card" id="qualidadeProteinaCard" style="display:none;">
+          <div class="result-card-header">
+            <span class="result-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"></path><line x1="6" y1="17" x2="18" y2="17"></line></svg>
+            </span>
+            <h3 class="result-card-title">Análise da Fonte Proteica</h3>
+          </div>
+          <div class="qualidade-proteina-content" id="qualidadeProteinaText">
+            <!-- Gerado dinamicamente pelo JS -->
+          </div>
+        </div>
+
         <!-- CARD: O QUE OBSERVAR NO SEU PET (INTEGRAÇÃO DA RESPOSTA DO TUTOR) -->
         <div class="result-card">
           <div class="result-card-header">
@@ -519,6 +567,19 @@
               <li><strong>Nível de Atividade:</strong> Preservação de vitalidade para caminhadas e interações regulares.</li>
               <li><strong>Condição Corporal:</strong> Costelas palpáveis sob leve pressão, sem acúmulo adiposo visível.</li>
             </ul>
+          </div>
+        </div>
+
+        <!-- ★ VEREDITO DE CUSTO-BENEFÍCIO (IA) ★ -->
+        <div class="result-card veredito-custo-card" id="veredictCustoBeneficioCard" style="display:none;">
+          <div class="result-card-header">
+            <span class="result-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </span>
+            <h3 class="result-card-title">Veredito & Vale a Pena Pagar?</h3>
+          </div>
+          <div class="veredito-custo-content" id="veredictCustoBeneficioText">
+            <!-- Gerado dinamicamente pelo JS -->
           </div>
         </div>
 

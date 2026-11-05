@@ -801,6 +801,291 @@ body {
   border-color: #cbd5e1;
 }
 
+/* ========================================================
+   ★ NOTA GERAL & CLASSIFICAÇÃO COMERCIAL (IA RAIO-X) ★
+   ======================================================== */
+.nota-geral-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.06);
+  border: 1px solid #e2e8f0;
+  position: relative;
+  overflow: hidden;
+}
+
+.nota-geral-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #0d9488, #3b82f6);
+}
+
+.nota-geral-score-area {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-bottom: 18px;
+}
+
+.nota-geral-circle {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: white;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  padding-top: 20px;
+  flex-shrink: 0;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.25);
+  border: 3px solid #38bdf8;
+}
+
+.nota-geral-valor {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.nota-geral-de {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-left: 2px;
+}
+
+.nota-geral-meta {
+  flex: 1;
+}
+
+.nota-geral-label {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.nota-geral-resumo {
+  font-size: 0.92rem;
+  color: #475569;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Barra de progresso da nota */
+.nota-bar-track {
+  width: 100%;
+  height: 10px;
+  background: #f1f5f9;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 12px 0 18px 0;
+  border: 1px solid #e2e8f0;
+}
+
+.nota-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nota-bar-fill.verde {
+  background: linear-gradient(90deg, #10b981, #059669);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.nota-bar-fill.amarelo {
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+.nota-bar-fill.vermelho {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
+/* Área de Classificação Comercial */
+.classificacao-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+}
+
+.classificacao-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.classificacao-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.classificacao-tag.super-premium {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #78350f;
+  border: 1px solid #fcd34d;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2);
+}
+
+.classificacao-tag.premium {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+.classificacao-tag.standard {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.classificacao-tag.economica {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.classificacao-texto {
+  font-size: 0.9rem;
+  color: #475569;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+/* ========================================================
+   ★ RAIO-X DOS INGREDIENTES ★
+   ======================================================== */
+.raiox-card {
+  margin-bottom: 28px;
+}
+
+.raiox-ingredientes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.raiox-ingrediente-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border-left-width: 4px;
+  border-left-style: solid;
+  transition: transform 0.2s ease;
+}
+
+.raiox-ingrediente-item:hover {
+  transform: translateX(3px);
+}
+
+.raiox-ingrediente-item.positivo {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-left: 4px solid #10b981;
+}
+
+.raiox-ingrediente-item.negativo {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-left: 4px solid #ef4444;
+}
+
+.raiox-ingrediente-item.atencao {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-left: 4px solid #f59e0b;
+}
+
+.raiox-ingrediente-item.neutro {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #94a3b8;
+}
+
+.raiox-icon {
+  font-size: 1.15rem;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+.raiox-info {
+  flex: 1;
+}
+
+.raiox-info h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 3px 0;
+}
+
+.raiox-info p {
+  font-size: 0.86rem;
+  color: #475569;
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* ========================================================
+   ★ QUALIDADE DA PROTEÍNA ★
+   ======================================================== */
+.qualidade-proteina-card {
+  margin-bottom: 28px;
+}
+
+.qualidade-proteina-content {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #334155;
+}
+
+.qualidade-proteina-content strong {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* ========================================================
+   ★ VEREDITO DE CUSTO-BENEFÍCIO ★
+   ======================================================== */
+.veredito-custo-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-left: 5px solid #0d9488 !important;
+  margin-bottom: 28px;
+}
+
+.veredito-custo-content {
+  font-size: 0.96rem;
+  line-height: 1.7;
+  color: #1e293b;
+}
+
+.veredito-custo-content strong {
+  color: #0f172a;
+  font-weight: 700;
+}
+
 /* Card Semáforo Principal */
 .semaphore-card {
   border-radius: var(--radius-xl);
@@ -1614,6 +1899,24 @@ body {
     padding: 12px;
     min-height: 46px;
     font-size: 0.88rem;
+  }
+
+  .nota-geral-card {
+    padding: 20px 16px;
+  }
+
+  .nota-geral-score-area {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .nota-geral-circle {
+    margin: 0 auto;
+  }
+
+  .classificacao-area {
+    justify-content: center;
   }
 
   .semaphore-card {
