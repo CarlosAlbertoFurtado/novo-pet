@@ -12,12 +12,13 @@
 //   - Anti-prompt injection multimodal
 // ============================================================
 
-// Lista de modelos resilientes em ordem de prioridade (suportados pela API)
+// Lista de modelos resilientes em ordem de prioridade (testados e suportados pela API)
 const GEMINI_MODELS = [
   'gemini-3.5-flash',
-  'gemini-3.5-flash-lite',
-  'gemini-3.8-flash',
   'gemini-3.6-flash',
+  'gemini-3-flash-preview',
+  'gemini-3.1-flash-lite',
+  'gemini-3.8-flash',
   'gemini-flash-latest'
 ];
 
@@ -204,57 +205,52 @@ export async function analyzeLabel(imageBuffer, mimeType, petData) {
     ],
   };
 
-  // Tenta modelos em ordem de prioridade com tolerância a picos de demanda
+  // Tenta modelos em ordem de prioridade — pula rápido para o próximo em caso de erro
   let lastError;
   for (const model of GEMINI_MODELS) {
-    for (let attempt = 1; attempt <= 2; attempt++) {
-      try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 45000); // 45s timeout para análises mais ricas
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 50000);
 
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(requestBody),
-          signal: controller.signal,
-        });
+      console.log(`[GEMINI] Tentando modelo: ${model}...`);
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+        signal: controller.signal,
+      });
 
-        clearTimeout(timeout);
+      clearTimeout(timeout);
 
-        if (!response.ok) {
-          const errorData = await response.text();
-          console.warn(`[GEMINI] Modelo ${model} retornou ${response.status} (tentativa ${attempt}):`, 
-            errorData.slice(0, 150));
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.warn(`[GEMINI] ${model} → HTTP ${response.status}:`, errorData.slice(0, 120));
 
-          if (response.status === 429 || response.status === 404 || response.status === 503) {
-            // Tenta o próximo modelo ou retry
-            break;
-          }
-          if (response.status === 403) {
-            throw new Error('Chave da API Gemini sem permissão ou inválida. Verifique o .env.');
-          }
-          throw new Error(`Erro na API Gemini (${model}): ${response.status}`);
+        if (response.status === 403) {
+          throw new Error('Chave da API Gemini sem permissão ou inválida. Verifique o .env.');
         }
-
-        const data = await response.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!text) {
-          throw new Error('A IA não retornou o texto da análise.');
-        }
-
-        console.log(`[GEMINI] Raio-X gerado com sucesso usando o modelo: ${model} (${text.length} chars)`);
-        return text;
-
-      } catch (err) {
-        lastError = err;
-        if (err.name === 'AbortError') {
-          lastError = new Error('A análise demorou muito (timeout de 45s). Tente com uma imagem menor ou mais nítida.');
-        }
-        if (attempt === 1) {
-          await new Promise(resolve => setTimeout(resolve, 2000));
-        }
+        // 429, 404, 503 → pula direto para o próximo modelo sem esperar
+        continue;
       }
+
+      const data = await response.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) {
+        console.warn(`[GEMINI] ${model} retornou resposta vazia, tentando próximo...`);
+        continue;
+      }
+
+      console.log(`[GEMINI] ✅ Raio-X gerado com ${model} (${text.length} chars)`);
+      return text;
+
+    } catch (err) {
+      lastError = err;
+      if (err.name === 'AbortError') {
+        lastError = new Error('A análise demorou muito (timeout de 50s). Tente com uma imagem menor ou mais nítida.');
+      }
+      console.warn(`[GEMINI] ${model} falhou:`, err.message?.slice(0, 80));
+      // Não espera, pula direto pro próximo modelo
     }
   }
 

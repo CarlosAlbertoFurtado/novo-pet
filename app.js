@@ -237,17 +237,67 @@ document.addEventListener("DOMContentLoaded", () => {
   // 6. SUBMISSÃO DO FORMULÁRIO E ANÁLISE IA
   // ==========================================
 
-  // URL do backend (em desenvolvimento usa localhost:3001)
-  const BACKEND_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:3001'
-    : ''; // Em produção, configurar o domínio real
+  // URL do backend com detecção inteligente e fallback resiliente
+  let activeBackendUrl = null;
+
+  async function resolveBackendUrl() {
+    if (activeBackendUrl !== null) return activeBackendUrl;
+
+    const hostname = window.location.hostname;
+    const isVercel = hostname.endsWith('.vercel.app');
+
+    // Se estiver em produção na Vercel, usa mesma origem relativa
+    if (isVercel) {
+      activeBackendUrl = '';
+      return activeBackendUrl;
+    }
+
+    // Se estiver em ambiente local (localhost, 127.0.0.1, Live Server ou file:)
+    // 1. Tentar backend local na porta 3001
+    try {
+      const localResp = await fetch('http://localhost:3001/api/analysis/status', {
+        signal: AbortSignal.timeout(1200)
+      });
+      if (localResp.ok) {
+        const data = await localResp.json();
+        if (data.ready) {
+          activeBackendUrl = 'http://localhost:3001';
+          console.log('[API] Conectado ao backend local na porta 3001.');
+          return activeBackendUrl;
+        }
+      }
+    } catch {
+      // Backend local desligado, testar fallback em nuvem
+    }
+
+    // 2. Fallback automático para a API em nuvem na Vercel (garante que a IA funcione em qualquer ambiente)
+    try {
+      const prodResp = await fetch('https://novo-pet-beta.vercel.app/api/analysis/status', {
+        signal: AbortSignal.timeout(3500)
+      });
+      if (prodResp.ok) {
+        const data = await prodResp.json();
+        if (data.ready) {
+          activeBackendUrl = 'https://novo-pet-beta.vercel.app';
+          console.log('[API] Backend local não detectado. Usando API em nuvem (Vercel): https://novo-pet-beta.vercel.app');
+          return activeBackendUrl;
+        }
+      }
+    } catch {
+      // Ambos indisponíveis
+    }
+
+    activeBackendUrl = '';
+    return activeBackendUrl;
+  }
 
   /**
    * Verifica se o backend está disponível e com API key configurada
    */
   async function checkBackendReady() {
     try {
-      const resp = await fetch(`${BACKEND_URL}/api/analysis/status`, { signal: AbortSignal.timeout(3000) });
+      const url = await resolveBackendUrl();
+      const resp = await fetch(`${url}/api/analysis/status`, { signal: AbortSignal.timeout(4000) });
       if (!resp.ok) return false;
       const data = await resp.json();
       return data.ready === true;
@@ -320,6 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   async function analisarViaBackend(file, species, size, age, observation) {
     const fileToSend = await comprimirImagemSeNecessario(file);
+    const backendUrl = await resolveBackendUrl();
 
     const formData = new FormData();
     formData.append('image', fileToSend);
@@ -328,7 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formData.append('age', age);
     formData.append('observation', observation);
 
-    const resp = await fetch(`${BACKEND_URL}/api/analysis/label`, {
+    const resp = await fetch(`${backendUrl}/api/analysis/label`, {
       method: 'POST',
       body: formData,
     });

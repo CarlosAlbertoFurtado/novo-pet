@@ -76,6 +76,11 @@ app.use(cors({
       return callback(null, true);
     }
 
+    // Permitir qualquer porta local em desenvolvimento (ex: Live Server 5500, Vite 5173, etc.)
+    if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+      return callback(null, true);
+    }
+
     callback(new Error(`Origem bloqueada pelo CORS: ${origin}`));
   },
   methods: ['GET', 'POST'],
