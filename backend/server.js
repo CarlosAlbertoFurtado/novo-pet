@@ -24,6 +24,10 @@ const app = express();
 const PORT = parseInt(process.env.PORT, 10) || 3001;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
+// ── 0. TRUST PROXY (Vercel / Cloudflare / Nginx) ───────────
+// Necessário para identificar corretamente o IP do cliente através do proxy reverso
+app.set('trust proxy', 1);
+
 // ── 1. HELMET — Headers de segurança HTTP ──────────────────
 app.use(helmet({
   contentSecurityPolicy: {
