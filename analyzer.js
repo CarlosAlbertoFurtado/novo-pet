@@ -137,9 +137,17 @@ class TradutorRacaoAnalyzer {
       ingredienteMensagem = "Primeiro ingrediente não informado. Recomenda-se conferir o topo da lista de composição básica no verso da embalagem para validar a presença de fontes de carne nobre antes de derivados vegetais.";
     }
 
-    // Detecção adicional de corantes e conservantes
-    const contemCorantes = ingredientesTexto.includes("corante") || ingredientesTexto.includes("tartrazina") || ingredientesTexto.includes("vermelho 40");
-    const contemBhaBht = ingredientesTexto.includes("bha") || ingredientesTexto.includes("bht");
+    // Detecção adicional de corantes e conservantes (com filtro contra falsos positivos como "sem corantes")
+    const temNegacaoCorantes = /sem\s+corante|livre\s+de\s+corante|zero\s+corante|n[aã]o\s+cont[eé]m\s+corante|aus[eê]ncia\s+de\s+corante/i.test(ingredientesTexto);
+    const contemCorantes = !temNegacaoCorantes && (
+      ingredientesTexto.includes("tartrazina") || 
+      ingredientesTexto.includes("vermelho 40") || 
+      ingredientesTexto.includes("amarelo") ||
+      ingredientesTexto.includes("dióxido de titânio") ||
+      (ingredientesTexto.includes("corante") && !temNegacaoCorantes)
+    );
+    const temNegacaoAntiox = /sem\s+(?:bha|bht)|livre\s+de\s+(?:bha|bht)|antioxidante\s+natural/i.test(ingredientesTexto);
+    const contemBhaBht = !temNegacaoAntiox && (ingredientesTexto.includes("bha") || ingredientesTexto.includes("bht"));
 
     // 6. Cálculo do Semáforo de Qualidade do Rótulo
     // Pontuação de 0 a 100 baseada puramente nos critérios técnicos de rotulagem

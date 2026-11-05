@@ -396,6 +396,21 @@ document.addEventListener("DOMContentLoaded", () => {
    * Converte a resposta markdown do Raio-X da IA Gemini para o formato de resultado do frontend
    */
   function parseGeminiResponse(analysisText, species, size, age, observation) {
+    // Função utilitária: limpar todos os asteriscos e formatação markdown do texto
+    function limpar(text) {
+      if (!text) return '';
+      return text
+        .replace(/\*\*\*/g, '')       // ***bold italic***
+        .replace(/\*\*/g, '')         // **bold**
+        .replace(/\*/g, '')           // *italic*
+        .replace(/__/g, '')           // __underline__
+        .replace(/^#+\s*/gm, '')      // ## headers
+        .replace(/^---+$/gm, '')      // --- separators
+        .replace(/^===+$/gm, '')      // === separators
+        .replace(/^\s*[-–—]\s*$/gm, '') // linhas só com traço
+        .trim();
+    }
+
     // Extrair seções do markdown
     const sections = {};
     const sectionRegex = /##\s+(.+)\n([\s\S]*?)(?=\n##\s|$)/g;
@@ -409,7 +424,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const notaMatch = notaSection.match(/NOTA:\s*(\d+[\.,]?\d*)\s*\/\s*10/i) 
       || notaSection.match(/(\d+[\.,]?\d*)\s*\/\s*10/i);
     const nota = notaMatch ? parseFloat(notaMatch[1].replace(',', '.')) : null;
-    const notaResumo = notaSection.replace(/NOTA:\s*\d+[\.,]?\d*\s*\/\s*10/i, '').replace(/^\s*[-–—]\s*/gm, '').trim().split('\n')[0] || '';
+    const notaResumo = limpar(notaSection.replace(/NOTA:\s*\d+[\.,]?\d*\s*\/\s*10/i, '').replace(/^\s*[-–—]\s*/gm, '').trim().split('\n')[0] || '');
 
     // ── 2. CLASSIFICAÇÃO COMERCIAL ──
     const classSection = sections['classificação comercial'] || '';
@@ -422,7 +437,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (classLower.includes('econômica') || classLower.includes('economica')) {
       classificacao = 'economica';
     }
-    const classificacaoTexto = classSection.replace(/^\*\*.*?\*\*\s*/gm, '').slice(0, 500);
+    const classificacaoTexto = limpar(classSection.slice(0, 500));
 
     // ── 3. SEMÁFORO ──
     const semaforoSection = sections['semáforo de qualidade'] || '';
@@ -433,12 +448,12 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (semaforoLower.includes('🔴') || semaforoLower.includes('vermelho')) {
       semaforoCor = 'vermelho';
     }
-    const semaforoDesc = semaforoSection
+    const semaforoDesc = limpar(semaforoSection
       .replace(/🟢|🟡|🔴/g, '')
       .replace(/VERDE|AMARELO|VERMELHO/gi, '')
       .replace(/^\s*[\(\)]*\s*/gm, '')
       .trim()
-      .slice(0, 400);
+      .slice(0, 400));
 
     // ── 4. RAIO-X DOS INGREDIENTES ──
     const raioxSection = sections['raio-x dos ingredientes'] || '';
@@ -452,9 +467,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const text = clean.replace(/[✅⚠️🚫]/g, '').trim();
       const parts = text.split(/[:–—]\s*/);
       return {
-        nome: parts[0]?.replace(/\*\*/g, '').trim() || text,
+        nome: limpar(parts[0] || text),
         status,
-        explicacao: parts.slice(1).join(': ').trim() || ''
+        explicacao: limpar(parts.slice(1).join(': ').trim() || '')
       };
     }).filter(i => i.nome.length > 1);
 
@@ -480,16 +495,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const umidade = umidadeMatch ? parseFloat(umidadeMatch[1].replace(',', '.')) : 0;
 
     // ── 6. QUALIDADE DA PROTEÍNA ──
-    const qualProtSection = sections['qualidade da proteína'] || '';
+    const qualProtSection = limpar(sections['qualidade da proteína'] || '');
 
     // ── 7. OBSERVAR NO PET ──
-    const obsSection = sections['o que observar no seu pet (30 dias)'] || sections['o que observar no seu pet'] || '';
+    const obsSection = limpar(sections['o que observar no seu pet (30 dias)'] || sections['o que observar no seu pet'] || '');
     let obsTipo = 'normal';
     if (observation === 'grave') obsTipo = 'urgente';
     else if (observation === 'leve') obsTipo = 'atencao';
 
     // ── 8. VEREDITO DE CUSTO-BENEFÍCIO ──
-    const veredictSection = sections['veredito de custo-benefício'] || sections['veredito de custo-beneficio'] || '';
+    const veredictSection = limpar(sections['veredito de custo-benefício'] || sections['veredito de custo-beneficio'] || '');
 
     // ── 9. SUGESTÕES PRÁTICAS ──
     const sugestoesSection = sections['sugestões práticas'] || sections['o que você pode fazer'] || '';
@@ -497,28 +512,34 @@ document.addEventListener("DOMContentLoaded", () => {
     if (sugestoesSection) {
       const bullets = sugestoesSection.split(/\n[-*•]\s+|\n\d+\.\s+/).filter(Boolean);
       bullets.slice(0, 4).forEach((text, i) => {
-        const clean = text.replace(/^\*\*|\*\*$/g, '').replace(/^[*_]+|[*_]+$/g, '').trim();
+        const clean = limpar(text);
         const parts = clean.split(/[:–—.]\s+/);
         sugestoes.push({
-          titulo: (parts[0] || `Sugestão ${i + 1}`).replace(/\*\*/g, ''),
-          texto: parts.slice(1).join('. ').trim() || clean
+          titulo: limpar(parts[0] || `Sugestão ${i + 1}`),
+          texto: limpar(parts.slice(1).join('. ').trim() || clean)
         });
       });
     }
 
-    // ── 10. AVISO LEGAL ──
-    const avisoSection = sections['aviso legal'] || sections['aviso importante'] || '';
+    // Aviso legal removido — UX limpa
 
-    // Usar o analyzer local como base de resultado estruturado
-    const ingredienteMatch2 = analysisText.match(/(?:primeiro|1º)\s+ingrediente[^:]*:\s*(.+)/i);
-    const ingrediente = ingredienteMatch2 ? ingredienteMatch2[1].trim() : 'Não identificado';
+    // Determinar o 1º ingrediente de forma limpa e confiável (sem pegar frases de veredito)
+    let ingredientePrincipal = 'Farinha de carne / vísceras';
+    if (ingredientesAnalisados.length > 0 && ingredientesAnalisados[0].nome) {
+      ingredientePrincipal = limpar(ingredientesAnalisados[0].nome);
+    } else {
+      const matchIngr = qualProtSection.match(/(?:fonte\s+principal|ingrediente\s+principal|1º\s+ingrediente)[:–—]\s*([^\n.,]+)/i);
+      if (matchIngr && matchIngr[1].trim().length < 60) {
+        ingredientePrincipal = limpar(matchIngr[1].trim());
+      }
+    }
 
     const resultado = analyzer.analisar({
       species, size, age, observation,
       labelData: {
         proteina, gordura, cinzas,
-        primeiroIngrediente: ingrediente,
-        ingredientesTexto: ingrediente
+        primeiroIngrediente: ingredientePrincipal,
+        ingredientesTexto: ingredientesAnalisados.map(i => i.nome).join(', ') || ingredientePrincipal
       }
     });
 
@@ -534,11 +555,25 @@ document.addEventListener("DOMContentLoaded", () => {
     resultado.niveisGarantia = { proteina, gordura, cinzas, fibrosa, umidade };
     resultado.qualidadeProteina = qualProtSection;
     resultado.observacaoPet = obsSection;
-    resultado.oQueObservarNoSeuPet.mensagem = obsSection.slice(0, 600) || resultado.oQueObservarNoSeuPet.mensagem;
+    resultado.oQueObservarNoSeuPet.mensagem = obsSection || resultado.oQueObservarNoSeuPet.mensagem;
     resultado.oQueObservarNoSeuPet.tipo = obsTipo;
     resultado.veredict = veredictSection;
     if (sugestoes.length > 0) resultado.oQueVocePodeFazer = sugestoes;
-    if (avisoSection) resultado.declaracaoHonestidade = avisoSection.replace(/^[*_"-]+\s*/gm, '').slice(0, 500);
+
+    // Sobrescrever primeiro ingrediente e aditivos com dados refinados da IA
+    if (resultado.oQueORotuloDiz) {
+      resultado.oQueORotuloDiz.primeiroIngrediente.valor = ingredientePrincipal;
+      resultado.oQueORotuloDiz.primeiroIngrediente.explicacao = `Fonte de proteína identificada no laudo da IA: ${ingredientePrincipal}.`;
+
+      const analiseLower = analysisText.toLowerCase();
+      const semCorantes = analiseLower.includes('ausência de corantes') || 
+                          analiseLower.includes('sem corantes') || 
+                          analiseLower.includes('livre de corantes');
+      if (semCorantes) {
+        resultado.oQueORotuloDiz.aditivos.contemCorantes = false;
+        resultado.oQueORotuloDiz.aditivos.explicacao = 'Ausência de corantes sintéticos confirmada pelo laudo do Raio-X da IA.';
+      }
+    }
 
     // Preservar a análise completa em markdown para uso futuro
     resultado._rawAnalysis = analysisText;
@@ -810,18 +845,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("descAditivos").textContent = res.oQueORotuloDiz.aditivos.explicacao;
 
+    // Função utilitária para renderizar texto da IA 100% limpo, sem asteriscos, com tópicos elegantes
+    function formatarTextoVisual(rawText) {
+      if (!rawText) return '';
+      // 1. Elimina todos os asteriscos (bold, italic, bullets soltos)
+      let text = rawText
+        .replace(/\*\*\*(.+?)\*\*\*/g, '<strong>$1</strong>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '$1')
+        .replace(/\*/g, '')
+        .replace(/_{1,3}/g, '')
+        .replace(/^#+\s*/gm, '')
+        .replace(/^[-=_]{3,}\s*$/gm, '')
+        .trim();
+
+      // 2. Transforma cada linha em tópico ou parágrafo legível
+      const lines = text.split('\n');
+      const htmlParts = lines.map(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return '';
+        if (/^[•\-–—]\s*/.test(trimmed)) {
+          return `<div class="clean-bullet-item"><span class="bullet-dot">•</span><span>${trimmed.replace(/^[•\-–—]\s*/, '')}</span></div>`;
+        }
+        return `<p class="clean-paragraph">${trimmed}</p>`;
+      });
+
+      return htmlParts.filter(Boolean).join('');
+    }
+
     // 5. Qualidade da Proteína (se disponível)
     const qualProtCard = document.getElementById("qualidadeProteinaCard");
     if (qualProtCard && res.qualidadeProteina) {
       qualProtCard.style.display = "block";
       const qualProtText = document.getElementById("qualidadeProteinaText");
       if (qualProtText) {
-        // Converter markdown simples para HTML
-        let htmlText = res.qualidadeProteina
-          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-          .replace(/\n[-*•]\s+/g, '<br>• ')
-          .replace(/\n/g, '<br>');
-        qualProtText.innerHTML = htmlText;
+        qualProtText.innerHTML = formatarTextoVisual(res.qualidadeProteina);
       }
     } else if (qualProtCard) {
       qualProtCard.style.display = "none";
@@ -831,7 +889,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const alertBox = document.getElementById("petObservationAlertBox");
     alertBox.className = `pet-observation-alert-box ${res.oQueObservarNoSeuPet.tipo}`;
     document.getElementById("obsAlertTitle").textContent = res.oQueObservarNoSeuPet.titulo;
-    document.getElementById("obsAlertText").textContent = res.oQueObservarNoSeuPet.mensagem;
+    document.getElementById("obsAlertText").innerHTML = formatarTextoVisual(res.oQueObservarNoSeuPet.mensagem);
     
     const obsIconMap = {
       normal: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`,
@@ -846,11 +904,7 @@ document.addEventListener("DOMContentLoaded", () => {
       veredictCard.style.display = "block";
       const veredictText = document.getElementById("veredictCustoBeneficioText");
       if (veredictText) {
-        let htmlText = res.veredict
-          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-          .replace(/\n[-*•]\s+/g, '<br>• ')
-          .replace(/\n/g, '<br>');
-        veredictText.innerHTML = htmlText;
+        veredictText.innerHTML = formatarTextoVisual(res.veredict);
       }
     } else if (veredictCard) {
       veredictCard.style.display = "none";
@@ -869,8 +923,11 @@ document.addEventListener("DOMContentLoaded", () => {
       actionContainer.appendChild(card);
     });
 
-    // 9. Declaração de Honestidade & Aviso Legal
-    document.getElementById("honestyText").textContent = res.declaracaoHonestidade;
+    // 9. Declaração de Honestidade & Aviso Legal (se elemento existir)
+    const honestyEl = document.getElementById("honestyText");
+    if (honestyEl && res.declaracaoHonestidade) {
+      honestyEl.textContent = res.declaracaoHonestidade;
+    }
 
     // Exibir seção e scroll suave
     resultSection.style.display = "block";

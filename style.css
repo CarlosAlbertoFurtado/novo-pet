@@ -1990,3 +1990,34 @@ body {
     break-inside: avoid;
   }
 }
+
+/* ==========================================
+   TIPOGRAFIA LIMPA PARA RESPOSTAS DA IA (SEM ASTERISCOS / POLUIÇÃO)
+   ========================================== */
+.clean-paragraph {
+  margin: 0 0 10px 0;
+  line-height: 1.6;
+  color: var(--slate-700, #334155);
+}
+
+.clean-bullet-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 7px 0;
+  line-height: 1.55;
+  color: var(--slate-700, #334155);
+}
+
+.clean-bullet-item .bullet-dot {
+  color: var(--teal, #0d9488);
+  font-weight: 800;
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+/* Ocultar elementos de poluição visual / avisos redundantes */
+.disclaimer-banner,
+.honesty-banner {
+  display: none !important;
+}

@@ -145,9 +145,6 @@ Dê 3-4 ações concretas que o tutor pode tomar HOJE:
 - Cada sugestão deve ter um TÍTULO curto e uma EXPLICAÇÃO de 1-2 frases
 - Seja específico (não diga "consulte um vet" sem contexto)
 
-## Aviso Legal
-"Esta análise é baseada exclusivamente no rótulo fotografado. Rações podem variar entre lotes de fabricação. A resposta real do organismo do seu pet nos próximos 30 dias de consumo é o teste soberano. Consulte sempre um médico-veterinário para orientação personalizada."
-
 ═══════════════════════════════════════════════════
 REGRAS FINAIS INVIOLÁVEIS:
 ═══════════════════════════════════════════════════
@@ -155,7 +152,9 @@ REGRAS FINAIS INVIOLÁVEIS:
 2. Se não conseguir ler algo na imagem, diga honestamente.
 3. Use linguagem POPULAR — explique como se estivesse conversando com um amigo.
 4. Seja IMPLACÁVEL na honestidade — não amenize problemas reais.
-5. O tutor precisa sair desta análise com uma DECISÃO CLARA: manter, trocar ou consultar um vet.`;
+5. O tutor precisa sair desta análise com uma DECISÃO CLARA: manter, trocar ou consultar um vet.
+6. NUNCA use asteriscos (*) nem marcações markdown como **texto** no corpo da resposta. Escreva tudo em texto limpo, sem formatação markdown. Os únicos caracteres especiais permitidos são os emojis de status (✅, ⚠️, 🚫, 🟢, 🟡, 🔴) e os títulos com ## no início da linha.
+7. NÃO inclua seção de "Aviso Legal" na resposta.`;
 }
 
 /**
