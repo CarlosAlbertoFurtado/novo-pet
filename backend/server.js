@@ -50,15 +50,32 @@ app.use(helmet({
 }));
 
 // ── 2. CORS — Origens permitidas ───────────────────────────
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000')
+const customOrigins = (process.env.ALLOWED_ORIGINS || '')
   .split(',')
-  .map(o => o.trim());
+  .map(o => o.trim())
+  .filter(Boolean);
+
+const defaultAllowed = [
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'https://novo-pet-beta.vercel.app'
+];
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Permitir requests sem origin (ex: Postman, curl em dev)
-    if (!origin && NODE_ENV === 'development') return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
+    // Permitir requisições same-origin ou ferramentas que não enviam origin header
+    if (!origin) return callback(null, true);
+
+    // Permitir domínios explícitos
+    if (defaultAllowed.includes(origin) || customOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // Permitir qualquer deployment e preview na Vercel
+    if (origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+
     callback(new Error(`Origem bloqueada pelo CORS: ${origin}`));
   },
   methods: ['GET', 'POST'],
