@@ -37,11 +37,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnNovaAnalise = document.getElementById("btnNovaAnalise");
   const btnPrintReport = document.getElementById("btnPrintReport");
-  const presetButtons = document.querySelectorAll(".btn-preset");
+  const resultCompareSection = document.getElementById("resultCompareSection");
+  const btnNovaComparacao = document.getElementById("btnNovaComparacao");
+  const btnIrParaComparador = document.getElementById("btnIrParaComparador");
+
+  // Elementos do Seletor de Modo (1 Ração vs Comparar 2)
+  const tabModoAnalise = document.getElementById("tabModoAnalise");
+  const tabModoComparar = document.getElementById("tabModoComparar");
+  const stepSingleUpload = document.getElementById("stepSingleUpload");
+  const stepCompareUpload = document.getElementById("stepCompareUpload");
+  const btnSubmitText = document.getElementById("btnSubmitText");
+
+  // Elementos de Upload do Comparador
+  const fotoAtualInput = document.getElementById("fotoAtualInput");
+  const fotoNovaInput = document.getElementById("fotoNovaInput");
+  const dropzoneAtual = document.getElementById("dropzoneAtual");
+  const dropzoneNova = document.getElementById("dropzoneNova");
+  const previewAtualContainer = document.getElementById("previewAtualContainer");
+  const previewNovaContainer = document.getElementById("previewNovaContainer");
+  const previewAtualImage = document.getElementById("previewAtualImage");
+  const previewNovaImage = document.getElementById("previewNovaImage");
+  const btnRemoveAtual = document.getElementById("btnRemoveAtual");
+  const btnRemoveNova = document.getElementById("btnRemoveNova");
 
   // Estado da aplicação
   let currentFile = null;
-  let activePresetKey = null;
+  let fileAtual = null;
+  let fileNova = null;
+  let currentMode = 'single'; // 'single' ou 'compare'
 
   // ==========================================
   // 1. CONTROLE DE ESPÉCIE & PORTE
@@ -152,75 +175,91 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ==========================================
-  // 4. TESTE RÁPIDO COM PRESETS (1 CLIQUE)
+  // 4. SELETOR DE MODO (1 RAÇÃO VS TIRA-TEIMA)
   // ==========================================
-  presetButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const presetKey = btn.getAttribute("data-preset");
-      const presetData = EXEMPLOS_ROTULOS[presetKey];
-      if (!presetData) return;
+  function alternarModo(novoModo) {
+    currentMode = novoModo;
+    resultSection.style.display = "none";
+    if (resultCompareSection) resultCompareSection.style.display = "none";
 
-      activePresetKey = presetKey;
-      currentFile = { name: `${presetKey}.jpg` };
+    if (currentMode === 'compare') {
+      tabModoComparar?.classList.add("active");
+      tabModoAnalise?.classList.remove("active");
+      stepSingleUpload.style.display = "none";
+      stepCompareUpload.style.display = "block";
+      if (btnSubmitText) btnSubmitText.textContent = "Comparar Rações Agora (Tira-Teima)";
+    } else {
+      tabModoAnalise?.classList.add("active");
+      tabModoComparar?.classList.remove("active");
+      stepSingleUpload.style.display = "block";
+      stepCompareUpload.style.display = "none";
+      if (btnSubmitText) btnSubmitText.textContent = "Analisar Ração Agora";
+    }
+  }
 
-      // Gera um card de imagem ilustrativo SVG do rótulo para preview
-      const svgLabel = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="300" viewBox="0 0 600 300">
-        <rect width="600" height="300" fill="%23f8fafc" stroke="%23cbd5e1" stroke-width="4"/>
-        <rect x="20" y="20" width="560" height="40" fill="%230f172a" rx="6"/>
-        <text x="300" y="46" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">NÍVEIS DE GARANTIA - ${presetData.nome.toUpperCase()}</text>
-        <text x="40" y="95" font-family="Arial, sans-serif" font-size="14" fill="%23334155">• Umidade (máx.): 100 g/kg (10,0%)</text>
-        <text x="40" y="125" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="%230d9488">• Proteína Bruta (mín.): ${presetData.rotulo.proteina * 10} g/kg (${presetData.rotulo.proteina}%)</text>
-        <text x="40" y="155" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="%230d9488">• Extrato Etéreo / Gordura (mín.): ${presetData.rotulo.gordura * 10} g/kg (${presetData.rotulo.gordura}%)</text>
-        <text x="40" y="185" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="%23e11d48">• Matéria Mineral / Cinzas (máx.): ${presetData.rotulo.cinzas * 10} g/kg (${presetData.rotulo.cinzas}%)</text>
-        <text x="40" y="215" font-family="Arial, sans-serif" font-size="14" fill="%23334155">• Matéria Fibrosa (máx.): ${presetData.rotulo.fibra * 10} g/kg (${presetData.rotulo.fibra}%)</text>
-        <text x="40" y="255" font-family="Arial, sans-serif" font-size="12" fill="%2364748b">1º Ingrediente: ${presetData.rotulo.primeiroIngrediente}</text>
-      </svg>`;
+  tabModoAnalise?.addEventListener("click", () => alternarModo('single'));
+  tabModoComparar?.addEventListener("click", () => alternarModo('compare'));
 
-      previewImage.src = svgLabel;
-      dropzone.style.display = "none";
-      previewContainer.style.display = "block";
-      scanLaser.style.display = "block";
+  // Botão de convite no fim da análise individual
+  btnIrParaComparador?.addEventListener("click", () => {
+    alternarModo('compare');
+    if (currentFile && !fileAtual) {
+      fileAtual = currentFile;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewAtualImage.src = e.target.result;
+        dropzoneAtual.style.display = "none";
+        previewAtualContainer.style.display = "block";
+      };
+      reader.readAsDataURL(fileAtual);
+    }
+    formSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 
-      // Seta espécie
-      const speciesRadio = document.querySelector(`input[name="species"][value="${presetData.species}"]`);
-      if (speciesRadio) {
-        speciesRadio.checked = true;
-        speciesRadio.dispatchEvent(new Event("change"));
-      }
+  // UPLOAD DA RAÇÃO ATUAL (COMPARADOR)
+  fotoAtualInput?.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      fileAtual = file;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        previewAtualImage.src = ev.target.result;
+        dropzoneAtual.style.display = "none";
+        previewAtualContainer.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 
-      // Seta porte (se cão)
-      if (presetData.species === "cao" && presetData.size) {
-        const porteRadio = document.querySelector(`input[name="size"][value="${presetData.size}"]`);
-        if (porteRadio) {
-          porteRadio.checked = true;
-          document.querySelectorAll("#porteControl label").forEach(l => l.classList.remove("active"));
-          porteRadio.closest("label")?.classList.add("active");
-        }
-      }
+  btnRemoveAtual?.addEventListener("click", () => {
+    fileAtual = null;
+    fotoAtualInput.value = "";
+    previewAtualImage.src = "";
+    previewAtualContainer.style.display = "none";
+    dropzoneAtual.style.display = "block";
+  });
 
-      // Seta idade
-      const ageRadio = document.querySelector(`input[name="age"][value="${presetData.age}"]`);
-      if (ageRadio) {
-        ageRadio.checked = true;
-        document.querySelectorAll("#idadeControl label").forEach(l => l.classList.remove("active"));
-        ageRadio.closest("label")?.classList.add("active");
-      }
+  // UPLOAD DA NOVA RAÇÃO (COMPARADOR)
+  fotoNovaInput?.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      fileNova = file;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        previewNovaImage.src = ev.target.result;
+        dropzoneNova.style.display = "none";
+        previewNovaContainer.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 
-      // Seta observação
-      const obsCard = document.querySelector(`.obs-card[data-obs="${presetData.observation}"]`);
-      if (obsCard) {
-        obsCard.click();
-      }
-
-      // Preenche campos manuais
-      inputProteina.value = presetData.rotulo.proteina;
-      inputGordura.value = presetData.rotulo.gordura;
-      inputCinzas.value = presetData.rotulo.cinzas;
-      inputPrimeiroIngrediente.value = presetData.rotulo.primeiroIngrediente;
-
-      // Scroll suave até o formulário
-      formSection.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+  btnRemoveNova?.addEventListener("click", () => {
+    fileNova = null;
+    fotoNovaInput.value = "";
+    previewNovaImage.src = "";
+    previewNovaContainer.style.display = "none";
+    dropzoneNova.style.display = "block";
   });
 
   // ==========================================
@@ -393,23 +432,53 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /**
+   * Envia as duas imagens para o backend e retorna o comparativo da IA Gemini (Tira-Teima)
+   */
+  async function compararViaBackend(file1, file2, species, size, age) {
+    const file1ToSend = await comprimirImagemSeNecessario(file1);
+    const file2ToSend = await comprimirImagemSeNecessario(file2);
+    const backendUrl = await resolveBackendUrl();
+
+    const formData = new FormData();
+    formData.append('imageCurrent', file1ToSend);
+    formData.append('imageNew', file2ToSend);
+    formData.append('species', species);
+    formData.append('size', size || '');
+    formData.append('age', age);
+    formData.append('observation', 'normal');
+
+    const resp = await fetch(`${backendUrl}/api/analysis/compare`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!resp.ok) {
+      const errData = await resp.json().catch(() => ({ error: 'Erro de conexão com o servidor.' }));
+      throw new Error(errData.error || `Erro HTTP ${resp.status}`);
+    }
+
+    return await resp.json();
+  }
+
+  // Função utilitária global: limpar todos os asteriscos e formatação markdown do texto
+  function limpar(text) {
+    if (!text) return '';
+    return text
+      .replace(/\*\*\*/g, '')       // ***bold italic***
+      .replace(/\*\*/g, '')         // **bold**
+      .replace(/\*/g, '')           // *italic*
+      .replace(/_{1,3}/g, '')       // __underline__
+      .replace(/^#+\s*/gm, '')      // ## headers
+      .replace(/^---+$/gm, '')      // --- separators
+      .replace(/^===+$/gm, '')      // === separators
+      .replace(/^\s*[-–—]\s*$/gm, '') // linhas só com traço
+      .trim();
+  }
+
+  /**
    * Converte a resposta markdown do Raio-X da IA Gemini para o formato de resultado do frontend
    */
   function parseGeminiResponse(analysisText, species, size, age, observation) {
-    // Função utilitária: limpar todos os asteriscos e formatação markdown do texto
-    function limpar(text) {
-      if (!text) return '';
-      return text
-        .replace(/\*\*\*/g, '')       // ***bold italic***
-        .replace(/\*\*/g, '')         // **bold**
-        .replace(/\*/g, '')           // *italic*
-        .replace(/__/g, '')           // __underline__
-        .replace(/^#+\s*/gm, '')      // ## headers
-        .replace(/^---+$/gm, '')      // --- separators
-        .replace(/^===+$/gm, '')      // === separators
-        .replace(/^\s*[-–—]\s*$/gm, '') // linhas só com traço
-        .trim();
-    }
 
     // Extrair seções do markdown
     const sections = {};
@@ -584,18 +653,82 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Validação da foto obrigatória (Item 2 dos Requisitos: "Upload da foto do rótulo (obrigatório)")
-    if (!currentFile) {
-      alert("Atenção: O upload da foto do rótulo é obrigatório.\n\nPor favor, envie uma foto do verso da embalagem ou selecione um dos exemplos clínicos de teste acima.");
-      dropzone.scrollIntoView({ behavior: "smooth", block: "center" });
-      return;
-    }
-
-    // Coleta dados
+    // Coleta dados biológicos do pet
     const species = document.querySelector('input[name="species"]:checked')?.value || "cao";
     const size = document.querySelector('input[name="size"]:checked')?.value || "medio";
     const age = document.querySelector('input[name="age"]:checked')?.value || "adulto";
     const observation = document.querySelector('input[name="observation"]:checked')?.value || "normais";
+
+    // ── FLUXO A: MODO COMPARADOR (TIRA-TEIMA DE 2 RAÇÕES) ──
+    if (currentMode === 'compare') {
+      if (!fileAtual || !fileNova) {
+        alert("Atenção: Para o Tira-Teima, envie a foto da Ração Atual E da Nova Ração.");
+        stepCompareUpload.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      processingModal.style.display = "flex";
+      const procTitle = document.getElementById("processingTitle");
+      const procSub = document.getElementById("processingSub");
+      if (procTitle) procTitle.textContent = "Comparando as duas rações...";
+      if (procSub) procSub.textContent = "A IA está cruzando a composição e os ingredientes das duas embalagens.";
+
+      const steps = [
+        document.getElementById("pstep1"),
+        document.getElementById("pstep2"),
+        document.getElementById("pstep3"),
+        document.getElementById("pstep4")
+      ];
+      steps.forEach(s => {
+        if (!s) return;
+        s.classList.remove("active");
+        s.innerHTML = `<span>○</span> ${s.textContent.replace(/^[✓○]\s*/, '')}`;
+      });
+
+      if (steps[0]) {
+        steps[0].classList.add("active");
+        steps[0].innerHTML = `<span>✓</span> Enviando fotos das duas rações...`;
+      }
+
+      setTimeout(() => {
+        if (steps[1]) {
+          steps[1].classList.add("active");
+          steps[1].innerHTML = `<span>✓</span> Comparando fontes de carne e proteína...`;
+        }
+      }, 600);
+
+      try {
+        const response = await compararViaBackend(fileAtual, fileNova, species, size, age);
+
+        if (steps[2]) {
+          steps[2].classList.add("active");
+          steps[2].innerHTML = `<span>✓</span> Verificando aditivos e rendimento no prato...`;
+        }
+        await new Promise(r => setTimeout(r, 400));
+
+        if (steps[3]) {
+          steps[3].classList.add("active");
+          steps[3].innerHTML = `<span>✓</span> Gerando veredito da troca...`;
+        }
+        await new Promise(r => setTimeout(r, 300));
+
+        processingModal.style.display = "none";
+        renderizarComparativo(response.comparison);
+
+      } catch (err) {
+        processingModal.style.display = "none";
+        console.error('[COMPARE ERROR]', err);
+        alert(`Erro ao comparar rações: ${err.message}\n\nVerifique se as fotos estão nítidas e tente novamente.`);
+      }
+      return;
+    }
+
+    // ── FLUXO B: MODO INDIVIDUAL (1 RAÇÃO) ──
+    if (!currentFile) {
+      alert("Atenção: O upload da foto do rótulo é obrigatório.\n\nPor favor, tire uma foto do verso da embalagem com a câmera ou escolha da galeria.");
+      dropzone.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
 
     // Mapear valores do frontend para o formato esperado pelo backend
     const obsMap = { normais: 'normal', leve: 'leve', grave: 'grave' };
@@ -734,6 +867,36 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================
+  // 6B. FUNÇÃO UTILITÁRIA DE FORMATAÇÃO LIMPA
+  // ==========================================
+  function formatarTextoVisual(rawText) {
+    if (!rawText) return '';
+    // 1. Elimina todos os asteriscos (bold, italic, bullets soltos)
+    let text = rawText
+      .replace(/\*\*\*(.+?)\*\*\*/g, '<strong>$1</strong>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '$1')
+      .replace(/\*/g, '')
+      .replace(/_{1,3}/g, '')
+      .replace(/^#+\s*/gm, '')
+      .replace(/^[-=_]{3,}\s*$/gm, '')
+      .trim();
+
+    // 2. Transforma cada linha em tópico ou parágrafo legível
+    const lines = text.split('\n');
+    const htmlParts = lines.map(line => {
+      const trimmed = line.trim();
+      if (!trimmed) return '';
+      if (/^[•\-–—]\s*/.test(trimmed)) {
+        return `<div class="clean-bullet-item"><span class="bullet-dot">•</span><span>${trimmed.replace(/^[•\-–—]\s*/, '')}</span></div>`;
+      }
+      return `<p class="clean-paragraph">${trimmed}</p>`;
+    });
+
+    return htmlParts.filter(Boolean).join('');
+  }
+
+  // ==========================================
   // 7. RENDERIZAÇÃO DO VEREDITO (v2 — Raio-X)
   // ==========================================
   function renderizarResultado(res) {
@@ -845,34 +1008,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("descAditivos").textContent = res.oQueORotuloDiz.aditivos.explicacao;
 
-    // Função utilitária para renderizar texto da IA 100% limpo, sem asteriscos, com tópicos elegantes
-    function formatarTextoVisual(rawText) {
-      if (!rawText) return '';
-      // 1. Elimina todos os asteriscos (bold, italic, bullets soltos)
-      let text = rawText
-        .replace(/\*\*\*(.+?)\*\*\*/g, '<strong>$1</strong>')
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '$1')
-        .replace(/\*/g, '')
-        .replace(/_{1,3}/g, '')
-        .replace(/^#+\s*/gm, '')
-        .replace(/^[-=_]{3,}\s*$/gm, '')
-        .trim();
-
-      // 2. Transforma cada linha em tópico ou parágrafo legível
-      const lines = text.split('\n');
-      const htmlParts = lines.map(line => {
-        const trimmed = line.trim();
-        if (!trimmed) return '';
-        if (/^[•\-–—]\s*/.test(trimmed)) {
-          return `<div class="clean-bullet-item"><span class="bullet-dot">•</span><span>${trimmed.replace(/^[•\-–—]\s*/, '')}</span></div>`;
-        }
-        return `<p class="clean-paragraph">${trimmed}</p>`;
-      });
-
-      return htmlParts.filter(Boolean).join('');
-    }
-
     // 5. Qualidade da Proteína (se disponível)
     const qualProtCard = document.getElementById("qualidadeProteinaCard");
     if (qualProtCard && res.qualidadeProteina) {
@@ -930,20 +1065,155 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Exibir seção e scroll suave
+    if (resultCompareSection) resultCompareSection.style.display = "none";
     resultSection.style.display = "block";
     resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  // ==========================================
+  // 7B. RENDERIZAÇÃO DO TIRA-TEIMA (COMPARATIVO)
+  // ==========================================
+  function renderizarComparativo(text) {
+    if (!text) return;
+
+    // Extrair seções do markdown retornado pela IA
+    const sections = {};
+    const sectionRegex = /##\s+(.+)\n([\s\S]*?)(?=\n##\s|$)/g;
+    let match;
+    while ((match = sectionRegex.exec(text)) !== null) {
+      sections[match[1].trim().toLowerCase()] = match[2].trim();
+    }
+
+    // 1. Veredito da Troca
+    const vereditoSection = sections['veredito da troca'] || '';
+    const vereditoCard = document.getElementById("vereditoTrocaCard");
+    const vereditoBadge = document.getElementById("vereditoTrocaBadge");
+    const vereditoTexto = document.getElementById("vereditoTrocaTexto");
+
+    let badgeText = "TROCA RECOMENDADA";
+    let cardClass = "";
+
+    const vLower = vereditoSection.toLowerCase();
+    if (vLower.includes('não compensa') || vLower.includes('mantenha a atual') || vLower.includes('nao compensa')) {
+      badgeText = "NÃO COMPENSA TROCAR";
+      cardClass = "rejeitado";
+    } else if (vLower.includes('equivalente')) {
+      badgeText = "RAÇÕES EQUIVALENTES";
+      cardClass = "alerta";
+    }
+
+    if (vereditoBadge) vereditoBadge.textContent = badgeText;
+    if (vereditoCard) vereditoCard.className = `veredito-troca-card ${cardClass}`;
+    if (vereditoTexto) {
+      const cleanVeredito = vereditoSection
+        .replace(/^(TROCA RECOMENDADA|NÃO COMPENSA TROCAR|EQUIVALENTES|VALE A PENA TROCAR|MANTENHA A ATUAL)[^\n]*\n?/i, '')
+        .trim();
+      vereditoTexto.textContent = limpar(cleanVeredito);
+    }
+
+    // 2. Ração Atual
+    const atualSection = sections['ração atual'] || '';
+    const nomeAtualMatch = atualSection.match(/(?:nome|marca)[^:]*:\s*(.+)/i);
+    const notaAtualMatch = atualSection.match(/nota[^:]*:\s*(\d+[\.,]?\d*)/i);
+    const catAtualMatch = atualSection.match(/categoria[^:]*:\s*(.+)/i);
+    const forteAtualMatch = atualSection.match(/ponto\s+forte[^:]*:\s*(.+)/i);
+    const fracoAtualMatch = atualSection.match(/ponto\s+fraco[^:]*:\s*(.+)/i);
+
+    const elNomeAtual = document.getElementById("nomeRacaoAtual");
+    if (elNomeAtual) elNomeAtual.textContent = limpar(nomeAtualMatch?.[1] || "Ração Atual");
+
+    const elScoreAtual = document.getElementById("scoreRacaoAtual");
+    if (elScoreAtual) elScoreAtual.textContent = notaAtualMatch ? `${notaAtualMatch[1]}/10` : "--/10";
+
+    const elCatAtual = document.getElementById("categoriaRacaoAtual");
+    if (elCatAtual) elCatAtual.textContent = limpar(catAtualMatch?.[1] || "Categoria Comercial");
+
+    const elForteAtual = document.getElementById("forteRacaoAtual");
+    if (elForteAtual) elForteAtual.textContent = limpar(forteAtualMatch?.[1] || "Composição padrão de mercado");
+
+    const elFracoAtual = document.getElementById("fracoRacaoAtual");
+    if (elFracoAtual) elFracoAtual.textContent = limpar(fracoAtualMatch?.[1] || "Sem grandes pontos críticos");
+
+    // 3. Nova Ração
+    const novaSection = sections['nova ração'] || '';
+    const nomeNovaMatch = novaSection.match(/(?:nome|marca)[^:]*:\s*(.+)/i);
+    const notaNovaMatch = novaSection.match(/nota[^:]*:\s*(\d+[\.,]?\d*)/i);
+    const catNovaMatch = novaSection.match(/categoria[^:]*:\s*(.+)/i);
+    const forteNovaMatch = novaSection.match(/ponto\s+forte[^:]*:\s*(.+)/i);
+    const fracoNovaMatch = novaSection.match(/ponto\s+fraco[^:]*:\s*(.+)/i);
+
+    const elNomeNova = document.getElementById("nomeRacaoNova");
+    if (elNomeNova) elNomeNova.textContent = limpar(nomeNovaMatch?.[1] || "Nova Ração");
+
+    const elScoreNova = document.getElementById("scoreRacaoNova");
+    if (elScoreNova) elScoreNova.textContent = notaNovaMatch ? `${notaNovaMatch[1]}/10` : "--/10";
+
+    const elCatNova = document.getElementById("categoriaRacaoNova");
+    if (elCatNova) elCatNova.textContent = limpar(catNovaMatch?.[1] || "Categoria Comercial");
+
+    const elForteNova = document.getElementById("forteRacaoNova");
+    if (elForteNova) elForteNova.textContent = limpar(forteNovaMatch?.[1] || "Composição balanceada");
+
+    const elFracoNova = document.getElementById("fracoRacaoNova");
+    if (elFracoNova) elFracoNova.textContent = limpar(fracoNovaMatch?.[1] || "Sem grandes pontos críticos");
+
+    // Destaque visual para o card vencedor
+    const notaAtual = notaAtualMatch ? parseFloat(notaAtualMatch[1].replace(',', '.')) : 0;
+    const notaNova = notaNovaMatch ? parseFloat(notaNovaMatch[1].replace(',', '.')) : 0;
+    const cardAtual = document.getElementById("cardRacaoAtual");
+    const cardNova = document.getElementById("cardRacaoNova");
+
+    if (cardAtual && cardNova) {
+      if (notaNova > notaAtual) {
+        cardNova.className = "compare-racao-card card-vencedor";
+        cardAtual.className = "compare-racao-card";
+      } else if (notaAtual > notaNova) {
+        cardAtual.className = "compare-racao-card card-vencedor";
+        cardNova.className = "compare-racao-card";
+      } else {
+        cardAtual.className = "compare-racao-card";
+        cardNova.className = "compare-racao-card";
+      }
+    }
+
+    // 4. Comparativo Lado a Lado
+    const breakdownSection = sections['comparativo lado a lado'] || sections['comparativo direto'] || '';
+    const breakdownEl = document.getElementById("compareBreakdownText");
+    if (breakdownEl) {
+      breakdownEl.innerHTML = formatarTextoVisual(breakdownSection);
+    }
+
+    // 5. Dica de Ouro
+    const dicaSection = sections['dica de ouro para o tutor'] || sections['dica de ouro'] || '';
+    const dicaEl = document.getElementById("compareDicaTexto");
+    if (dicaEl && dicaSection) {
+      dicaEl.textContent = limpar(dicaSection);
+    }
+
+    // Exibir seção e scroll suave
+    resultSection.style.display = "none";
+    if (resultCompareSection) {
+      resultCompareSection.style.display = "block";
+      resultCompareSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
 
   // ==========================================
   // 8. BOTÕES AUXILIARES
   // ==========================================
-  btnNovaAnalise.addEventListener("click", () => {
+  btnNovaAnalise?.addEventListener("click", () => {
+    resultSection.style.display = "none";
+    if (resultCompareSection) resultCompareSection.style.display = "none";
+    heroSection.scrollIntoView({ behavior: "smooth" });
+  });
+
+  btnNovaComparacao?.addEventListener("click", () => {
+    if (resultCompareSection) resultCompareSection.style.display = "none";
     resultSection.style.display = "none";
     heroSection.scrollIntoView({ behavior: "smooth" });
   });
 
-  btnPrintReport.addEventListener("click", () => {
+  btnPrintReport?.addEventListener("click", () => {
     window.print();
   });
 });

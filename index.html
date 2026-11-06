@@ -62,16 +62,15 @@
       <div class="hero-header-block">
         <div class="hero-pill">
           <span class="pulse"></span>
-          Decodificação Imparcial de Rótulos Comerciais
+          Análise inteligente do rótulo da ração
         </div>
 
         <h2 class="hero-title">
-          Seu pet está comendo a ração certa? <span class="highlight">Descubra em 2 minutos.</span>
+          Seu pet está comendo bem? <span class="highlight">Descubra agora.</span>
         </h2>
 
         <p class="hero-subtitle">
-          Envie uma foto da embalagem no seu celular. Traduzimos as letrinhas miúdas de proteína, extrato etéreo,
-          matéria mineral e fonte primária de ingredientes com fundamentação técnica.
+          Tire uma foto do rótulo da ração e a gente te mostra, de forma clara e direta, se o alimento é bom ou não para o seu pet.
         </p>
       </div>
 
@@ -91,39 +90,31 @@
         </div>
       </div>
 
-      <!-- BARRA DE AMOSTRAS DE TESTE (MOBILE ERGONÔMICA) -->
-      <div class="quick-presets-bar">
-        <div class="presets-header">
-          <div class="presets-title-wrap">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="16" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-            <strong>Amostras de Rotulagem para Demonstração:</strong>
-          </div>
-          <span class="presets-sub">Clique em um perfil para testar instantaneamente:</span>
-        </div>
-        <div class="presets-buttons">
-          <button type="button" class="btn-preset" data-preset="super_premium_cao">
-            <span class="preset-indicator status-green"></span>
-            Ração Super Premium (Cão)
-          </button>
-          <button type="button" class="btn-preset" data-preset="standard_carne_ossos_cao">
-            <span class="preset-indicator status-red"></span>
-            Ração Econômica (Cão - Alerta)
-          </button>
-          <button type="button" class="btn-preset" data-preset="premium_gato">
-            <span class="preset-indicator status-green"></span>
-            Ração Premium (Gato Castrado)
-          </button>
-          <button type="button" class="btn-preset" data-preset="subprodutos_gato">
-            <span class="preset-indicator status-red"></span>
-            Ração c/ Subprodutos (Gato)
-          </button>
-        </div>
-      </div>
+      <!-- Presets de demonstração removidos para UX limpa -->
     </section>
+
+    <!-- ==========================================
+         SELETOR DE MODO: 1 RAÇÃO OU TIRA-TEIMA (COMPARAR 2)
+         ========================================== -->
+    <div class="mode-tabs-container">
+      <button type="button" class="mode-tab active" id="tabModoAnalise" data-mode="single">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+          <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+        Analisar 1 Ração
+      </button>
+      <button type="button" class="mode-tab" id="tabModoComparar" data-mode="compare">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"></path>
+          <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"></path>
+          <path d="M7 21h10"></path>
+          <path d="M12 3v18"></path>
+          <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path>
+        </svg>
+        Tira-Teima (Comparar 2)
+      </button>
+    </div>
 
     <!-- ==========================================
          FORMULÁRIO DE ANÁLISE OTIMIZADO PARA SMARTPHONE
@@ -131,16 +122,15 @@
     <section class="analysis-card" id="formSection">
       <form id="racaoForm" novalidate>
 
-        <!-- ETAPA 1: UPLOAD DA FOTO DO RÓTULO -->
-        <div class="form-step">
+        <!-- ETAPA 1A: UPLOAD DE 1 RÓTULO (MODO INDIVIDUAL) -->
+        <div class="form-step" id="stepSingleUpload">
           <div class="form-step-title">
             <span class="step-num">1</span>
-            <h3>Registro Fotográfico da Embalagem</h3>
+            <h3>Foto do Rótulo</h3>
             <span class="step-required">*Obrigatório</span>
           </div>
           <p class="form-step-desc">
-            Capture com a câmera do smartphone a tabela de <strong>Níveis de Garantia</strong> ou a <strong>Composição
-              Básica</strong> no verso do saco.
+            Tire uma foto nítida da tabela de <strong>Níveis de Garantia</strong> ou da <strong>lista de ingredientes</strong> no verso do saco.
           </p>
 
           <div class="upload-dropzone" id="dropzoneArea">
@@ -170,17 +160,62 @@
           </div>
         </div>
 
+        <!-- ETAPA 1B: UPLOAD DE 2 RÓTULOS (MODO TIRA-TEIMA) -->
+        <div class="form-step" id="stepCompareUpload" style="display:none;">
+          <div class="form-step-title">
+            <span class="step-num">1</span>
+            <h3>Fotos das Duas Rações para Comparar</h3>
+            <span class="step-required">*Envie as 2 fotos</span>
+          </div>
+          <p class="form-step-desc">
+            Tire foto do verso de cada embalagem (tabela de níveis ou ingredientes) para o tira-teima da IA.
+          </p>
+
+          <div class="compare-upload-grid">
+            <!-- Ração Atual -->
+            <div class="compare-slot">
+              <span class="slot-badge slot-current">Ração Atual (a que já come)</span>
+              <div class="upload-dropzone dropzone-compact" id="dropzoneAtual">
+                <input type="file" id="fotoAtualInput" accept="image/jpeg,image/png,image/webp,image/*">
+                <div class="upload-icon-small">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                </div>
+                <div class="upload-text-small" id="textoSlotAtual">Foto da Ração Atual</div>
+              </div>
+              <div class="image-preview-container preview-compact" id="previewAtualContainer" style="display:none;">
+                <img id="previewAtualImage" class="preview-image" alt="Ração Atual">
+                <button type="button" class="preview-remove-btn-compact" id="btnRemoveAtual">Trocar</button>
+              </div>
+            </div>
+
+            <!-- Nova Ração -->
+            <div class="compare-slot">
+              <span class="slot-badge slot-new">Nova Ração (quer comprar)</span>
+              <div class="upload-dropzone dropzone-compact" id="dropzoneNova">
+                <input type="file" id="fotoNovaInput" accept="image/jpeg,image/png,image/webp,image/*">
+                <div class="upload-icon-small">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                </div>
+                <div class="upload-text-small" id="textoSlotNova">Foto da Nova Ração</div>
+              </div>
+              <div class="image-preview-container preview-compact" id="previewNovaContainer" style="display:none;">
+                <img id="previewNovaImage" class="preview-image" alt="Nova Ração">
+                <button type="button" class="preview-remove-btn-compact" id="btnRemoveNova">Trocar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <hr class="form-section-divider">
 
         <!-- ETAPA 2: PERFIL DO PET (ESPÉCIE, PORTE, IDADE) -->
         <div class="form-step">
           <div class="form-step-title">
             <span class="step-num">2</span>
-            <h3>Perfil Biológico do Animal</h3>
+            <h3>Sobre o Seu Pet</h3>
             <span class="step-required">*Obrigatório</span>
           </div>
-          <p class="form-step-desc">A demanda por proteína, gordura e minerais varia conforme espécie e estágio
-            fisiológico.</p>
+          <p class="form-step-desc">Selecione a espécie, porte e idade. Isso influencia o que é saudável para ele.</p>
 
           <!-- SELEÇÃO DE ESPÉCIE (Com suporte a Fase 2) -->
           <label class="field-label">Espécie Animal:</label>
@@ -230,53 +265,6 @@
                 <span class="species-sub">Gatos</span>
               </div>
             </label>
-
-            <!-- Aves (Fase 2 - Futuro) -->
-            <div class="species-card disabled" title="Disponível na Fase 2 de expansão">
-              <span class="species-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path d="M16 7h.01"></path>
-                  <path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 18Z"></path>
-                  <path d="m20 7 2 .5-2 .5"></path>
-                  <path d="M10 18v3"></path>
-                  <path d="M14 17.75V21"></path>
-                  <path d="M7 18a6 6 0 0 0 3.84-10.61"></path>
-                </svg>
-              </span>
-              <span class="species-name">Aves</span>
-              <span class="phase-badge">Fase 2</span>
-            </div>
-
-            <!-- Coelhos (Fase 2 - Futuro) -->
-            <div class="species-card disabled" title="Disponível na Fase 2 de expansão">
-              <span class="species-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path d="M7 10V3a2 2 0 0 1 4 0v7"></path>
-                  <path d="M13 10V3a2 2 0 0 1 4 0v7"></path>
-                  <rect width="16" height="12" x="4" y="9" rx="6"></rect>
-                  <path d="M9 14h.01"></path>
-                  <path d="M15 14h.01"></path>
-                </svg>
-              </span>
-              <span class="species-name">Coelhos</span>
-              <span class="phase-badge">Fase 2</span>
-            </div>
-
-            <!-- Répteis (Fase 2 - Futuro) -->
-            <div class="species-card disabled" title="Disponível na Fase 2 de expansão">
-              <span class="species-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path d="M12 2a4 4 0 0 0-4 4c0 1.5.8 2.8 2 3.5V14a6 6 0 1 0 4 0V9.5c1.2-.7 2-2 2-3.5a4 4 0 0 0-4-4Z">
-                  </path>
-                  <path d="M6 10l-3 2"></path>
-                  <path d="M18 10l3 2"></path>
-                  <path d="M6 18l-3 2"></path>
-                  <path d="M18 18l3 2"></path>
-                </svg>
-              </span>
-              <span class="species-name">Répteis</span>
-              <span class="phase-badge">Fase 2</span>
-            </div>
           </div>
 
           <!-- DETALHES DE PORTE E IDADE -->
@@ -327,11 +315,11 @@
         <div class="form-step">
           <div class="form-step-title">
             <span class="step-num">3</span>
-            <h3>Avaliação Clínica Observacional</h3>
+            <h3>Como Está Seu Pet?</h3>
             <span class="step-badge-key">Critério Físico</span>
           </div>
           <p class="form-step-desc">
-            "Como está a qualidade da pelagem e a consistência fecal do seu pet recentemente?"
+            Como está a pelagem e as fezes do seu pet ultimamente?
           </p>
 
           <div class="observation-options" id="obsGroup">
@@ -345,8 +333,8 @@
                 </svg>
               </span>
               <div class="obs-info">
-                <strong>Parâmetros Fisiológicos Normais</strong>
-                <p>Pelagem brilhante, ausência de prurido excessivo e fezes cilíndricas firmes.</p>
+                <strong>Tudo normal</strong>
+                <p>Pelo bonito e brilhante, fezes firmes, tudo certo.</p>
               </div>
             </label>
 
@@ -361,8 +349,8 @@
                 </svg>
               </span>
               <div class="obs-info">
-                <strong>Levemente Opaco / Fezes Amolecidas</strong>
-                <p>Queda atípica de pelos, perda de viço ou consistência fecal pastosa com odor acentuado.</p>
+                <strong>Pelo opaco ou fezes moles</strong>
+                <p>Pelagem sem brilho, solta pelos mais que o normal ou fezes pastosas.</p>
               </div>
             </label>
 
@@ -377,8 +365,8 @@
                 </svg>
               </span>
               <div class="obs-info">
-                <strong>Quadro Desfavorável / Prurido Constante</strong>
-                <p>Coceira contínua, áreas alopécicas, lambedura compulsiva ou episódios recorrentes de diarreia.</p>
+                <strong>Problemas visíveis</strong>
+                <p>Coceira frequente, falhas no pelo, diarreia recorrente.</p>
               </div>
             </label>
           </div>
@@ -433,7 +421,7 @@
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          Gerar Veredito Técnico de Rotulagem
+          <span id="btnSubmitText">Analisar Ração Agora</span>
         </button>
 
       </form>
@@ -445,25 +433,25 @@
     <div class="processing-modal" id="processingModal">
       <div class="processing-card">
         <div class="spinner-circle"></div>
-        <h3 class="processing-card-title">
-          Analisando Rotulagem Nutricional...
+        <h3 class="processing-card-title" id="processingTitle">
+          Analisando o rótulo da ração...
         </h3>
-        <p class="processing-card-sub">
-          Cruzando padrões de exigência biológica da espécie com a composição analítica declarada.
+        <p class="processing-card-sub" id="processingSub">
+          A IA está lendo os ingredientes e níveis de garantia da foto.
         </p>
 
         <div class="processing-steps">
           <div class="proc-step-item active" id="pstep1">
-            <span>✓</span> Verificando proteína bruta, extrato etéreo e matéria mineral...
+            <span>✓</span> Enviando imagem do rótulo...
           </div>
           <div class="proc-step-item" id="pstep2">
-            <span>○</span> Identificando qualidade biológica do 1º ingrediente da composição...
+            <span>○</span> Identificando ingredientes e carne real...
           </div>
           <div class="proc-step-item" id="pstep3">
-            <span>○</span> Correlacionando com a avaliação física de pelagem e fezes...
+            <span>○</span> Verificando corantes e conservantes (BHA/BHT)...
           </div>
           <div class="proc-step-item" id="pstep4">
-            <span>○</span> Consolidando semáforo analítico e diretrizes de manejo...
+            <span>○</span> Montando a nota e veredito final...
           </div>
         </div>
       </div>
@@ -725,68 +713,125 @@
 
       </div>
 
-      <!-- Transparência removida para UX limpa -->
+      <!-- CARD DE CONVITE AO TIRA-TEIMA (ALTA CONVERSÃO) -->
+      <div class="invite-compare-card">
+        <div class="invite-compare-info">
+          <span class="invite-badge">⚔️ Tira-Teima de Balcão</span>
+          <h4>Ficou em dúvida entre esta ração e outra?</h4>
+          <p>Tire foto da outra ração e a IA te diz na hora qual das duas é a vencedora e se compensa a troca.</p>
+        </div>
+        <button type="button" class="btn-invite-compare" id="btnIrParaComparador">
+          Comparar com Outra Ração
+        </button>
+      </div>
 
     </section>
 
     <!-- ==========================================
-         SEÇÃO EDUCATIVA COMPLEMENTAR
+         PÁGINA DE RESULTADO DO COMPARATIVO (TIRA-TEIMA)
          ========================================== -->
-    <section class="education-section">
-      <div class="section-heading">
-        <h2>Diretrizes Técnicas de Rotulagem Comercial</h2>
-        <p>Critérios objetivos estabelecidos pela zootecnia e nutrição animal</p>
-      </div>
+    <section class="result-section" id="resultCompareSection" style="display:none;">
 
-      <div class="education-cards">
-        <div class="edu-card">
-          <div class="edu-card-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="4 17 10 11 4 5"></polyline>
-              <line x1="12" y1="19" x2="20" y2="19"></line>
-            </svg>
-          </div>
-          <h3>A Ordem Decrescente de Ingredientes</h3>
-          <p>
-            Por instrução normativa do Ministério da Agricultura (MAPA), os ingredientes devem constar obrigatoriamente
-            em ordem decrescente de peso. O primeiro item representa a maior fração da fórmula.
-          </p>
+      <!-- Topo do Resultado do Comparativo -->
+      <div class="result-top-bar">
+        <div>
+          <span class="report-badge-meta">⚔️ Tira-Teima Nutricional</span>
+          <h2 class="result-main-heading">Resultado da Comparação</h2>
         </div>
-
-        <div class="edu-card">
-          <div class="edu-card-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2v20"></path>
-              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        <div class="result-actions">
+          <button type="button" class="btn-secondary" id="btnNovaComparacao">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
             </svg>
-          </div>
-          <h3>Matéria Mineral / Cinzas (&gt;10%)</h3>
-          <p>
-            A fração de cinzas indica o resíduo inorgânico mineral pós-combustão laboratorial. Concentrações superiores
-            a 10% frequentemente refletem carcaças e ossos moídos, demandando maior esforço glomerular renal.
-          </p>
-        </div>
-
-        <div class="edu-card">
-          <div class="edu-card-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
-            </svg>
-          </div>
-          <h3>Corantes Artificiais e Aditivos</h3>
-          <p>
-            Cães e gatos apresentam espectro visual dicromático e seleção alimentar mediada principalmente pelo olfato.
-            Pigmentações artificiais atendem a razões estéticas mercadológicas humanas, sem benefício nutricional ao
-            animal.
-          </p>
+            Nova Comparação
+          </button>
         </div>
       </div>
+
+      <!-- CARD: VEREDITO DA TROCA (DESTAQUE MÁXIMO) -->
+      <div class="veredito-troca-card" id="vereditoTrocaCard">
+        <div class="veredito-troca-badge" id="vereditoTrocaBadge">TROCA RECOMENDADA</div>
+        <h3 class="veredito-troca-titulo" id="vereditoTrocaTitulo">Veredito do Especialista</h3>
+        <p class="veredito-troca-texto" id="vereditoTrocaTexto"></p>
+      </div>
+
+      <!-- CARDS FRENTE A FRENTE DAS DUAS RAÇÕES -->
+      <div class="compare-cards-row">
+        <!-- Ração Atual -->
+        <div class="compare-racao-card" id="cardRacaoAtual">
+          <div class="compare-racao-header">
+            <span class="compare-tag tag-atual">Ração Atual</span>
+            <div class="compare-score" id="scoreRacaoAtual">--/10</div>
+          </div>
+          <h4 class="compare-racao-nome" id="nomeRacaoAtual">Ração Atual</h4>
+          <div class="compare-categoria" id="categoriaRacaoAtual">Standard</div>
+          <div class="compare-pro-con">
+            <div class="pro-item">
+              <span class="pro-icon">✅</span>
+              <span id="forteRacaoAtual">Analisando...</span>
+            </div>
+            <div class="con-item">
+              <span class="con-icon">⚠️</span>
+              <span id="fracoRacaoAtual">Analisando...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nova Ração -->
+        <div class="compare-racao-card card-vencedor" id="cardRacaoNova">
+          <div class="compare-racao-header">
+            <span class="compare-tag tag-nova">Nova Ração</span>
+            <div class="compare-score" id="scoreRacaoNova">--/10</div>
+          </div>
+          <h4 class="compare-racao-nome" id="nomeRacaoNova">Nova Ração</h4>
+          <div class="compare-categoria" id="categoriaRacaoNova">Super Premium</div>
+          <div class="compare-pro-con">
+            <div class="pro-item">
+              <span class="pro-icon">✅</span>
+              <span id="forteRacaoNova">Analisando...</span>
+            </div>
+            <div class="con-item">
+              <span class="con-icon">⚠️</span>
+              <span id="fracoRacaoNova">Analisando...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD: COMPARATIVO DETALHADO PONTO A PONTO -->
+      <div class="result-card">
+        <div class="result-card-header">
+          <span class="result-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </span>
+          <h3 class="result-card-title">Comparativo Lado a Lado</h3>
+        </div>
+        <div class="compare-breakdown-content" id="compareBreakdownText">
+          <!-- Gerado dinamicamente -->
+        </div>
+      </div>
+
+      <!-- CARD: DICA DE TRANSIÇÃO (7 DIAS) -->
+      <div class="transicao-guia-card">
+        <div class="transicao-icon">🥣</div>
+        <div class="transicao-info">
+          <h4>Como Fazer a Troca Sem Dor de Barriga (Regra dos 7 Dias)</h4>
+          <p id="compareDicaTexto">
+            Dias 1 e 2: 75% ração atual + 25% nova. Dias 3 e 4: 50% de cada. Dias 5 e 6: 25% atual + 75% nova. Dia 7: 100% ração nova. Isso evita diarreia e vômitos pela troca brusca.
+          </p>
+        </div>
+      </div>
+
     </section>
   </main>
 
   <!-- ==========================================
-       FOOTER SÓBRIO & PROFISSIONAL
+       FOOTER SÓBRIO & DIRETO
        ========================================== -->
   <footer class="site-footer">
     <div class="container">
@@ -798,16 +843,11 @@
             </svg>
             <h3>Tradutor de Ração</h3>
           </div>
-          <p>Plataforma de apoio informativo ao tutor consciente e suporte à medicina veterinária preventiva.</p>
-        </div>
-        <div class="footer-meta">
-          <p>Arquitetura expansível: Fase 1 (Caninos &amp; Felinos) | Fase 2 (Aves, Coelhos e Répteis).</p>
-          <p>Desenvolvido em conformidade com normas técnicas de nutrição e rotulagem animal.</p>
+          <p>Análise independente e imparcial de rótulos de ração para cães e gatos.</p>
         </div>
       </div>
       <div class="footer-copy">
-        <p>&copy; 2026 Tradutor de Ração. Análise estritamente informativa de rotulagem. Não substitui consulta com
-          médico-veterinário.</p>
+        <p>&copy; 2026 Tradutor de Ração. Análise informativa baseada no rótulo. Consulte sempre um médico-veterinário.</p>
       </div>
     </div>
   </footer>

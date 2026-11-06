@@ -256,3 +256,150 @@ export async function analyzeLabel(imageBuffer, mimeType, petData) {
   throw lastError || new Error('Não foi possível obter resposta dos modelos de IA no momento.');
 }
 
+/**
+ * Monta o prompt do "Tira-Teima de Rações" — comparativo frente a frente
+ */
+function buildComparePrompt(petData) {
+  const { species, size, age } = petData;
+  const speciesName = species === 'cao' ? 'cão' : 'gato';
+  const sizeText = species === 'cao' ? ` de porte ${size}` : '';
+
+  return `Você é um ESPECIALISTA ZOOTECNISTA e perito em nutrição de cães e gatos no Brasil.
+O tutor está em dúvida no pet shop ou na internet e quer comparar DUAS RAÇÕES para o seu pet:
+- Espécie: ${speciesName}${sizeText}
+- Fase de vida: ${age}
+
+A PRIMEIRA IMAGEM é a RAÇÃO ATUAL (a que o animal já consome).
+A SEGUNDA IMAGEM é a NOVA RAÇÃO (a que o tutor está pensando em comprar).
+
+Sua missão é dar um TIRA-TEIMA DEFINITIVO, IMPARCIAL e CLARO.
+
+ESTRUTURA OBRIGATÓRIA DA RESPOSTA (use EXATAMENTE estes títulos):
+
+## Veredito da Troca
+Na primeira linha coloque apenas uma destas três opções:
+TROCA RECOMENDADA
+NÃO COMPENSA TROCAR
+EQUIVALENTES
+Em seguida, explique o motivo em 2 frases diretas em linguagem simples.
+
+## Ração Atual
+Nome ou marca identificada: [nome]
+Nota: [X.X]/10
+Categoria: [Econômica, Standard, Premium ou Super Premium]
+Ponto forte: [1 frase]
+Ponto fraco: [1 frase destacando corantes, BHA, BHT ou excesso de cinzas se houver]
+
+## Nova Ração
+Nome ou marca identificada: [nome]
+Nota: [X.X]/10
+Categoria: [Econômica, Standard, Premium ou Super Premium]
+Ponto forte: [1 frase]
+Ponto fraco: [1 frase destacando corantes, BHA, BHT ou excesso de cinzas se houver]
+
+## Comparativo Lado a Lado
+- Carne e Proteína: [Qual tem melhor fonte biológica real]
+- Aditivos Químicos: [Qual é mais limpa e sem corantes artificiais/BHA/BHT]
+- Digestibilidade e Saciedade: [Qual rende mais por porção e gera menos volume de fezes]
+- Custo x Rendimento: [Explique se a diferença de preço compensa pelo rendimento]
+
+## Dica de Ouro para o Tutor
+Dê uma orientação prática de 2 frases sobre a transição de 7 dias entre os alimentos.
+
+REGRAS:
+1. NUNCA use asteriscos (*) nem marcações de negrito markdown. Escreva tudo em texto limpo.
+2. Use linguagem amigável, sincera e acessível para qualquer pessoa leiga.`;
+}
+
+/**
+ * Compara dois rótulos frente a frente usando IA Gemini
+ */
+export async function compareLabels(image1Buffer, mimeType1, image2Buffer, mimeType2, petData) {
+  const apiKey = process.env.GEMINI_API_KEY;
+
+  if (!apiKey || apiKey === 'SUA_CHAVE_AQUI') {
+    throw new Error('GEMINI_API_KEY não configurada no servidor.');
+  }
+
+  const base64Image1 = image1Buffer.toString('base64');
+  const base64Image2 = image2Buffer.toString('base64');
+  const prompt = buildComparePrompt(petData);
+
+  const requestBody = {
+    contents: [
+      {
+        parts: [
+          {
+            text: 'IMAGEM 1: Rótulo da RAÇÃO ATUAL que o animal já come:'
+          },
+          {
+            inlineData: {
+              mimeType: mimeType1,
+              data: base64Image1,
+            },
+          },
+          {
+            text: 'IMAGEM 2: Rótulo da NOVA RAÇÃO que o tutor está pensando em comprar:'
+          },
+          {
+            inlineData: {
+              mimeType: mimeType2,
+              data: base64Image2,
+            },
+          },
+          {
+            text: prompt,
+          },
+        ],
+      },
+    ],
+    generationConfig: {
+      temperature: 0.3,
+      topP: 0.85,
+      topK: 40,
+      maxOutputTokens: 3000,
+    },
+  };
+
+  let lastError;
+  for (const model of GEMINI_MODELS) {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 55000);
+
+      console.log(`[GEMINI-COMPARE] Comparando com modelo: ${model}...`);
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.warn(`[GEMINI-COMPARE] ${model} → HTTP ${response.status}:`, errorData.slice(0, 120));
+        if (response.status === 403) {
+          throw new Error('Chave da API Gemini sem permissão ou inválida.');
+        }
+        continue;
+      }
+
+      const data = await response.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) continue;
+
+      console.log(`[GEMINI-COMPARE] ✅ Comparativo gerado com sucesso via ${model} (${text.length} chars)`);
+      return text;
+
+    } catch (err) {
+      lastError = err;
+      console.warn(`[GEMINI-COMPARE] ${model} falhou:`, err.message?.slice(0, 80));
+    }
+  }
+
+  throw lastError || new Error('Não foi possível obter o comparativo da IA no momento.');
+}
+

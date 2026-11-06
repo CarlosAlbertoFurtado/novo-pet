@@ -13,7 +13,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import { validateAnalysisInput, validateImageFile } from '../middleware/validator.js';
-import { analyzeLabel } from '../services/gemini.js';
+import { analyzeLabel, compareLabels } from '../services/gemini.js';
 
 export function createAnalysisRouter() {
   const router = Router();
@@ -74,14 +74,65 @@ export function createAnalysisRouter() {
         success: true,
         analysis: analysisText,
         timestamp: new Date().toISOString(),
-        disclaimer: 'Esta é uma análise informativa de rotulagem. Não substitui a consulta com um médico-veterinário.',
       });
 
     } catch (err) {
-      // Descartar imagem em caso de erro também
       if (req.file) req.file.buffer = null;
-
       console.error('[ANALYSIS ERROR]', err.message);
+      next(err);
+    }
+  });
+
+  // ── POST /api/analysis/compare ────────────────────────────
+  // Compara dois rótulos frente a frente (Tira-Teima de Rações)
+  router.post('/compare', upload.fields([
+    { name: 'imageCurrent', maxCount: 1 },
+    { name: 'imageNew', maxCount: 1 }
+  ]), async (req, res, next) => {
+    try {
+      const file1 = req.files?.imageCurrent?.[0];
+      const file2 = req.files?.imageNew?.[0];
+
+      if (!file1 || !file2) {
+        return res.status(400).json({ error: 'Envie as fotos das duas rações para comparar.' });
+      }
+
+      const val1 = validateImageFile(file1);
+      const val2 = validateImageFile(file2);
+      if (!val1.valid) return res.status(400).json({ error: `Ração Atual: ${val1.error}` });
+      if (!val2.valid) return res.status(400).json({ error: `Nova Ração: ${val2.error}` });
+
+      const inputValidation = validateAnalysisInput(req.body);
+      if (!inputValidation.valid) {
+        return res.status(400).json({ error: inputValidation.error });
+      }
+
+      console.log('[COMPARE] Iniciando comparativo...', {
+        species: inputValidation.data.species,
+        age: inputValidation.data.age,
+      });
+
+      const compareText = await compareLabels(
+        file1.buffer,
+        file1.mimetype,
+        file2.buffer,
+        file2.mimetype,
+        inputValidation.data
+      );
+
+      file1.buffer = null;
+      file2.buffer = null;
+
+      res.json({
+        success: true,
+        comparison: compareText,
+        timestamp: new Date().toISOString(),
+      });
+
+    } catch (err) {
+      if (req.files?.imageCurrent?.[0]) req.files.imageCurrent[0].buffer = null;
+      if (req.files?.imageNew?.[0]) req.files.imageNew[0].buffer = null;
+      console.error('[COMPARE ERROR]', err.message);
       next(err);
     }
   });

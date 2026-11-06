@@ -2021,3 +2021,359 @@ body {
 .honesty-banner {
   display: none !important;
 }
+
+/* ==========================================
+   SELETOR DE MODO (1 RAÇÃO VS COMPARAR 2)
+   ========================================== */
+.mode-tabs-container {
+  display: flex;
+  gap: 8px;
+  background: #f1f5f9;
+  padding: 6px;
+  border-radius: 12px;
+  margin: 0 auto 20px auto;
+  max-width: 520px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.mode-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mode-tab:hover {
+  color: #0f172a;
+}
+
+.mode-tab.active {
+  background: #ffffff;
+  color: #0d9488;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* GRID DE UPLOAD COMPARATIVO */
+.compare-upload-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+  .compare-upload-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.compare-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.slot-badge {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.slot-badge.slot-current {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.slot-badge.slot-new {
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+.dropzone-compact {
+  padding: 24px 14px !important;
+  min-height: 140px;
+}
+
+.upload-icon-small {
+  color: #0d9488;
+  margin-bottom: 6px;
+}
+
+.upload-text-small {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #334155;
+  text-align: center;
+}
+
+.preview-compact {
+  max-height: 160px;
+}
+
+.preview-compact img {
+  max-height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.preview-remove-btn-compact {
+  margin-top: 6px;
+  padding: 4px 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  align-self: center;
+}
+
+/* CARD DE VEREDITO DA TROCA (TIRA-TEIMA) */
+.veredito-troca-card {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  border: 2px solid #86efac;
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.veredito-troca-card.alerta {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border-color: #fde047;
+}
+
+.veredito-troca-card.rejeitado {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border-color: #fca5a5;
+}
+
+.veredito-troca-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: #16a34a;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.veredito-troca-card.alerta .veredito-troca-badge {
+  background: #d97706;
+}
+
+.veredito-troca-card.rejeitado .veredito-troca-badge {
+  background: #dc2626;
+}
+
+.veredito-troca-titulo {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+}
+
+.veredito-troca-texto {
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: #334155;
+  margin: 0;
+}
+
+/* CARDS FRENTE A FRENTE */
+.compare-cards-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+  .compare-cards-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.compare-racao-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.compare-racao-card.card-vencedor {
+  border: 2px solid #0d9488;
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.12);
+}
+
+.compare-racao-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.compare-tag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.tag-atual {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.tag-nova {
+  background: #ccfbf1;
+  color: #0d9488;
+}
+
+.compare-score {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.compare-racao-nome {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.compare-categoria {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.compare-pro-con {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.pro-item, .con-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.pro-item { color: #166534; }
+.con-item { color: #854d0e; }
+
+/* GUIA DE TRANSIÇÃO (7 DIAS) */
+.transicao-guia-card {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-top: 16px;
+}
+
+.transicao-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.transicao-info h4 {
+  margin: 0 0 6px 0;
+  font-size: 0.98rem;
+  color: #0f172a;
+}
+
+.transicao-info p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+/* CARD DE CONVITE AO TIRA-TEIMA */
+.invite-compare-card {
+  background: #f0fdfa;
+  border: 1px solid #99f6e4;
+  border-radius: 14px;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+@media (max-width: 600px) {
+  .invite-compare-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.invite-badge {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #0d9488;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.invite-compare-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 1.05rem;
+  color: #0f172a;
+}
+
+.invite-compare-info p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #475569;
+}
+
+.btn-invite-compare {
+  background: #0d9488;
+  color: #ffffff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.btn-invite-compare:hover {
+  background: #0f766e;
+}
