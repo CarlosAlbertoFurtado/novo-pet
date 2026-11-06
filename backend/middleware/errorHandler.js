@@ -41,6 +41,13 @@ export function errorHandler(err, req, res, _next) {
     });
   }
 
+  // Erros de limite de arquivos (Multer)
+  if (err.code === 'LIMIT_FILE_COUNT') {
+    return res.status(400).json({
+      error: 'Número de arquivos excedido.',
+    });
+  }
+
   // Erro de JSON malformado
   if (err.type === 'entity.parse.failed') {
     return res.status(400).json({

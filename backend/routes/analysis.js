@@ -23,7 +23,7 @@ export function createAnalysisRouter() {
     storage: multer.memoryStorage(),
     limits: {
       fileSize: parseInt(process.env.MAX_FILE_SIZE, 10) || 10 * 1024 * 1024,
-      files: 1,           // Apenas 1 arquivo por vez
+      files: 2,           // Até 2 arquivos (comparativo usa 2)
       fields: 10,         // Máximo de 10 campos texto
       fieldSize: 500,     // Máximo de 500 bytes por campo texto
     },
@@ -132,7 +132,7 @@ export function createAnalysisRouter() {
     } catch (err) {
       if (req.files?.imageCurrent?.[0]) req.files.imageCurrent[0].buffer = null;
       if (req.files?.imageNew?.[0]) req.files.imageNew[0].buffer = null;
-      console.error('[COMPARE ERROR]', err.message);
+      console.error('[COMPARE ERROR]', err.message, err.stack?.slice(0, 300));
       next(err);
     }
   });
