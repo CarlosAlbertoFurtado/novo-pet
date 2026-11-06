@@ -530,10 +530,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const ingredientesAnalisados = ingredientLines.map(line => {
       const clean = line.replace(/^[\s\-*•]+/, '').trim();
       let status = 'neutro';
-      if (clean.includes('✅')) status = 'positivo';
-      else if (clean.includes('🚫')) status = 'negativo';
-      else if (clean.includes('⚠️')) status = 'atencao';
-      const text = clean.replace(/[✅⚠️🚫]/g, '').trim();
+      if (clean.includes('✅') || /\bPOSITIVO\b/i.test(clean)) status = 'positivo';
+      else if (clean.includes('🚫') || /\bEVIT[ÁA]VEL\b/i.test(clean)) status = 'negativo';
+      else if (clean.includes('⚠️') || /\bATEN[ÇC][ÃA]O\b/i.test(clean)) status = 'atencao';
+      const text = clean.replace(/[✅⚠️🚫]/g, '').replace(/\b(POSITIVO|ATENÇÃO|ATENÇÃO|EVITÁVEL)\b/gi, '').trim();
       const parts = text.split(/[:–—]\s*/);
       return {
         nome: limpar(parts[0] || text),
@@ -966,9 +966,14 @@ document.addEventListener("DOMContentLoaded", () => {
         res.ingredientesAnalisados.forEach(ing => {
           const item = document.createElement("div");
           item.className = `raiox-ingrediente-item ${ing.status}`;
-          const iconMap = { positivo: '✅', atencao: '⚠️', negativo: '🚫', neutro: '➖' };
+          const iconSvgMap = {
+            positivo: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+            atencao: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>',
+            negativo: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>',
+            neutro: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>'
+          };
           item.innerHTML = `
-            <span class="raiox-icon">${iconMap[ing.status] || '➖'}</span>
+            <span class="raiox-icon">${iconSvgMap[ing.status] || iconSvgMap.neutro}</span>
             <div class="raiox-info">
               <strong>${ing.nome}</strong>
               ${ing.explicacao ? `<span>${ing.explicacao}</span>` : ''}

@@ -55,14 +55,14 @@
         </h2>
 
         <p class="hero-subtitle">
-          Tire uma foto dos ingredientes no verso da embalagem. Descubra em segundos a qualidade nutricional da fórmula e se o preço que você paga realmente compensa.
+          Tire uma foto dos ingredientes no verso da embalagem. Descubra em segundos a qualidade nutricional da fórmula
+          e se o preço que você paga realmente compensa.
         </p>
       </div>
 
       <!-- FOTOGRAFIA DO APP (LIMPA E DIRETA) -->
       <div class="hero-media-card">
-        <img src="hero-banner.jpg" alt="Tutor cuidando da alimentação do pet"
-          class="hero-banner-img" loading="eager">
+        <img src="hero-banner.jpg" alt="Tutor cuidando da alimentação do pet" class="hero-banner-img" loading="eager">
       </div>
     </section>
 
@@ -103,7 +103,8 @@
             <span class="step-required">*Obrigatório</span>
           </div>
           <p class="form-step-desc">
-            Tire uma foto nítida da tabela de <strong>Níveis de Garantia</strong> ou da <strong>lista de ingredientes</strong> no verso do saco.
+            Tire uma foto nítida da tabela de <strong>Níveis de Garantia</strong> ou da <strong>lista de
+              ingredientes</strong> no verso do saco.
           </p>
 
           <div class="upload-dropzone" id="dropzoneArea">
@@ -151,7 +152,10 @@
               <div class="upload-dropzone dropzone-compact" id="dropzoneAtual">
                 <input type="file" id="fotoAtualInput" accept="image/jpeg,image/png,image/webp,image/*">
                 <div class="upload-icon-small">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
                 </div>
                 <div class="upload-text-small" id="textoSlotAtual">Foto da Ração Atual</div>
               </div>
@@ -167,7 +171,10 @@
               <div class="upload-dropzone dropzone-compact" id="dropzoneNova">
                 <input type="file" id="fotoNovaInput" accept="image/jpeg,image/png,image/webp,image/*">
                 <div class="upload-icon-small">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
                 </div>
                 <div class="upload-text-small" id="textoSlotNova">Foto da Nova Ração</div>
               </div>
@@ -687,7 +694,7 @@
       <!-- CARD DE CONVITE AO TIRA-TEIMA (ALTA CONVERSÃO) -->
       <div class="invite-compare-card">
         <div class="invite-compare-info">
-          <span class="invite-badge">⚔️ Tira-Teima de Balcão</span>
+          <span class="invite-badge">Tira-Teima de Balcão</span>
           <h4>Ficou em dúvida entre esta ração e outra?</h4>
           <p>Tire foto da outra ração e a IA te diz na hora qual das duas é a vencedora e se compensa a troca.</p>
         </div>
@@ -706,7 +713,7 @@
       <!-- Topo do Resultado do Comparativo -->
       <div class="result-top-bar">
         <div>
-          <span class="report-badge-meta">⚔️ Tira-Teima Nutricional</span>
+          <span class="report-badge-meta">Tira-Teima Nutricional</span>
           <h2 class="result-main-heading">Resultado da Comparação</h2>
         </div>
         <div class="result-actions">
@@ -739,11 +746,23 @@
           <div class="compare-categoria" id="categoriaRacaoAtual">Standard</div>
           <div class="compare-pro-con">
             <div class="pro-item">
-              <span class="pro-icon">✅</span>
+              <span class="pro-icon pro-icon-positivo">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
               <span id="forteRacaoAtual">Analisando...</span>
             </div>
             <div class="con-item">
-              <span class="con-icon">⚠️</span>
+              <span class="con-icon con-icon-atencao">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </span>
               <span id="fracoRacaoAtual">Analisando...</span>
             </div>
           </div>
@@ -759,11 +778,23 @@
           <div class="compare-categoria" id="categoriaRacaoNova">Super Premium</div>
           <div class="compare-pro-con">
             <div class="pro-item">
-              <span class="pro-icon">✅</span>
+              <span class="pro-icon pro-icon-positivo">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
               <span id="forteRacaoNova">Analisando...</span>
             </div>
             <div class="con-item">
-              <span class="con-icon">⚠️</span>
+              <span class="con-icon con-icon-atencao">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </span>
               <span id="fracoRacaoNova">Analisando...</span>
             </div>
           </div>
@@ -789,11 +820,18 @@
 
       <!-- CARD: DICA DE TRANSIÇÃO (7 DIAS) -->
       <div class="transicao-guia-card">
-        <div class="transicao-icon">🥣</div>
+        <div class="transicao-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 8l4 4-4 4"></path>
+            <path d="M3 12h18"></path>
+          </svg>
+        </div>
         <div class="transicao-info">
           <h4>Como Fazer a Troca Sem Dor de Barriga (Regra dos 7 Dias)</h4>
           <p id="compareDicaTexto">
-            Dias 1 e 2: 75% ração atual + 25% nova. Dias 3 e 4: 50% de cada. Dias 5 e 6: 25% atual + 75% nova. Dia 7: 100% ração nova. Isso evita diarreia e vômitos pela troca brusca.
+            Dias 1 e 2: 75% ração atual + 25% nova. Dias 3 e 4: 50% de cada. Dias 5 e 6: 25% atual + 75% nova. Dia 7:
+            100% ração nova. Isso evita diarreia e vômitos pela troca brusca.
           </p>
         </div>
       </div>
@@ -822,7 +860,9 @@
         </div>
       </div>
       <div class="footer-copy">
-        <p>&copy; 2026 Tradutor de Ração. Plataforma educativa fundamentada nas normas públicas de rotulagem do MAPA (IN nº 30/2009) e no Código de Defesa do Consumidor (Art. 6º, III). O conteúdo possui caráter exclusivamente informativo sobre rotulagem comercial e não substitui a consulta ou prescrição de um médico-veterinário.</p>
+        <p>&copy; 2026 Tradutor de Ração. Plataforma educativa fundamentada nas normas públicas de rotulagem do MAPA (IN
+          nº 30/2009) e no Código de Defesa do Consumidor (Art. 6º, III). O conteúdo possui caráter exclusivamente
+          informativo sobre rotulagem comercial e não substitui a consulta ou prescrição de um médico-veterinário.</p>
       </div>
     </div>
   </footer>

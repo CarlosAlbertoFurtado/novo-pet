@@ -1038,9 +1038,34 @@ body {
 }
 
 .raiox-icon {
-  font-size: 1.15rem;
-  line-height: 1.4;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.raiox-ingrediente-item.positivo .raiox-icon {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.raiox-ingrediente-item.atencao .raiox-icon {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.raiox-ingrediente-item.negativo .raiox-icon {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.raiox-ingrediente-item.neutro .raiox-icon {
+  background: #f1f5f9;
+  color: #64748b;
 }
 
 .raiox-info {
@@ -2303,6 +2328,27 @@ body {
 .pro-item { color: #166534; }
 .con-item { color: #854d0e; }
 
+.pro-icon, .con-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pro-icon-positivo {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.con-icon-atencao {
+  background: #fef3c7;
+  color: #d97706;
+}
+
 /* GUIA DE TRANSIÇÃO (7 DIAS) */
 .transicao-guia-card {
   background: #f8fafc;
@@ -2316,8 +2362,15 @@ body {
 }
 
 .transicao-icon {
-  font-size: 2rem;
-  line-height: 1;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #f0fdfa;
+  color: #0d9488;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .transicao-info h4 {
