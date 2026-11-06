@@ -14,12 +14,12 @@
 
 // Lista de modelos resilientes em ordem de prioridade (testados e suportados pela API)
 const GEMINI_MODELS = [
-  'gemini-3.8-flash',
-  'gemini-3.7-flash',
+  'gemini-3.1-flash-lite',
+  'gemini-3-flash-preview',
   'gemini-3.6-flash',
   'gemini-3.5-flash',
   'gemini-flash-latest',
-  'gemini-3.1-flash-lite',
+  'gemini-3.8-flash',
 ];
 
 /**
@@ -181,7 +181,7 @@ export async function analyzeLabel(imageBuffer, mimeType, petData) {
   for (const model of GEMINI_MODELS) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 50000);
+      const timeout = setTimeout(() => controller.abort(), 12000);
 
       console.log(`[GEMINI] Tentando modelo: ${model}...`);
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
@@ -218,7 +218,7 @@ export async function analyzeLabel(imageBuffer, mimeType, petData) {
     } catch (err) {
       lastError = err;
       if (err.name === 'AbortError') {
-        lastError = new Error('A análise demorou muito (timeout de 50s). Tente com uma imagem menor ou mais nítida.');
+        lastError = new Error('A análise demorou para responder. Tente com uma imagem mais nítida ou menor.');
       }
       console.warn(`[GEMINI] ${model} falhou:`, err.message?.slice(0, 80));
       // Não espera, pula direto pro próximo modelo
@@ -339,7 +339,7 @@ export async function compareLabels(image1Buffer, mimeType1, image2Buffer, mimeT
   for (const model of GEMINI_MODELS) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 55000);
+      const timeout = setTimeout(() => controller.abort(), 14000);
 
       console.log(`[GEMINI-COMPARE] Comparando com modelo: ${model}...`);
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
