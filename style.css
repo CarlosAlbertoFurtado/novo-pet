@@ -2443,3 +2443,381 @@ body {
 .btn-invite-compare:hover {
   background: #0f766e;
 }
+
+/* ========================================================
+   ★ PAYWALL FREEMIUM & MODAL PIX (MERCADO PAGO) ★
+   ======================================================== */
+
+/* Card de Oferta do Paywall */
+.paywall-unlock-card {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, #042f2e 0%, #0f172a 100%);
+  border: 1px solid #14b8a6;
+  border-radius: 16px;
+  padding: 28px 32px;
+  color: #ffffff;
+  box-shadow: 0 10px 30px -10px rgba(13, 148, 136, 0.4);
+  margin-top: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.paywall-unlock-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.paywall-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(20, 184, 166, 0.18);
+  border: 1px solid rgba(20, 184, 166, 0.4);
+  color: #5eead4;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.paywall-unlock-card h3 {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.paywall-unlock-card p {
+  font-size: 0.94rem;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+  max-width: 680px;
+}
+
+.paywall-perks {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px 16px;
+}
+
+.paywall-perks li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: #e2e8f0;
+}
+
+.paywall-perks li span {
+  color: #2dd4bf;
+  font-weight: 800;
+}
+
+.paywall-cta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 640px) {
+  .paywall-cta-row {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+}
+
+.paywall-price {
+  display: flex;
+  flex-direction: column;
+}
+
+.paywall-price .price-val {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: #2dd4bf;
+  line-height: 1;
+}
+
+.paywall-price .price-desc {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin-top: 3px;
+}
+
+.btn-unlock-pix {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #0d9488;
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 800;
+  padding: 14px 28px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.4);
+  transition: all 0.2s ease;
+}
+
+.btn-unlock-pix:hover {
+  background: #0f766e;
+  transform: translateY(-1px);
+}
+
+/* Área Bloqueada por Blur */
+.premium-locked-wrapper {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  transition: filter 0.4s ease, opacity 0.4s ease;
+}
+
+.premium-locked-wrapper.is-locked {
+  filter: blur(5px);
+  opacity: 0.45;
+  pointer-events: none;
+  user-select: none;
+  max-height: 480px;
+  overflow: hidden;
+}
+
+/* Modal de Pagamento Pix */
+.pix-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.pix-modal-card {
+  background: #ffffff;
+  border-radius: 18px;
+  max-width: 480px;
+  width: 100%;
+  padding: 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  position: relative;
+  text-align: center;
+  animation: modalPop 0.25s ease-out;
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.pix-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: #94a3b8;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.pix-modal-close:hover {
+  color: #0f172a;
+}
+
+.pix-modal-header {
+  margin-bottom: 20px;
+}
+
+.pix-brand-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0fdfa;
+  border: 1px solid #ccfbf1;
+  color: #0f766e;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.pix-modal-header h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+}
+
+.pix-price-badge {
+  display: inline-block;
+  background: #0f172a;
+  color: #2dd4bf;
+  font-size: 1.4rem;
+  font-weight: 900;
+  padding: 4px 16px;
+  border-radius: 8px;
+}
+
+.pix-qr-container {
+  margin: 16px 0;
+}
+
+.pix-qr-box {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 12px;
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.pix-qr-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pix-qr-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.spinner-small {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #0d9488;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.pix-instruction {
+  font-size: 0.84rem;
+  color: #475569;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.pix-copia-cola-box {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.pix-copia-cola-box input {
+  flex: 1;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.8rem;
+  color: #334155;
+  font-family: monospace;
+}
+
+.btn-copiar-pix {
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.btn-copiar-pix:hover {
+  background: #1e293b;
+}
+
+.pix-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #475569;
+  font-weight: 600;
+}
+
+.pix-pulse-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #0d9488;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(13, 148, 136, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(13, 148, 136, 0); }
+}
+
+.pix-demo-notice {
+  margin-top: 14px;
+  padding: 10px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: #92400e;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-pix-simular {
+  background: #f59e0b;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.btn-pix-simular:hover {
+  background: #d97706;
+}
+

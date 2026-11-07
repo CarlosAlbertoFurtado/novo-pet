@@ -570,6 +570,35 @@
           </div>
         </div>
 
+        <!-- BANNER DE PAYWALL FREEMIUM (DESTRAVA LAUDO COMPLETO) -->
+        <div class="paywall-unlock-card" id="paywallCardIndividual">
+          <div class="paywall-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <span>Laudo Completo Disponível</span>
+          </div>
+          <h3>Quer ver o Raio-X detalhado de cada ingrediente?</h3>
+          <p>Descubra os conservantes ocultos, se há sobrecarga para os rins a longo prazo e se a ração realmente vale o preço que custa.</p>
+          <ul class="paywall-perks">
+            <li><span>✓</span> Raio-X completo ingrediente por ingrediente</li>
+            <li><span>✓</span> Qualidade biológica da carne e absorção</li>
+            <li><span>✓</span> Veredito honesto: vale o que custa na prateleira?</li>
+            <li><span>✓</span> Guia de acompanhamento clínico de 30 dias</li>
+          </ul>
+          <div class="paywall-cta-row">
+            <div class="paywall-price">
+              <span class="price-val">R$ 4,90</span>
+              <span class="price-desc">Pagamento único no Pix</span>
+            </div>
+            <button type="button" class="btn-unlock-pix" id="btnDesbloquearIndividual">
+              <span>Desbloquear Laudo Completo</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ÁREA BLOQUEADA (REVELADA APÓS PIX APROVADO) -->
+        <div class="premium-locked-wrapper is-locked" id="premiumLockedWrapper">
+
         <!-- ★ RAIO-X DOS INGREDIENTES (IA) ★ -->
         <div class="result-card raiox-card" id="raioxIngredientesContainer" style="display:none;">
           <div class="result-card-header">
@@ -688,6 +717,8 @@
             <!-- Gerado dinamicamente via analyzer.js -->
           </div>
         </div>
+
+        </div> <!-- /premium-locked-wrapper -->
 
       </div>
 
@@ -837,6 +868,59 @@
       </div>
 
     </section>
+
+    <!-- ==========================================
+         MODAL DE PAGAMENTO PIX (MERCADO PAGO)
+         ========================================== -->
+    <div class="pix-modal-overlay" id="pixModalOverlay" style="display:none;">
+      <div class="pix-modal-card">
+        <button type="button" class="pix-modal-close" id="btnFecharPix" aria-label="Fechar">&times;</button>
+        
+        <div class="pix-modal-header">
+          <div class="pix-brand-tag">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            <span>Pix Instantâneo • Liberação Automática</span>
+          </div>
+          <h3 id="pixModalTitle">Desbloqueio do Laudo Completo</h3>
+          <div class="pix-price-badge">R$ 4,90</div>
+        </div>
+
+        <!-- ÁREA DO QR CODE -->
+        <div class="pix-qr-container">
+          <div class="pix-qr-box" id="pixQrBox">
+            <img id="pixQrImg" src="" alt="QR Code Pix" style="display:none;">
+            <div id="pixQrPlaceholder" class="pix-qr-loading">
+              <div class="spinner-small"></div>
+              <span>Gerando chave Pix...</span>
+            </div>
+          </div>
+          <p class="pix-instruction">Abra o app do seu banco, escolha <strong>Pix</strong> e aponte a câmera para o QR Code ou copie o código abaixo:</p>
+        </div>
+
+        <!-- COPIA E COLA -->
+        <div class="pix-copia-cola-box">
+          <input type="text" id="pixCodeInput" readonly value="Carregando código Pix...">
+          <button type="button" class="btn-copiar-pix" id="btnCopiarPix">
+            <span id="btnCopiarPixText">Copiar Código Pix</span>
+          </button>
+        </div>
+
+        <!-- STATUS AO VIVO -->
+        <div class="pix-status-bar" id="pixStatusBar">
+          <div class="pix-pulse-dot"></div>
+          <span id="pixStatusText">Aguardando pagamento... A tela destravará automaticamente.</span>
+        </div>
+
+        <!-- MODO DEMO / SIMULAÇÃO (VISÍVEL ENQUANTO NÃO HOUVER TOKEN REAL) -->
+        <div class="pix-demo-notice" id="pixDemoNotice" style="display:none;">
+          <p>Modo de Demonstração ativo (sem cobrança real):</p>
+          <button type="button" class="btn-pix-simular" id="btnSimularPixAprovado">Simular Pagamento Aprovado</button>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <!-- ==========================================

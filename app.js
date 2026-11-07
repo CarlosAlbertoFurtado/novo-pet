@@ -913,6 +913,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // 7. RENDERIZAÇÃO DO VEREDITO (v2 — Raio-X)
   // ==========================================
   function renderizarResultado(res) {
+    // Configura o estado inicial do Paywall Freemium
+    if (premiumLockedWrapper && !isLaudoDesbloqueado) {
+      premiumLockedWrapper.classList.add("is-locked");
+      if (paywallCardIndividual) paywallCardIndividual.style.display = "block";
+    }
+
     // 1. Nota Geral (se disponível da IA)
     const notaCard = document.getElementById("notaGeralCard");
     if (notaCard && res.notaGeral !== null && res.notaGeral !== undefined) {
@@ -1215,6 +1221,192 @@ document.addEventListener("DOMContentLoaded", () => {
       resultCompareSection.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }
+
+  // ==========================================
+  // 7C. FLUXO DE PAGAMENTO PIX (MERCADO PAGO)
+  // ==========================================
+  let isLaudoDesbloqueado = false;
+  let activePaymentPolling = null;
+  let currentPaymentId = null;
+
+  const btnDesbloquearIndividual = document.getElementById("btnDesbloquearIndividual");
+  const paywallCardIndividual = document.getElementById("paywallCardIndividual");
+  const premiumLockedWrapper = document.getElementById("premiumLockedWrapper");
+
+  const pixModalOverlay = document.getElementById("pixModalOverlay");
+  const btnFecharPix = document.getElementById("btnFecharPix");
+  const pixQrImg = document.getElementById("pixQrImg");
+  const pixQrPlaceholder = document.getElementById("pixQrPlaceholder");
+  const pixCodeInput = document.getElementById("pixCodeInput");
+  const btnCopiarPix = document.getElementById("btnCopiarPix");
+  const btnCopiarPixText = document.getElementById("btnCopiarPixText");
+  const pixStatusText = document.getElementById("pixStatusText");
+  const pixDemoNotice = document.getElementById("pixDemoNotice");
+  const btnSimularPixAprovado = document.getElementById("btnSimularPixAprovado");
+
+  async function abrirCheckoutPix(tipo = 'individual') {
+    if (!pixModalOverlay) return;
+
+    pixModalOverlay.style.display = "flex";
+    if (pixQrPlaceholder) {
+      pixQrPlaceholder.style.display = "flex";
+      pixQrPlaceholder.innerHTML = '<div class="spinner-small"></div><span>Gerando chave Pix no Mercado Pago...</span>';
+    }
+    if (pixQrImg) pixQrImg.style.display = "none";
+    if (pixCodeInput) pixCodeInput.value = "Gerando código...";
+    if (pixStatusText) pixStatusText.textContent = "Aguardando pagamento... A tela destravará automaticamente.";
+    if (pixDemoNotice) pixDemoNotice.style.display = "none";
+
+    try {
+      const backendUrl = await resolveBackendUrl();
+      const resp = await fetch(`${backendUrl}/api/payment/create-pix`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: tipo })
+      });
+
+      if (!resp.ok) {
+        throw new Error("Não foi possível gerar a cobrança Pix.");
+      }
+
+      const data = await resp.json();
+      const p = data.payment;
+      currentPaymentId = p.id;
+
+      // Exibe QR Code se disponível em base64
+      if (p.qr_code_base64 && pixQrImg) {
+        pixQrImg.src = `data:image/png;base64,${p.qr_code_base64}`;
+        pixQrImg.style.display = "block";
+        if (pixQrPlaceholder) pixQrPlaceholder.style.display = "none";
+      } else if (pixQrPlaceholder) {
+        // Fallback para modo demo: gera placeholder elegante
+        pixQrPlaceholder.innerHTML = `
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="3" height="3"/><rect x="14" y="7" width="3" height="3"/><rect x="7" y="14" width="3" height="3"/></svg>
+          <span style="font-size:0.75rem; color:#0f766e; font-weight:700;">Pix Copia e Cola</span>
+        `;
+      }
+
+      if (pixCodeInput) {
+        pixCodeInput.value = p.qr_code;
+      }
+
+      // Se estiver em modo demonstração, oferece botão de aprovação imediata
+      if (p.isDemo && pixDemoNotice) {
+        pixDemoNotice.style.display = "flex";
+      }
+
+      // Inicia polling para verificar aprovação automática a cada 2.5s
+      iniciarPollingPagamento(p.id);
+
+    } catch (err) {
+      console.error("[PIX ERROR]", err);
+      if (pixQrPlaceholder) {
+        pixQrPlaceholder.innerHTML = `<span style="color:#ef4444; font-size:0.85rem;">Erro ao gerar Pix. Tente novamente.</span>`;
+      }
+    }
+  }
+
+  function iniciarPollingPagamento(paymentId) {
+    if (activePaymentPolling) clearInterval(activePaymentPolling);
+
+    activePaymentPolling = setInterval(async () => {
+      try {
+        const backendUrl = await resolveBackendUrl();
+        const resp = await fetch(`${backendUrl}/api/payment/status/${paymentId}`);
+        if (!resp.ok) return;
+
+        const data = await resp.json();
+        if (data.status === "approved") {
+          desbloquearSucesso();
+        }
+      } catch (err) {
+        console.warn("[POLLING ERROR]", err.message);
+      }
+    }, 2500);
+  }
+
+  function desbloquearSucesso() {
+    if (activePaymentPolling) {
+      clearInterval(activePaymentPolling);
+      activePaymentPolling = null;
+    }
+
+    isLaudoDesbloqueado = true;
+
+    if (pixStatusText) {
+      pixStatusText.innerHTML = `<strong style="color:#16a34a;">✓ Pagamento Aprovado! Liberando laudo...</strong>`;
+    }
+
+    setTimeout(() => {
+      fecharModalPix();
+
+      // Destrava a área premium
+      if (premiumLockedWrapper) {
+        premiumLockedWrapper.classList.remove("is-locked");
+      }
+      if (paywallCardIndividual) {
+        paywallCardIndividual.style.display = "none";
+      }
+
+      // Rola suavemente até o Raio-X agora desbloqueado
+      const raioxEl = document.getElementById("raioxIngredientesContainer");
+      if (raioxEl) {
+        raioxEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 900);
+  }
+
+  function fecharModalPix() {
+    if (activePaymentPolling) {
+      clearInterval(activePaymentPolling);
+      activePaymentPolling = null;
+    }
+    if (pixModalOverlay) {
+      pixModalOverlay.style.display = "none";
+    }
+  }
+
+  // Eventos de clique
+  btnDesbloquearIndividual?.addEventListener("click", () => {
+    abrirCheckoutPix('individual');
+  });
+
+  btnFecharPix?.addEventListener("click", fecharModalPix);
+
+  pixModalOverlay?.addEventListener("click", (e) => {
+    if (e.target === pixModalOverlay) fecharModalPix();
+  });
+
+  btnCopiarPix?.addEventListener("click", async () => {
+    if (!pixCodeInput || !pixCodeInput.value) return;
+    try {
+      await navigator.clipboard.writeText(pixCodeInput.value);
+      if (btnCopiarPixText) {
+        btnCopiarPixText.textContent = "✓ Copiado!";
+        setTimeout(() => {
+          btnCopiarPixText.textContent = "Copiar Código Pix";
+        }, 2500);
+      }
+    } catch {
+      pixCodeInput.select();
+      document.execCommand("copy");
+      if (btnCopiarPixText) btnCopiarPixText.textContent = "✓ Copiado!";
+    }
+  });
+
+  btnSimularPixAprovado?.addEventListener("click", async () => {
+    try {
+      const backendUrl = await resolveBackendUrl();
+      await fetch(`${backendUrl}/api/payment/simulate-approval`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: currentPaymentId })
+      });
+      desbloquearSucesso();
+    } catch {
+      desbloquearSucesso();
+    }
+  });
 
   // ==========================================
   // 8. BOTÕES AUXILIARES

@@ -17,6 +17,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { createAnalysisRouter } from './routes/analysis.js';
+import { createPaymentRouter } from './routes/payment.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { requestLogger } from './middleware/logger.js';
 
@@ -123,6 +124,7 @@ app.get('/api/health', (_req, res) => {
 
 // ── 7. ROTAS DA APLICAÇÃO ──────────────────────────────────
 app.use('/api/analysis', createAnalysisRouter());
+app.use('/api/payment', createPaymentRouter());
 
 // ── 8. SERVIR FRONTEND (apenas em desenvolvimento) ─────────
 // Em produção, o frontend será servido por Nginx/Cloudflare
