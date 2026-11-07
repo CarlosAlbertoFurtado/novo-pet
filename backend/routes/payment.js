@@ -9,7 +9,7 @@
 // ============================================================
 
 import { Router } from 'express';
-import { createPixPayment, getPaymentStatus } from '../services/mercadopago.js';
+import { createPixPayment, getPaymentStatus, createCardCheckoutPreference } from '../services/mercadopago.js';
 
 export function createPaymentRouter() {
   const router = Router();
@@ -36,6 +36,34 @@ export function createPaymentRouter() {
       });
     } catch (err) {
       console.error('[PAYMENT CREATE ERROR]', err.message);
+      next(err);
+    }
+  });
+
+  // ── POST /api/payment/create-card-checkout ────────────────
+  // Gera preferência oficial de pagamento seguro com Cartão de Crédito e Débito (Mercado Pago)
+  router.post('/create-card-checkout', async (req, res, next) => {
+    try {
+      const defaultPrice = parseFloat(process.env.PIX_ANALYSIS_PRICE) || 4.90;
+      const { description, type } = req.body || {};
+      const originUrl = req.headers.origin || 'https://novo-pet-beta.vercel.app';
+
+      const desc = description || (type === 'compare'
+        ? 'Tira-Teima de Rações - Laudo Comparativo'
+        : 'Raio-X Completo da Ração - Laudo Nutricional');
+
+      const checkout = await createCardCheckoutPreference({
+        amount: defaultPrice,
+        description: desc,
+        originUrl
+      });
+
+      res.json({
+        success: true,
+        checkout
+      });
+    } catch (err) {
+      console.error('[CARD CHECKOUT ERROR]', err.message);
       next(err);
     }
   });
@@ -96,3 +124,4 @@ export function createPaymentRouter() {
 
   return router;
 }
+

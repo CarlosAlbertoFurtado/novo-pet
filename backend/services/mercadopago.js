@@ -10,6 +10,7 @@
 import crypto from 'crypto';
 
 const MP_API_URL = 'https://api.mercadopago.com/v1/payments';
+const MP_PREFERENCES_URL = 'https://api.mercadopago.com/checkout/preferences';
 
 /**
  * Cria uma ordem de pagamento Pix no Mercado Pago
@@ -130,3 +131,81 @@ export async function getPaymentStatus(paymentId) {
     return { id: paymentId, status: 'error' };
   }
 }
+
+/**
+ * Cria uma preferência do Mercado Pago Checkout Pro para Cartão de Crédito e Débito.
+ * SEGURANÇA TOTAL (PCI-DSS Level 1): O cliente preenche os dados do cartão diretamente
+ * no cofre criptografado do Mercado Pago. Nosso servidor nunca toca nem armazena números de cartão.
+ * @param {object} params
+ * @param {number} params.amount - Valor da cobrança
+ * @param {string} params.description - Título do laudo
+ * @param {string} params.originUrl - URL base para retorno do cliente após pagamento
+ * @returns {Promise<object>} { id, init_point, isDemo }
+ */
+export async function createCardCheckoutPreference({ amount = 4.90, description = 'Laudo Nutricional Pet', originUrl = 'https://novo-pet-beta.vercel.app' }) {
+  const token = process.env.MERCADO_PAGO_ACCESS_TOKEN;
+
+  if (!token || token.startsWith('SEU_') || token === 'SUA_CHAVE_AQUI') {
+    return {
+      id: 'demo_pref_' + Date.now(),
+      init_point: `${originUrl}/?payment=approved&demo=true`,
+      isDemo: true
+    };
+  }
+
+  const baseReturn = originUrl.replace(/\/+$/, '');
+
+  const body = {
+    items: [
+      {
+        title: description.slice(0, 100),
+        quantity: 1,
+        unit_price: Number(amount),
+        currency_id: 'BRL',
+        description: 'Desbloqueio do Laudo Nutricional Completo'
+      }
+    ],
+    back_urls: {
+      success: `${baseReturn}/?payment=approved`,
+      failure: `${baseReturn}/?payment=failure`,
+      pending: `${baseReturn}/?payment=pending`
+    },
+    auto_return: 'approved',
+    statement_descriptor: 'TRADUTOR PET',
+    payment_methods: {
+      excluded_payment_types: [
+        { id: 'ticket' } // Exclui boleto bancário (foco em cartão de crédito e débito com aprovação imediata)
+      ],
+      installments: 1
+    }
+  };
+
+  try {
+    const response = await fetch(MP_PREFERENCES_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('[MERCADO PAGO PREFERENCE ERROR]', data);
+      throw new Error(data.message || 'Erro ao gerar checkout com cartão.');
+    }
+
+    return {
+      id: data.id,
+      init_point: data.init_point, // Link oficial protegido do Mercado Pago
+      sandbox_init_point: data.sandbox_init_point,
+      isDemo: false
+    };
+  } catch (err) {
+    console.error('[MERCADO PAGO CARD CHECKOUT EXCEPTION]', err.message);
+    throw err;
+  }
+}
+

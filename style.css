@@ -2821,3 +2821,134 @@ body {
   background: #d97706;
 }
 
+/* ABAS DE PAGAMENTO (PIX VS CARTÃO) */
+.payment-tabs-row {
+  display: flex;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 12px;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.btn-pay-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-pay-tab.active {
+  background: #ffffff;
+  color: #0d9488;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* CONTEÚDO DA ABA CARTÃO */
+.card-pay-view {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+}
+
+.card-security-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f0fdfa;
+  border: 1px solid #ccfbf1;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.card-security-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-security-text strong {
+  font-size: 0.85rem;
+  color: #0f172a;
+}
+
+.card-security-text span {
+  font-size: 0.74rem;
+  color: #0f766e;
+}
+
+.card-explain-text {
+  font-size: 0.84rem;
+  color: #475569;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.card-brands-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+.card-brand-pill {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.card-brand-pill.debit {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+  width: 100%;
+  text-align: center;
+}
+
+.btn-pay-card-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #0d9488;
+  color: #ffffff;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 0.98rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
+  transition: all 0.2s ease;
+}
+
+.btn-pay-card-cta:hover {
+  background: #0f766e;
+  transform: translateY(-1px);
+}
+
+.card-sub-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: #64748b;
+  text-align: center;
+}
+
+

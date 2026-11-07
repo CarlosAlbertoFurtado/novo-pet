@@ -587,7 +587,7 @@
           <div class="paywall-cta-row">
             <div class="paywall-price">
               <span class="price-val">R$ 4,90</span>
-              <span class="price-desc">Pagamento único no Pix</span>
+              <span class="price-desc">Pix ou Cartão de Crédito/Débito</span>
             </div>
             <button type="button" class="btn-unlock-pix" id="btnDesbloquearIndividual">
               <span>Desbloquear Laudo Completo</span>
@@ -881,42 +881,91 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
             </svg>
-            <span>Pix Instantâneo • Liberação Automática</span>
+            <span>Ambiente Seguro • Mercado Pago</span>
           </div>
           <h3 id="pixModalTitle">Desbloqueio do Laudo Completo</h3>
           <div class="pix-price-badge">R$ 4,90</div>
         </div>
 
-        <!-- ÁREA DO QR CODE -->
-        <div class="pix-qr-container">
-          <div class="pix-qr-box" id="pixQrBox">
-            <img id="pixQrImg" src="" alt="QR Code Pix" style="display:none;">
-            <div id="pixQrPlaceholder" class="pix-qr-loading">
-              <div class="spinner-small"></div>
-              <span>Gerando chave Pix...</span>
-            </div>
-          </div>
-          <p class="pix-instruction">Abra o app do seu banco, escolha <strong>Pix</strong> e aponte a câmera para o QR Code ou copie o código abaixo:</p>
-        </div>
-
-        <!-- COPIA E COLA -->
-        <div class="pix-copia-cola-box">
-          <input type="text" id="pixCodeInput" readonly value="Carregando código Pix...">
-          <button type="button" class="btn-copiar-pix" id="btnCopiarPix">
-            <span id="btnCopiarPixText">Copiar Código Pix</span>
+        <!-- SELETOR DE FORMA DE PAGAMENTO -->
+        <div class="payment-tabs-row">
+          <button type="button" class="btn-pay-tab active" id="tabPayPix">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>Pix Instantâneo</span>
+          </button>
+          <button type="button" class="btn-pay-tab" id="tabPayCard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            <span>Cartão de Crédito / Débito</span>
           </button>
         </div>
 
-        <!-- STATUS AO VIVO -->
-        <div class="pix-status-bar" id="pixStatusBar">
-          <div class="pix-pulse-dot"></div>
-          <span id="pixStatusText">Aguardando pagamento... A tela destravará automaticamente.</span>
+        <!-- ── ABA 1: PIX ── -->
+        <div class="pix-pay-view" id="viewPayPix">
+          <!-- ÁREA DO QR CODE -->
+          <div class="pix-qr-container">
+            <div class="pix-qr-box" id="pixQrBox">
+              <img id="pixQrImg" src="" alt="QR Code Pix" style="display:none;">
+              <div id="pixQrPlaceholder" class="pix-qr-loading">
+                <div class="spinner-small"></div>
+                <span>Gerando chave Pix...</span>
+              </div>
+            </div>
+            <p class="pix-instruction">Abra o app do seu banco, escolha <strong>Pix</strong> e aponte a câmera para o QR Code ou copie o código abaixo:</p>
+          </div>
+
+          <!-- COPIA E COLA -->
+          <div class="pix-copia-cola-box">
+            <input type="text" id="pixCodeInput" readonly value="Carregando código Pix...">
+            <button type="button" class="btn-copiar-pix" id="btnCopiarPix">
+              <span id="btnCopiarPixText">Copiar Código Pix</span>
+            </button>
+          </div>
+
+          <!-- STATUS AO VIVO -->
+          <div class="pix-status-bar" id="pixStatusBar">
+            <div class="pix-pulse-dot"></div>
+            <span id="pixStatusText">Aguardando pagamento... A tela destravará automaticamente.</span>
+          </div>
+
+          <!-- MODO DEMO / SIMULAÇÃO -->
+          <div class="pix-demo-notice" id="pixDemoNotice" style="display:none;">
+            <p>Modo de Demonstração ativo (sem cobrança real):</p>
+            <button type="button" class="btn-pix-simular" id="btnSimularPixAprovado">Simular Pagamento Aprovado</button>
+          </div>
         </div>
 
-        <!-- MODO DEMO / SIMULAÇÃO (VISÍVEL ENQUANTO NÃO HOUVER TOKEN REAL) -->
-        <div class="pix-demo-notice" id="pixDemoNotice" style="display:none;">
-          <p>Modo de Demonstração ativo (sem cobrança real):</p>
-          <button type="button" class="btn-pix-simular" id="btnSimularPixAprovado">Simular Pagamento Aprovado</button>
+        <!-- ── ABA 2: CARTÃO DE CRÉDITO E DÉBITO ── -->
+        <div class="card-pay-view" id="viewPayCard" style="display:none;">
+          <div class="card-security-badge">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <div class="card-security-text">
+              <strong>Pagamento 100% Blindado & Criptografado</strong>
+              <span>Certificação PCI-DSS Nível 1 pelo Mercado Pago</span>
+            </div>
+          </div>
+
+          <p class="card-explain-text">
+            Seus dados são transmitidos diretamente para o cofre seguro do Mercado Pago com criptografia de ponta a ponta. Nosso site <strong>nunca tem acesso aos números do seu cartão</strong>.
+          </p>
+
+          <div class="card-brands-row">
+            <span class="card-brand-pill">Visa</span>
+            <span class="card-brand-pill">Mastercard</span>
+            <span class="card-brand-pill">Elo</span>
+            <span class="card-brand-pill">Hipercard</span>
+            <span class="card-brand-pill">American Express</span>
+            <span class="card-brand-pill debit">Débito Caixa, BB, Bradesco, Santander, Itaú</span>
+          </div>
+
+          <button type="button" class="btn-pay-card-cta" id="btnIniciarCheckoutCartao">
+            <span>Ir para Pagamento com Cartão</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+          </button>
+
+          <div class="card-sub-info">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span>Aprovação imediata • O laudo destrava assim que o pagamento for concluído</span>
+          </div>
         </div>
       </div>
     </div>

@@ -38,6 +38,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnNovaAnalise = document.getElementById("btnNovaAnalise");
   const btnPrintReport = document.getElementById("btnPrintReport");
   const resultCompareSection = document.getElementById("resultCompareSection");
+
+  // ── DETECTAR RETORNO DE PAGAMENTO COM CARTÃO APROVADO (MERCADO PAGO) ──
+  const urlParams = new URLSearchParams(window.location.search);
+  const paymentReturnStatus = urlParams.get("payment") || urlParams.get("collection_status") || urlParams.get("status");
+  if (paymentReturnStatus === "approved" || paymentReturnStatus === "success") {
+    setTimeout(() => {
+      const lockedWrapper = document.getElementById("premiumLockedWrapper");
+      const paywallCard = document.getElementById("paywallCardIndividual");
+      if (lockedWrapper) lockedWrapper.classList.remove("is-locked");
+      if (paywallCard) paywallCard.style.display = "none";
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }, 400);
+  }
   const btnNovaComparacao = document.getElementById("btnNovaComparacao");
   const btnIrParaComparador = document.getElementById("btnIrParaComparador");
 
@@ -1243,6 +1256,68 @@ document.addEventListener("DOMContentLoaded", () => {
   const pixStatusText = document.getElementById("pixStatusText");
   const pixDemoNotice = document.getElementById("pixDemoNotice");
   const btnSimularPixAprovado = document.getElementById("btnSimularPixAprovado");
+
+  // Abas de Pagamento (Pix vs Cartão)
+  const tabPayPix = document.getElementById("tabPayPix");
+  const tabPayCard = document.getElementById("tabPayCard");
+  const viewPayPix = document.getElementById("viewPayPix");
+  const viewPayCard = document.getElementById("viewPayCard");
+  const btnIniciarCheckoutCartao = document.getElementById("btnIniciarCheckoutCartao");
+
+  // Alternância entre as abas Pix e Cartão
+  tabPayPix?.addEventListener("click", () => {
+    tabPayPix.classList.add("active");
+    tabPayCard?.classList.remove("active");
+    if (viewPayPix) viewPayPix.style.display = "block";
+    if (viewPayCard) viewPayCard.style.display = "none";
+  });
+
+  tabPayCard?.addEventListener("click", () => {
+    tabPayCard.classList.add("active");
+    tabPayPix?.classList.remove("active");
+    if (viewPayCard) viewPayCard.style.display = "flex";
+    if (viewPayPix) viewPayPix.style.display = "none";
+  });
+
+  // Checkout Seguro com Cartão de Crédito e Débito (PCI-DSS Mercado Pago)
+  btnIniciarCheckoutCartao?.addEventListener("click", async () => {
+    try {
+      btnIniciarCheckoutCartao.disabled = true;
+      btnIniciarCheckoutCartao.innerHTML = `
+        <div class="spinner-small" style="width:16px;height:16px;border-width:2px;border-top-color:#ffffff;"></div>
+        <span>Conectando com Mercado Pago...</span>
+      `;
+
+      const backendUrl = await resolveBackendUrl();
+      const resp = await fetch(`${backendUrl}/api/payment/create-card-checkout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: 'individual' })
+      });
+
+      if (!resp.ok) {
+        throw new Error("Falha ao gerar checkout de cartão.");
+      }
+
+      const data = await resp.json();
+      const initPoint = data.checkout?.init_point || data.checkout?.sandbox_init_point;
+
+      if (initPoint) {
+        // Redireciona com segurança total para o ambiente blindado do Mercado Pago
+        window.location.href = initPoint;
+      } else {
+        throw new Error("Link de pagamento não retornado.");
+      }
+    } catch (err) {
+      console.error("[CARD CHECKOUT ERROR]", err);
+      alert("Não foi possível iniciar o pagamento com cartão. Tente via Pix ou recarregue a página.");
+      btnIniciarCheckoutCartao.disabled = false;
+      btnIniciarCheckoutCartao.innerHTML = `
+        <span>Ir para Pagamento com Cartão</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+      `;
+    }
+  });
 
   async function abrirCheckoutPix(tipo = 'individual') {
     if (!pixModalOverlay) return;
