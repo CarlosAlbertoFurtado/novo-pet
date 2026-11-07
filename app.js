@@ -1356,8 +1356,8 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (pixQrPlaceholder) {
         // Fallback para modo demo: gera placeholder elegante
         pixQrPlaceholder.innerHTML = `
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="3" height="3"/><rect x="14" y="7" width="3" height="3"/><rect x="7" y="14" width="3" height="3"/></svg>
-          <span style="font-size:0.75rem; color:#0f766e; font-weight:700;">Pix Copia e Cola</span>
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="3" height="3"/><rect x="14" y="7" width="3" height="3"/><rect x="7" y="14" width="3" height="3"/></svg>
+          <span style="font-size:0.75rem; color:#047857; font-weight:700;">Pix Copia e Cola</span>
         `;
       }
 

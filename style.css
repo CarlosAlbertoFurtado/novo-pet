@@ -6,14 +6,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Cores Principais */
-  --primary: #0d9488;
-  --primary-hover: #0f766e;
-  --primary-light: #ccfbf1;
-  --primary-subtle: #f0fdfa;
+  /* Cores Principais — Vibe Pet: Calor, Vitalidade Natural e Acolhimento */
+  --primary: #059669;          /* Verde Natural / Vitalidade Pet */
+  --primary-hover: #047857;    /* Verde Floresta Aconchegante */
+  --primary-light: #d1fae5;    /* Verde Suave Acolhedor */
+  --primary-subtle: #f0fdf4;   /* Fundo Verde Leve */
   
-  --secondary: #3b82f6;
+  --secondary: #2563eb;
   --secondary-light: #dbeafe;
+
+  --accent-pet: #f59e0b;       /* Dourado / Caramelo Pet (calor, afeto e cuidado) */
+  --accent-pet-hover: #d97706;
+  --accent-pet-light: #fef3c7;
 
   /* Semáforo e Alertas */
   --color-green: #10b981;
@@ -28,28 +32,28 @@
   --color-red-light: #fef2f2;
   --color-red-border: #fecaca;
 
-  /* Neutros & Superfícies */
-  --bg-page: #f8fafc;
+  /* Neutros & Superfícies Acolhedoras (Creme / Linho Pet) */
+  --bg-page: #fbfaf8;          /* Fundo suave e quentinho, zero tom cinza-frio de hospital */
   --bg-surface: #ffffff;
   --bg-surface-elevated: #ffffff;
-  --bg-subtle: #f1f5f9;
+  --bg-subtle: #f5f3ef;
 
-  --text-main: #0f172a;
-  --text-muted: #475569;
-  --text-light: #94a3b8;
+  --text-main: #1c1917;        /* Grafite quente e elegante */
+  --text-muted: #57534e;        /* Texto secundário legível e acolhedor */
+  --text-light: #a8a29e;
   
-  --border-color: #e2e8f0;
-  --border-focus: #14b8a6;
+  --border-color: #e7e5e4;
+  --border-focus: #10b981;
 
-  /* Sombras & Efeitos */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.05);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
+  /* Sombras & Efeitos Orgânicos */
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.04);
+  --shadow-md: 0 4px 10px -2px rgb(28 25 23 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.03);
+  --shadow-lg: 0 12px 24px -4px rgb(28 25 23 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.03);
+  --shadow-xl: 0 20px 30px -6px rgb(28 25 23 / 0.1), 0 8px 12px -6px rgb(0 0 0 / 0.04);
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
   --radius-full: 9999px;
 
   --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -171,20 +175,21 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--primary, #0d9488);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: #ffffff;
-  padding: 8px 18px;
+  padding: 8px 20px;
   border-radius: var(--radius-full, 9999px);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 800;
   text-decoration: none;
-  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.25);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.28);
   transition: all 0.2s ease;
 }
 
 .header-cta-link:hover {
-  background: #0f766e;
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
   transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(5, 150, 105, 0.38);
 }
 
 .header-badges,
@@ -668,22 +673,22 @@ body {
 .input-field:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.18);
 }
 
-/* Botão Principal de Análise */
+/* Botão Principal de Análise — Vibe Pet (Pílula Ergonômica) */
 .btn-submit-analysis {
   width: 100%;
-  padding: 18px 28px;
-  background: linear-gradient(135deg, var(--primary) 0%, #059669 100%);
+  padding: 18px 32px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   border: none;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-full);
   font-family: var(--font-heading);
   font-size: 1.15rem;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 10px 20px rgba(13, 148, 136, 0.3);
+  box-shadow: 0 10px 24px -4px rgba(5, 150, 105, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -692,8 +697,9 @@ body {
 }
 
 .btn-submit-analysis:hover {
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
   transform: translateY(-2px);
-  box-shadow: 0 14px 24px rgba(13, 148, 136, 0.4);
+  box-shadow: 0 14px 28px -4px rgba(5, 150, 105, 0.5);
 }
 
 .btn-submit-analysis:disabled {
@@ -835,7 +841,7 @@ body {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #0d9488, #3b82f6);
+  background: linear-gradient(90deg, #059669, #f59e0b);
 }
 
 .nota-geral-score-area {
@@ -1108,8 +1114,8 @@ body {
    ★ VEREDITO DE CUSTO-BENEFÍCIO ★
    ======================================================== */
 .veredito-custo-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border-left: 5px solid #0d9488 !important;
+  background: linear-gradient(135deg, #ffffff 0%, #fbfaf8 100%);
+  border-left: 5px solid var(--primary, #059669) !important;
   margin-bottom: 28px;
 }
 
@@ -2048,7 +2054,7 @@ body {
 }
 
 .clean-bullet-item .bullet-dot {
-  color: var(--teal, #0d9488);
+  color: var(--primary, #059669);
   font-weight: 800;
   font-size: 1.15rem;
   line-height: 1.2;
@@ -2061,17 +2067,18 @@ body {
 }
 
 /* ==========================================
-   SELETOR DE MODO (1 RAÇÃO VS COMPARAR 2)
+   SELETOR DE MODO (1 RAÇÃO VS COMPARAR 2) — VIBE PET
    ========================================== */
 .mode-tabs-container {
   display: flex;
   gap: 8px;
-  background: #f1f5f9;
+  background: var(--bg-subtle, #f5f3ef);
   padding: 6px;
-  border-radius: 12px;
-  margin: 0 auto 20px auto;
+  border-radius: var(--radius-full);
+  margin: 0 auto 24px auto;
   max-width: 520px;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+  border: 1px solid var(--border-color, #e7e5e4);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.04);
 }
 
 .mode-tab {
@@ -2080,25 +2087,25 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 14px;
+  padding: 12px 18px;
   border: none;
   background: transparent;
-  color: #64748b;
+  color: var(--text-muted, #57534e);
   font-weight: 700;
   font-size: 0.95rem;
-  border-radius: 8px;
+  border-radius: var(--radius-full);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
 .mode-tab:hover {
-  color: #0f172a;
+  color: var(--text-main, #1c1917);
 }
 
 .mode-tab.active {
   background: #ffffff;
-  color: #0d9488;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  color: var(--primary, #059669);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.15);
 }
 
 /* GRID DE UPLOAD COMPARATIVO */
@@ -2138,8 +2145,9 @@ body {
 }
 
 .slot-badge.slot-new {
-  background: #ccfbf1;
-  color: #0f766e;
+  background: var(--primary-light, #d1fae5);
+  color: var(--primary-hover, #047857);
+  border-radius: var(--radius-full);
 }
 
 .dropzone-compact {
@@ -2148,7 +2156,7 @@ body {
 }
 
 .upload-icon-small {
-  color: #0d9488;
+  color: var(--primary, #059669);
   margin-bottom: 6px;
 }
 
@@ -2263,8 +2271,8 @@ body {
 }
 
 .compare-racao-card.card-vencedor {
-  border: 2px solid #0d9488;
-  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.12);
+  border: 2px solid var(--primary, #059669);
+  box-shadow: 0 4px 16px rgba(5, 150, 105, 0.16);
 }
 
 .compare-racao-header {
@@ -2278,7 +2286,7 @@ body {
   font-weight: 800;
   text-transform: uppercase;
   padding: 3px 8px;
-  border-radius: 6px;
+  border-radius: var(--radius-full);
 }
 
 .tag-atual {
@@ -2287,8 +2295,8 @@ body {
 }
 
 .tag-nova {
-  background: #ccfbf1;
-  color: #0d9488;
+  background: var(--primary-light, #d1fae5);
+  color: var(--primary-hover, #047857);
 }
 
 .compare-score {
@@ -2362,11 +2370,11 @@ body {
 }
 
 .transicao-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  background: #f0fdfa;
-  color: #0d9488;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ecfdf5;
+  color: #059669;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2388,9 +2396,9 @@ body {
 
 /* CARD DE CONVITE AO TIRA-TEIMA */
 .invite-compare-card {
-  background: #f0fdfa;
-  border: 1px solid #99f6e4;
-  border-radius: 14px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 20px;
   padding: 20px 24px;
   display: flex;
   justify-content: space-between;
@@ -2410,7 +2418,7 @@ body {
   font-size: 0.78rem;
   font-weight: 800;
   text-transform: uppercase;
-  color: #0d9488;
+  color: #059669;
   display: inline-block;
   margin-bottom: 4px;
 }
@@ -2428,138 +2436,198 @@ body {
 }
 
 .btn-invite-compare {
-  background: #0d9488;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
   color: #ffffff;
   border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-full);
   font-weight: 700;
   font-size: 0.92rem;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.2s;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+  transition: all 0.2s ease;
 }
 
 .btn-invite-compare:hover {
-  background: #0f766e;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  transform: translateY(-1px);
 }
 
 /* ========================================================
    ★ PAYWALL FREEMIUM & MODAL PIX (MERCADO PAGO) ★
    ======================================================== */
 
-/* Card de Oferta do Paywall */
+/* Card de Oferta do Paywall — Formato Cápsula com Emblema Circular (Vibe Pet) */
 .paywall-unlock-card {
   grid-column: 1 / -1;
-  background: linear-gradient(135deg, #042f2e 0%, #0f172a 100%);
-  border: 1px solid #14b8a6;
-  border-radius: 16px;
-  padding: 28px 32px;
+  background: linear-gradient(155deg, #064e3b 0%, #022c22 100%);
+  border: 2px solid rgba(16, 185, 129, 0.45);
+  border-radius: 36px;
+  padding: 36px 36px 32px 36px;
   color: #ffffff;
-  box-shadow: 0 10px 30px -10px rgba(13, 148, 136, 0.4);
-  margin-top: 10px;
+  box-shadow: 0 20px 45px -12px rgba(5, 150, 105, 0.35);
+  margin-top: 14px;
   position: relative;
   overflow: hidden;
+  text-align: center;
 }
 
 .paywall-unlock-card::before {
   content: "";
   position: absolute;
-  top: -50%;
-  right: -20%;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(20, 184, 166, 0.18) 0%, transparent 70%);
+  top: -40%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, transparent 70%);
   pointer-events: none;
+}
+
+/* Emblema Circular de Destaque */
+.paywall-emblem-circle {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.45), 0 0 0 6px rgba(254, 243, 199, 0.15);
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+.paywall-unlock-card:hover .paywall-emblem-circle {
+  transform: scale(1.06);
 }
 
 .paywall-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(20, 184, 166, 0.18);
-  border: 1px solid rgba(20, 184, 166, 0.4);
-  color: #5eead4;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.78rem;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  color: #a7f3d0;
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
 }
 
 .paywall-unlock-card h3 {
   font-family: var(--font-heading);
-  font-size: 1.35rem;
+  font-size: 1.45rem;
   font-weight: 800;
   color: #ffffff;
-  margin: 0 0 8px 0;
+  margin: 0 auto 10px auto;
   line-height: 1.3;
+  max-width: 640px;
 }
 
 .paywall-unlock-card p {
-  font-size: 0.94rem;
-  color: #94a3b8;
-  line-height: 1.5;
-  margin: 0 0 16px 0;
-  max-width: 680px;
+  font-size: 0.96rem;
+  color: #cbd5e1;
+  line-height: 1.55;
+  margin: 0 auto 22px auto;
+  max-width: 620px;
 }
 
-.paywall-perks {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 24px 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 10px 16px;
-}
-
-.paywall-perks li {
+/* Badges em Pílula dos Benefícios */
+.paywall-perks-pills {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 auto 26px auto;
+  max-width: 700px;
+}
+
+.pet-perk-pill {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #f1f5f9;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
   font-size: 0.88rem;
-  color: #e2e8f0;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
 }
 
-.paywall-perks li span {
-  color: #2dd4bf;
-  font-weight: 800;
+.pet-perk-pill:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(52, 211, 153, 0.5);
+  transform: translateY(-1px);
 }
 
+.pet-perk-pill svg {
+  color: #34d399;
+}
+
+/* Linha de Chamada para Ação (CTA) em Formato Cápsula */
 .paywall-cta-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 28px;
+  padding: 16px 28px;
+  margin-top: 10px;
 }
 
 @media (max-width: 640px) {
+  .paywall-unlock-card {
+    padding: 28px 20px 24px 20px;
+    border-radius: 28px;
+  }
+
   .paywall-cta-row {
     flex-direction: column;
     align-items: stretch;
     text-align: center;
+    padding: 20px 18px;
+    gap: 16px;
   }
 }
 
 .paywall-price {
   display: flex;
   flex-direction: column;
+  text-align: left;
+}
+
+@media (max-width: 640px) {
+  .paywall-price {
+    text-align: center;
+  }
 }
 
 .paywall-price .price-val {
-  font-size: 1.75rem;
+  font-size: 1.95rem;
   font-weight: 900;
-  color: #2dd4bf;
+  color: #34d399;
   line-height: 1;
+  letter-spacing: -0.5px;
 }
 
 .paywall-price .price-desc {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: #94a3b8;
-  margin-top: 3px;
+  margin-top: 4px;
+  font-weight: 500;
 }
 
 .btn-unlock-pix {
@@ -2567,21 +2635,27 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: #0d9488;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: #ffffff;
   font-size: 1.05rem;
   font-weight: 800;
-  padding: 14px 28px;
-  border-radius: 10px;
+  padding: 16px 36px;
+  border-radius: var(--radius-full);
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.4);
-  transition: all 0.2s ease;
+  box-shadow: 0 8px 24px -4px rgba(16, 185, 129, 0.45);
+  transition: all 0.25s ease;
+  white-space: nowrap;
 }
 
 .btn-unlock-pix:hover {
-  background: #0f766e;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -4px rgba(16, 185, 129, 0.55);
+}
+
+.btn-unlock-pix:active {
+  transform: translateY(0);
 }
 
 /* Área Bloqueada por Blur */
@@ -2617,11 +2691,11 @@ body {
 
 .pix-modal-card {
   background: #ffffff;
-  border-radius: 18px;
+  border-radius: 28px;
   max-width: 480px;
   width: 100%;
-  padding: 28px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  padding: 32px 28px;
+  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.25);
   position: relative;
   text-align: center;
   animation: modalPop 0.25s ease-out;
@@ -2656,31 +2730,31 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #f0fdfa;
-  border: 1px solid #ccfbf1;
-  color: #0f766e;
-  padding: 4px 10px;
-  border-radius: 16px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #047857;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
   font-size: 0.78rem;
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .pix-modal-header h3 {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 800;
   color: #0f172a;
-  margin: 0 0 6px 0;
+  margin: 0 0 8px 0;
 }
 
 .pix-price-badge {
   display: inline-block;
-  background: #0f172a;
-  color: #2dd4bf;
-  font-size: 1.4rem;
+  background: #022c22;
+  color: #34d399;
+  font-size: 1.45rem;
   font-weight: 900;
-  padding: 4px 16px;
-  border-radius: 8px;
+  padding: 6px 20px;
+  border-radius: var(--radius-full);
 }
 
 .pix-qr-container {
@@ -2693,7 +2767,7 @@ body {
   margin: 0 auto 12px;
   background: #f8fafc;
   border: 2px dashed #cbd5e1;
-  border-radius: 12px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2719,7 +2793,7 @@ body {
   width: 28px;
   height: 28px;
   border: 3px solid #e2e8f0;
-  border-top-color: #0d9488;
+  border-top-color: #059669;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -2739,10 +2813,10 @@ body {
 
 .pix-copia-cola-box input {
   flex: 1;
-  background: #f1f5f9;
+  background: #f8fafc;
   border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  padding: 10px 12px;
+  border-radius: var(--radius-full);
+  padding: 10px 16px;
   font-size: 0.8rem;
   color: #334155;
   font-family: monospace;
@@ -2752,13 +2826,13 @@ body {
   background: #0f172a;
   color: #ffffff;
   border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius-full);
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
 }
 
 .btn-copiar-pix:hover {
@@ -2770,9 +2844,9 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px;
+  padding: 10px 16px;
   background: #f8fafc;
-  border-radius: 8px;
+  border-radius: var(--radius-full);
   font-size: 0.82rem;
   color: #475569;
   font-weight: 600;
@@ -2782,14 +2856,14 @@ body {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #0d9488;
+  background: #059669;
   animation: pulse 1.5s infinite;
 }
 
 @keyframes pulse {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(13, 148, 136, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(13, 148, 136, 0); }
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(5, 150, 105, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
 }
 
 .pix-demo-notice {
@@ -2797,7 +2871,7 @@ body {
   padding: 10px;
   background: #fffbeb;
   border: 1px solid #fde68a;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 0.8rem;
   color: #92400e;
   display: flex;
@@ -2810,8 +2884,8 @@ body {
   background: #f59e0b;
   color: #ffffff;
   border: none;
-  padding: 6px 14px;
-  border-radius: 6px;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
   font-weight: 700;
   font-size: 0.78rem;
   cursor: pointer;
@@ -2824,11 +2898,12 @@ body {
 /* ABAS DE PAGAMENTO (PIX VS CARTÃO) */
 .payment-tabs-row {
   display: flex;
-  background: #f1f5f9;
-  padding: 4px;
-  border-radius: 12px;
+  background: var(--bg-subtle, #f5f3ef);
+  padding: 5px;
+  border-radius: var(--radius-full);
   gap: 6px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color, #e7e5e4);
 }
 
 .btn-pay-tab {
@@ -2840,7 +2915,7 @@ body {
   padding: 10px 14px;
   background: none;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-full);
   font-size: 0.86rem;
   font-weight: 700;
   color: #64748b;
@@ -2850,8 +2925,8 @@ body {
 
 .btn-pay-tab.active {
   background: #ffffff;
-  color: #0d9488;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  color: #059669;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15);
 }
 
 /* CONTEÚDO DA ABA CARTÃO */
@@ -2866,9 +2941,9 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #f0fdfa;
-  border: 1px solid #ccfbf1;
-  border-radius: 10px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 14px;
   padding: 12px 14px;
 }
 
@@ -2879,12 +2954,12 @@ body {
 
 .card-security-text strong {
   font-size: 0.85rem;
-  color: #0f172a;
+  color: #064e3b;
 }
 
 .card-security-text span {
   font-size: 0.74rem;
-  color: #0f766e;
+  color: #047857;
 }
 
 .card-explain-text {
@@ -2904,8 +2979,8 @@ body {
 .card-brand-pill {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  padding: 4px 8px;
-  border-radius: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
   font-size: 0.72rem;
   font-weight: 700;
   color: #334155;
@@ -2924,21 +2999,22 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: #0d9488;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
   color: #ffffff;
   border: none;
-  padding: 14px 20px;
-  border-radius: 10px;
+  padding: 15px 24px;
+  border-radius: var(--radius-full);
   font-size: 0.98rem;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.35);
   transition: all 0.2s ease;
 }
 
 .btn-pay-card-cta:hover {
-  background: #0f766e;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(5, 150, 105, 0.45);
 }
 
 .card-sub-info {

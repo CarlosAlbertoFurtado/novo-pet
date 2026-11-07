@@ -9,7 +9,7 @@
     content="Tire foto do rótulo da ração e descubra se os ingredientes são saudáveis, se tem carne de verdade e se o preço compensa para o seu pet.">
   <link rel="stylesheet" href="style.css">
   <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230d9488%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><circle cx=%2212%22 cy=%2214%22 r=%224%22/><circle cx=%226.5%22 cy=%229.5%22 r=%222.5%22/><circle cx=%2217.5%22 cy=%229.5%22 r=%222.5%22/><circle cx=%229%22 cy=%225.5%22 r=%222%22/><circle cx=%2215%22 cy=%225.5%22 r=%222%22/></svg>">
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23059669%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><circle cx=%2212%22 cy=%2214%22 r=%224%22/><circle cx=%226.5%22 cy=%229.5%22 r=%222.5%22/><circle cx=%2217.5%22 cy=%229.5%22 r=%222.5%22/><circle cx=%229%22 cy=%225.5%22 r=%222%22/><circle cx=%2215%22 cy=%225.5%22 r=%222%22/></svg>">
 </head>
 
 <body>
@@ -571,27 +571,44 @@
         </div>
 
         <!-- BANNER DE PAYWALL FREEMIUM (DESTRAVA LAUDO COMPLETO) -->
-        <div class="paywall-unlock-card" id="paywallCardIndividual">
+        <div class="paywall-unlock-card paywall-pet-capsule" id="paywallCardIndividual">
+          <div class="paywall-emblem-circle">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="14" r="4"></circle>
+              <circle cx="6.5" cy="9.5" r="2.5"></circle>
+              <circle cx="17.5" cy="9.5" r="2.5"></circle>
+              <circle cx="9" cy="5.5" r="2"></circle>
+              <circle cx="15" cy="5.5" r="2"></circle>
+            </svg>
+          </div>
           <div class="paywall-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-            <span>Laudo Completo Disponível</span>
+            <span>Raio-X Completo Liberado</span>
           </div>
-          <h3>Quer ver o Raio-X detalhado de cada ingrediente?</h3>
-          <p>Descubra os conservantes ocultos, se há sobrecarga para os rins a longo prazo e se a ração realmente vale o preço que custa.</p>
-          <ul class="paywall-perks">
-            <li><span>✓</span> Raio-X completo ingrediente por ingrediente</li>
-            <li><span>✓</span> Qualidade biológica da carne e absorção</li>
-            <li><span>✓</span> Veredito honesto: vale o que custa na prateleira?</li>
-            <li><span>✓</span> Guia de acompanhamento clínico de 30 dias</li>
-          </ul>
+          <h3>Quer o Raio-X completo da ração do seu pet?</h3>
+          <p>Descubra conservantes ocultos, sobrecarga para os rins a longo prazo e se a ração realmente vale o preço que custa.</p>
+          <div class="paywall-perks-pills">
+            <span class="pet-perk-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Ingredientes & Corantes
+            </span>
+            <span class="pet-perk-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Saúde Renal & Digestão
+            </span>
+            <span class="pet-perk-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Veredito Custo-Benefício
+            </span>
+          </div>
           <div class="paywall-cta-row">
             <div class="paywall-price">
               <span class="price-val">R$ 4,90</span>
-              <span class="price-desc">Pix ou Cartão de Crédito/Débito</span>
+              <span class="price-desc">Pix ou Cartão • Liberação Instantânea</span>
             </div>
-            <button type="button" class="btn-unlock-pix" id="btnDesbloquearIndividual">
+            <button type="button" class="btn-unlock-pix btn-pet-pill-cta" id="btnDesbloquearIndividual">
               <span>Desbloquear Laudo Completo</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
             </button>
           </div>
         </div>
@@ -937,7 +954,7 @@
         <!-- ── ABA 2: CARTÃO DE CRÉDITO E DÉBITO ── -->
         <div class="card-pay-view" id="viewPayCard" style="display:none;">
           <div class="card-security-badge">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
             <div class="card-security-text">
               <strong>Pagamento 100% Blindado & Criptografado</strong>
               <span>Certificação PCI-DSS Nível 1 pelo Mercado Pago</span>
