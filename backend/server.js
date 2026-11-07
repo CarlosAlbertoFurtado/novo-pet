@@ -71,8 +71,8 @@ app.use(cors({
       return callback(null, true);
     }
 
-    // Permitir qualquer deployment e preview na Vercel
-    if (origin.endsWith('.vercel.app')) {
+    // Permitir apenas o domínio oficial e previews do projeto novo-pet na Vercel
+    if (/^https:\/\/novo-pet(-[a-z0-9]+)?\.vercel\.app$/.test(origin)) {
       return callback(null, true);
     }
 
@@ -98,10 +98,8 @@ const limiter = rateLimit({
     error: 'Muitas requisições deste IP. Aguarde 15 minutos e tente novamente.',
     retryAfter: '15 minutos',
   },
-  // Identificar por IP real (caso esteja atrás de proxy/Cloudflare)
-  keyGenerator: (req) => {
-    return req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
-  },
+  // Identificar por IP seguro validado pelo Express (trust proxy)
+  keyGenerator: (req) => req.ip,
 });
 
 app.use('/api/', limiter);

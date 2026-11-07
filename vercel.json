@@ -1,9 +1,49 @@
 {
   "version": 2,
+  "redirects": [
+    {
+      "source": "/backend/:path*",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/(.*)\\.(md|pdf|cjs|json|env.*|log)",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/relatorio_retomada.html",
+      "destination": "/",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "/api/index.js"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(self), microphone=(), geolocation=(), payment=()"
+        }
+      ]
     }
   ],
   "functions": {

@@ -867,12 +867,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================
-  // 6B. FUNÇÃO UTILITÁRIA DE FORMATAÇÃO LIMPA
+  // 6B. FUNÇÃO UTILITÁRIA DE FORMATAÇÃO LIMPA & BLINDAGEM XSS
   // ==========================================
+  function escapeHTML(str) {
+    if (!str || typeof str !== 'string') return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
   function formatarTextoVisual(rawText) {
     if (!rawText) return '';
-    // 1. Elimina todos os asteriscos (bold, italic, bullets soltos)
-    let text = rawText
+    // 0. Escapa caracteres perigosos antes de qualquer formatação (Anti-XSS)
+    let text = escapeHTML(rawText);
+
+    // 1. Elimina todos os asteriscos e formata apenas tags seguras
+    text = text
       .replace(/\*\*\*(.+?)\*\*\*/g, '<strong>$1</strong>')
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.+?)\*/g, '$1')
@@ -975,8 +988,8 @@ document.addEventListener("DOMContentLoaded", () => {
           item.innerHTML = `
             <span class="raiox-icon">${iconSvgMap[ing.status] || iconSvgMap.neutro}</span>
             <div class="raiox-info">
-              <strong>${ing.nome}</strong>
-              ${ing.explicacao ? `<span>${ing.explicacao}</span>` : ''}
+              <strong>${escapeHTML(ing.nome)}</strong>
+              ${ing.explicacao ? `<span>${escapeHTML(ing.explicacao)}</span>` : ''}
             </div>
           `;
           raioxList.appendChild(item);
@@ -1057,8 +1070,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const card = document.createElement("div");
       card.className = "action-card-item";
       card.innerHTML = `
-        <h4>${sugestao.titulo}</h4>
-        <p>${sugestao.texto}</p>
+        <h4>${escapeHTML(sugestao.titulo)}</h4>
+        <p>${escapeHTML(sugestao.texto)}</p>
       `;
       actionContainer.appendChild(card);
     });

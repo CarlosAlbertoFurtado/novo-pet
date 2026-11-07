@@ -15,8 +15,9 @@ uploads/
 *.log
 npm-debug.log*
 
-# Sistema operacional e IDEs
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
+# Relatórios e documentos internos
+relatorio_retomada.html
+STATUS_E_RETOMADA_PROJETO_PET.pdf
+*.pdf
+*.cjs
+
