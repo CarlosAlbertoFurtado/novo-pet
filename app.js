@@ -1484,31 +1484,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ==========================================
-  // 8. BOTÕES AUXILIARES & DEMONSTRAÇÃO
+  // 8. BOTÕES AUXILIARES
   // ==========================================
-  function executarLaudoExemplo() {
-    iniciarProcessamento(() => {
-      const demoResultado = analyzer.analisar({
-        species: "cao",
-        size: "medio",
-        age: "adulto",
-        observation: "normais",
-        labelData: {
-          proteinaBruta: 26,
-          extratoEtereo: 14,
-          materiaMineral: 8.5,
-          primeiroIngrediente: "Farinha de vísceras de frango"
-        }
-      });
-      demoResultado.notaGeral = 7.8;
-      demoResultado.notaResumo = "Ração de boa qualidade com 26% de proteína e minerais equilibrados. Livre de corantes artificiais pesados.";
-      renderizarResultado(demoResultado);
-    });
-  }
-
-  document.getElementById("btnVerExemploHeader")?.addEventListener("click", executarLaudoExemplo);
-  document.getElementById("btnVerExemploHero")?.addEventListener("click", executarLaudoExemplo);
-
   btnNovaAnalise?.addEventListener("click", () => {
     resultSection.style.display = "none";
     if (resultCompareSection) resultCompareSection.style.display = "none";

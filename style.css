@@ -169,28 +169,6 @@ body {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-
-.btn-demo-header {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #ffffff;
-  color: var(--primary, #059669);
-  border: 1.5px solid var(--primary-light, #d1fae5);
-  padding: 8px 16px;
-  border-radius: var(--radius-full, 9999px);
-  font-size: 0.84rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-demo-header:hover {
-  background: var(--primary-subtle, #f0fdf4);
-  border-color: var(--primary, #059669);
-  transform: translateY(-1px);
 }
 
 .header-cta-link {
@@ -212,67 +190,6 @@ body {
   background: linear-gradient(135deg, #34d399 0%, #059669 100%);
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(5, 150, 105, 0.38);
-}
-
-/* Ações Centrais do Hero */
-.hero-cta-buttons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  margin: 0 auto 32px auto;
-  flex-wrap: wrap;
-}
-
-.btn-hero-analyze {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: #ffffff;
-  padding: 14px 28px;
-  border-radius: var(--radius-full);
-  font-size: 1rem;
-  font-weight: 800;
-  text-decoration: none;
-  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.35);
-  transition: all 0.2s ease;
-}
-
-.btn-hero-analyze:hover {
-  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(5, 150, 105, 0.45);
-}
-
-.btn-hero-demo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: #ffffff;
-  color: #064e3b;
-  border: 1.5px solid #a7f3d0;
-  padding: 13px 24px;
-  border-radius: var(--radius-full);
-  font-size: 0.96rem;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s ease;
-}
-
-.btn-hero-demo:hover {
-  background: #f0fdf4;
-  border-color: #059669;
-  color: #047857;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(5, 150, 105, 0.15);
-}
-
-.btn-hero-demo svg {
-  color: #f59e0b;
 }
 
 .header-badges,
