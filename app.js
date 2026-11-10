@@ -647,13 +647,47 @@ document.addEventListener("DOMContentLoaded", () => {
       resultado.oQueORotuloDiz.primeiroIngrediente.valor = ingredientePrincipal;
       resultado.oQueORotuloDiz.primeiroIngrediente.explicacao = `Fonte de proteína identificada no laudo da IA: ${ingredientePrincipal}.`;
 
+      // Injetar explicações clínicas personalizadas da IA nos níveis de garantia
+      const niveisLines = niveisSection.split('\n').map(l => l.trim()).filter(Boolean);
+      const lineProt = niveisLines.find(l => /^[-*•]?\s*prote[ií]na/i.test(l));
+      const lineGord = niveisLines.find(l => /^[-*•]?\s*(?:extrato\s*et[ée]reo|gordura)/i.test(l));
+      const lineCinz = niveisLines.find(l => /^[-*•]?\s*(?:mat[ée]ria\s*mineral|cinzas)/i.test(l));
+      const lineEnn = niveisLines.find(l => /(?:extrato\s*n[aã]o\s*nitrogenado|enn|carboidratos?)/i.test(l));
+      const lineCap = niveisLines.find(l => /(?:c[áa]lcio\s*:\s*f[óo]sforo|ca\s*:\s*p)/i.test(l));
+
+      if (lineProt) {
+        const explProt = lineProt.replace(/^[-*•]\s*/, '').replace(/^[^—–:]+[—–:]\s*/, '').trim();
+        if (explProt.length > 8) resultado.oQueORotuloDiz.proteina.explicacao = limpar(explProt);
+      }
+      if (lineGord) {
+        const explGord = lineGord.replace(/^[-*•]\s*/, '').replace(/^[^—–:]+[—–:]\s*/, '').trim();
+        if (explGord.length > 8) resultado.oQueORotuloDiz.gordura.explicacao = limpar(explGord);
+      }
+      if (lineCinz) {
+        const explCinz = lineCinz.replace(/^[-*•]\s*/, '').replace(/^[^—–:]+[—–:]\s*/, '').trim();
+        if (explCinz.length > 8) resultado.oQueORotuloDiz.cinzas.explicacao = limpar(explCinz);
+      }
+
       const analiseLower = analysisText.toLowerCase();
       const semCorantes = analiseLower.includes('ausência de corantes') || 
                           analiseLower.includes('sem corantes') || 
                           analiseLower.includes('livre de corantes');
+      
+      let aditivosTexto = '';
+      if (lineEnn) {
+        aditivosTexto += `${limpar(lineEnn.replace(/^[-*•]\s*/, ''))}. `;
+      }
+      if (lineCap) {
+        aditivosTexto += `${limpar(lineCap.replace(/^[-*•]\s*/, ''))}. `;
+      }
       if (semCorantes) {
         resultado.oQueORotuloDiz.aditivos.contemCorantes = false;
-        resultado.oQueORotuloDiz.aditivos.explicacao = 'Ausência de corantes sintéticos confirmada pelo laudo do Raio-X da IA.';
+        aditivosTexto += 'Ausência de corantes sintéticos confirmada pelo laudo pericial da IA.';
+      } else {
+        aditivosTexto += 'Presença de aditivos e conservantes detalhada no Raio-X dos ingredientes.';
+      }
+      if (aditivosTexto.trim()) {
+        resultado.oQueORotuloDiz.aditivos.explicacao = aditivosTexto.trim();
       }
     }
 
@@ -1154,7 +1188,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const notaAtualMatch = atualSection.match(/nota[^:]*:\s*(\d+[\.,]?\d*)/i);
     const catAtualMatch = atualSection.match(/categoria[^:]*:\s*(.+)/i);
     const forteAtualMatch = atualSection.match(/ponto\s+forte[^:]*:\s*(.+)/i);
-    const fracoAtualMatch = atualSection.match(/ponto\s+fraco[^:]*:\s*(.+)/i);
+    const fracoAtualMatch = atualSection.match(/ponto\s+(?:fraco|de\s+aten[çc][ãa]o|cr[íi]tico)[^:]*:\s*(.+)/i) || atualSection.match(/aten[çc][ãa]o[^:]*:\s*(.+)/i);
 
     const elNomeAtual = document.getElementById("nomeRacaoAtual");
     if (elNomeAtual) elNomeAtual.textContent = limpar(nomeAtualMatch?.[1] || "Ração Atual");
@@ -1177,7 +1211,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const notaNovaMatch = novaSection.match(/nota[^:]*:\s*(\d+[\.,]?\d*)/i);
     const catNovaMatch = novaSection.match(/categoria[^:]*:\s*(.+)/i);
     const forteNovaMatch = novaSection.match(/ponto\s+forte[^:]*:\s*(.+)/i);
-    const fracoNovaMatch = novaSection.match(/ponto\s+fraco[^:]*:\s*(.+)/i);
+    const fracoNovaMatch = novaSection.match(/ponto\s+(?:fraco|de\s+aten[çc][ãa]o|cr[íi]tico)[^:]*:\s*(.+)/i) || novaSection.match(/aten[çc][ãa]o[^:]*:\s*(.+)/i);
 
     const elNomeNova = document.getElementById("nomeRacaoNova");
     if (elNomeNova) elNomeNova.textContent = limpar(nomeNovaMatch?.[1] || "Nova Ração");

@@ -88,10 +88,10 @@ class TradutorRacaoAnalyzer {
 
     if (cinzas > cinzasAlerta) {
       cinzasStatus = "alerta";
-      cinzasMensagem = `[Atenção aos Rins] ${cinzas}% de matéria mineral (cinzas). Valores superiores a 10% frequentemente decorrem de alta proporção de carcaças e ossos moídos na receita para baratear a produção, sobrecarregando a filtração renal a longo prazo.`;
-    } else if (cinzas >= 8.5) {
+      cinzasMensagem = `[Atenção aos Rins] ${cinzas}% de matéria mineral (cinzas). Valores superiores a ${cinzasAlerta}% frequentemente decorrem de alta proporção de carcaças e ossos moídos na receita para baratear a produção, sobrecarregando a filtração renal a longo prazo.`;
+    } else if (cinzas >= cinzasAlerta - 1.5) {
       cinzasStatus = "atencao";
-      cinzasMensagem = `${cinzas}% de matéria mineral. Valor dentro do limite legal, porém limítrofe. Recomenda-se acompanhamento da densidade e estímulo à ingestão hídrica.`;
+      cinzasMensagem = `${cinzas}% de matéria mineral. Valor dentro do limite legal, porém limítrofe para a espécie. Recomenda-se acompanhamento da densidade urinária e estímulo à ingestão hídrica.`;
     } else {
       cinzasStatus = "ideal";
       cinzasMensagem = `${cinzas}% de matéria mineral, índice controlado e favorável. Indica processamento limpo com predomínio de tecidos cárneos de melhor digestibilidade.`;

@@ -22,26 +22,39 @@ const SPECIES_CONFIG = {
         max: 20,
         ideal_str: "10% a 20%"
       },
-      cinzas_max_alerta: 10, // Acima de 10% é alerta de baixa qualidade
+      cinzas_max_alerta: 10, // Acima de 10% indica alta proporção de farinha de ossos moídos
       fibra_max_recomendada: 4.5,
       umidade_padrao_max: 12
     },
     ingredientes_inferiores: [
       "farinha de carne e ossos",
+      "farinha de ossos",
       "subprodutos",
       "subproduto",
-      "quirera de arroz",
-      "milho integral moído",
+      "farinha de penas hidrolisada",
+      "farinha de sangue",
+      "glúten de milho 21",
       "farelo de soja",
-      "farinha de penas"
+      "casca de soja",
+      "milho moído",
+      "milho integral moído",
+      "quirera de arroz"
     ],
     ingredientes_nobres: [
       "carne mecanicamente separada",
-      "farinha de vísceras de aves",
       "carne de frango",
+      "carne fresca",
+      "farinha de vísceras de frango",
+      "farinha de vísceras de aves",
+      "farinha de salmão",
       "salmão",
       "cordeiro",
-      "proteína hidrolisada"
+      "carne bovina",
+      "proteína hidrolisada de frango",
+      "proteína isolada de suíno",
+      "ovo integral desidratado",
+      "ovo em pó",
+      "óleo de peixe refinado"
     ],
     dicas_especificas: [
       "Cães de porte grande necessitam de controle calórico estrito e proporção adequada de Cálcio/Fósforo.",
@@ -62,28 +75,37 @@ const SPECIES_CONFIG = {
         idoso: { min_recomendado: 32, ideal_str: "Ideal > 32%" }
       },
       gordura: {
-        min: 15,
-        max: 25,
-        ideal_str: "15% a 25%"
+        min: 12,
+        max: 22,
+        ideal_str: "12% a 22%"
       },
-      cinzas_max_alerta: 10, // Especialmente sensível em gatos para saúde urinária
+      cinzas_max_alerta: 8.5, // Em felinos, cinzas >8.5% representam risco elevado de urolitíase
       fibra_max_recomendada: 4.0,
-      taurina_minima_recomendada: 0.1, // Nutriente essencial obrigatório para felinos
+      taurina_minima_recomendada: 0.1, // Nutriente vital obrigatório para felinos (prevenção de CMD e retinopatia)
       umidade_padrao_max: 12
     },
     ingredientes_inferiores: [
       "farinha de carne e ossos",
       "subprodutos",
       "subproduto",
+      "farinha de penas",
+      "farelo de glúten de milho 21",
+      "farelo de soja",
       "milho integral moído",
-      "farelo de glúten de milho"
+      "quirera de arroz"
     ],
     ingredientes_nobres: [
       "farinha de vísceras de frango",
+      "farinha de vísceras de aves",
+      "carne de frango",
+      "carne fresca",
       "salmão",
+      "farinha de salmão",
       "carne de peru",
       "proteína isolada de suíno",
-      "ovo em pó"
+      "ovo em pó",
+      "ovo integral desidratado",
+      "proteína hidrolisada"
     ],
     dicas_especificas: [
       "Gatos são carnívoros estritos e dependem de proteína animal e taurina como nutrientes vitais.",
