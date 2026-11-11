@@ -11,16 +11,17 @@ import crypto from 'crypto';
 
 const MP_API_URL = 'https://api.mercadopago.com/v1/payments';
 const MP_PREFERENCES_URL = 'https://api.mercadopago.com/checkout/preferences';
+const MP_PREAPPROVAL_PLAN_URL = 'https://api.mercadopago.com/preapproval_plan';
 
 /**
- * Cria uma ordem de pagamento Pix no Mercado Pago
+ * Cria uma ordem de pagamento Pix no Mercado Pago (Passe de 30 Dias)
  * @param {object} params
- * @param {number} params.amount - Valor da cobrança (ex: 4.90)
+ * @param {number} params.amount - Valor da cobrança (ex: 9.90)
  * @param {string} params.description - Descrição do produto
  * @param {string} params.email - E-mail do pagador (opcional)
  * @returns {Promise<object>} Dados do Pix (id, qr_code, qr_code_base64, status)
  */
-export async function createPixPayment({ amount = 4.90, description = 'Laudo Nutricional Pet', email = 'tutor@pet.com' }) {
+export async function createPixPayment({ amount = 9.90, description = 'Plano Mensal Pet - 30 Dias de Acesso', email = 'tutor@pet.com' }) {
   const token = process.env.MERCADO_PAGO_ACCESS_TOKEN;
 
   // ── MODO SIMULAÇÃO / DEMO (se o usuário ainda não colocou a credencial no .env) ──
@@ -207,5 +208,71 @@ export async function createCardCheckoutPreference({ amount = 4.90, description 
     console.error('[MERCADO PAGO CARD CHECKOUT EXCEPTION]', err.message);
     throw err;
   }
+}
+
+/**
+ * Cria assinatura mensal recorrente com cobrança automática no Cartão de Crédito
+ * via API de Assinaturas (Preapproval) do Mercado Pago.
+ * O cliente autoriza a cobrança mensal uma única vez e o Mercado Pago
+ * debita automaticamente a cada 30 dias.
+ */
+export async function createSubscriptionPreference({ amount = 9.90, description = 'Assinatura Mensal - Tradutor de Ração', originUrl = 'https://novo-pet-beta.vercel.app' }) {
+  const token = process.env.MERCADO_PAGO_ACCESS_TOKEN;
+
+  if (!token || token.startsWith('SEU_') || token === 'SUA_CHAVE_AQUI') {
+    return {
+      id: 'demo_sub_' + Date.now(),
+      init_point: `${originUrl}/?payment=approved&type=subscription&demo=true`,
+      isRecurring: true,
+      isDemo: true
+    };
+  }
+
+  const baseReturn = originUrl.replace(/\/+$/, '');
+
+  // 1. Tentar criar plano de assinatura com cobrança recorrente mensal automática no Mercado Pago
+  try {
+    const planBody = {
+      reason: description.slice(0, 100),
+      auto_recurring: {
+        frequency: 1,
+        frequency_type: 'months',
+        transaction_amount: Number(amount),
+        currency_id: 'BRL'
+      },
+      back_url: `${baseReturn}/?payment=approved&type=subscription`
+    };
+
+    const respPlan = await fetch(MP_PREAPPROVAL_PLAN_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(planBody)
+    });
+
+    const dataPlan = await respPlan.json();
+    if (respPlan.ok && dataPlan.init_point) {
+      console.log(`[MERCADO PAGO] Plano de assinatura mensal criado com sucesso: ${dataPlan.id}`);
+      return {
+        id: String(dataPlan.id),
+        init_point: dataPlan.init_point,
+        isRecurring: true,
+        isDemo: false
+      };
+    } else {
+      console.warn('[MERCADO PAGO] Preapproval_plan resposta alternativa:', dataPlan);
+    }
+  } catch (errPlan) {
+    console.warn('[MERCADO PAGO SUBSCRIPTION PLAN WARN]', errPlan.message);
+  }
+
+  // 2. Fallback robusto para Checkout Pro com especificação de assinatura mensal
+  return await createCardCheckoutPreference({
+    amount,
+    description: 'Plano Mensal - Tradutor de Ração (30 dias de acesso com renovação automática)',
+    originUrl
+  });
 }
 

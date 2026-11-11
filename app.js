@@ -38,18 +38,111 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnNovaAnalise = document.getElementById("btnNovaAnalise");
   const btnPrintReport = document.getElementById("btnPrintReport");
   const resultCompareSection = document.getElementById("resultCompareSection");
+  const premiumLockedWrapper = document.getElementById("premiumLockedWrapper");
+  const paywallCardIndividual = document.getElementById("paywallCardIndividual");
+
+  // ==========================================
+  // GERENCIAMENTO DA ASSINATURA MENSAL (30 DIAS)
+  // ==========================================
+  const SUB_STORAGE_KEY = "pet_subscription";
+  let isLaudoDesbloqueado = false;
+
+  function getAssinaturaState() {
+    try {
+      const raw = localStorage.getItem(SUB_STORAGE_KEY);
+      if (!raw) return { active: false, diasRestantes: 0 };
+      const data = JSON.parse(raw);
+      if (!data || !data.expiresAt) return { active: false, diasRestantes: 0 };
+
+      const agora = Date.now();
+      if (agora < data.expiresAt) {
+        const diffMs = data.expiresAt - agora;
+        const diasRestantes = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+        return {
+          active: true,
+          diasRestantes,
+          method: data.method || 'card',
+          autoRenew: Boolean(data.autoRenew),
+          expiresAt: data.expiresAt
+        };
+      }
+      return { active: false, diasRestantes: 0, expirado: true };
+    } catch {
+      return { active: false, diasRestantes: 0 };
+    }
+  }
+
+  function ativarAssinatura(dias = 30, method = 'card', autoRenew = true) {
+    const expiresAt = Date.now() + (dias * 24 * 60 * 60 * 1000);
+    const subData = {
+      active: true,
+      plan: 'monthly',
+      method,
+      autoRenew,
+      activatedAt: new Date().toISOString(),
+      expiresAt
+    };
+    try {
+      localStorage.setItem(SUB_STORAGE_KEY, JSON.stringify(subData));
+    } catch (e) {
+      console.warn("[STORAGE ERROR]", e);
+    }
+    isLaudoDesbloqueado = true;
+    aplicarEstadoAssinatura();
+  }
+
+  function aplicarEstadoAssinatura() {
+    const sub = getAssinaturaState();
+    const activePill = document.getElementById("activeSubPill");
+    const activePillCompare = document.getElementById("activeSubPillCompare");
+    const countdownEl = document.getElementById("activeSubPillCountdown");
+    const methodBadge = document.getElementById("activeSubPillBadge");
+    const countdownCompEl = document.getElementById("activeSubPillCompareCountdown");
+    const lockedWrapper = premiumLockedWrapper || document.getElementById("premiumLockedWrapper");
+    const paywallCard = paywallCardIndividual || document.getElementById("paywallCardIndividual");
+
+    if (sub.active) {
+      isLaudoDesbloqueado = true;
+      if (lockedWrapper) lockedWrapper.classList.remove("is-locked");
+      if (paywallCard) paywallCard.style.display = "none";
+
+      if (activePill) {
+        activePill.style.display = "flex";
+        if (countdownEl) {
+          countdownEl.textContent = `Restam ${sub.diasRestantes} ${sub.diasRestantes === 1 ? 'dia' : 'dias'} de consultas ilimitadas`;
+        }
+        if (methodBadge) {
+          methodBadge.textContent = sub.autoRenew ? "Renovação Automática" : "Passe 30 Dias";
+        }
+      }
+
+      if (activePillCompare) {
+        activePillCompare.style.display = "flex";
+        if (countdownCompEl) {
+          countdownCompEl.textContent = `Restam ${sub.diasRestantes} ${sub.diasRestantes === 1 ? 'dia' : 'dias'} de consultas ilimitadas`;
+        }
+      }
+    } else {
+      if (activePill) activePill.style.display = "none";
+      if (activePillCompare) activePillCompare.style.display = "none";
+      if (!isLaudoDesbloqueado) {
+        if (lockedWrapper) lockedWrapper.classList.add("is-locked");
+        if (paywallCard) paywallCard.style.display = "block";
+      }
+    }
+  }
 
   // ── DETECTAR RETORNO DE PAGAMENTO COM CARTÃO APROVADO (MERCADO PAGO) ──
   const urlParams = new URLSearchParams(window.location.search);
   const paymentReturnStatus = urlParams.get("payment") || urlParams.get("collection_status") || urlParams.get("status");
   if (paymentReturnStatus === "approved" || paymentReturnStatus === "success") {
+    ativarAssinatura(30, 'card', true);
     setTimeout(() => {
-      const lockedWrapper = document.getElementById("premiumLockedWrapper");
-      const paywallCard = document.getElementById("paywallCardIndividual");
-      if (lockedWrapper) lockedWrapper.classList.remove("is-locked");
-      if (paywallCard) paywallCard.style.display = "none";
+      aplicarEstadoAssinatura();
       window.history.replaceState({}, document.title, window.location.pathname);
     }, 400);
+  } else {
+    aplicarEstadoAssinatura();
   }
   const btnNovaComparacao = document.getElementById("btnNovaComparacao");
   const btnIrParaComparador = document.getElementById("btnIrParaComparador");
@@ -960,11 +1053,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // 7. RENDERIZAÇÃO DO VEREDITO (v2 — Raio-X)
   // ==========================================
   function renderizarResultado(res) {
-    // Configura o estado inicial do Paywall Freemium
-    if (premiumLockedWrapper && !isLaudoDesbloqueado) {
-      premiumLockedWrapper.classList.add("is-locked");
+    // Configura o estado inicial do Paywall com base na assinatura mensal ativa
+    const sub = getAssinaturaState();
+    if (sub.active) {
+      isLaudoDesbloqueado = true;
+      if (premiumLockedWrapper) premiumLockedWrapper.classList.remove("is-locked");
+      if (paywallCardIndividual) paywallCardIndividual.style.display = "none";
+    } else if (!isLaudoDesbloqueado) {
+      if (premiumLockedWrapper) premiumLockedWrapper.classList.add("is-locked");
       if (paywallCardIndividual) paywallCardIndividual.style.display = "block";
     }
+    aplicarEstadoAssinatura();
 
     // 1. Nota Geral (se disponível da IA)
     const notaCard = document.getElementById("notaGeralCard");
@@ -1270,15 +1369,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================
-  // 7C. FLUXO DE PAGAMENTO PIX (MERCADO PAGO)
+  // 7C. CONTROLES DO MODAL DE PAGAMENTO (MERCADO PAGO)
   // ==========================================
-  let isLaudoDesbloqueado = false;
   let activePaymentPolling = null;
   let currentPaymentId = null;
 
   const btnDesbloquearIndividual = document.getElementById("btnDesbloquearIndividual");
-  const paywallCardIndividual = document.getElementById("paywallCardIndividual");
-  const premiumLockedWrapper = document.getElementById("premiumLockedWrapper");
 
   const pixModalOverlay = document.getElementById("pixModalOverlay");
   const btnFecharPix = document.getElementById("btnFecharPix");
@@ -1291,19 +1387,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const pixDemoNotice = document.getElementById("pixDemoNotice");
   const btnSimularPixAprovado = document.getElementById("btnSimularPixAprovado");
 
-  // Abas de Pagamento (Pix vs Cartão)
+  // Abas de Pagamento (Cartão Automático vs Pix)
   const tabPayPix = document.getElementById("tabPayPix");
   const tabPayCard = document.getElementById("tabPayCard");
   const viewPayPix = document.getElementById("viewPayPix");
   const viewPayCard = document.getElementById("viewPayCard");
   const btnIniciarCheckoutCartao = document.getElementById("btnIniciarCheckoutCartao");
 
-  // Alternância entre as abas Pix e Cartão
+  // Alternância entre as abas Cartão e Pix
   tabPayPix?.addEventListener("click", () => {
     tabPayPix.classList.add("active");
     tabPayCard?.classList.remove("active");
     if (viewPayPix) viewPayPix.style.display = "block";
     if (viewPayCard) viewPayCard.style.display = "none";
+    gerarChavePixModal('individual');
   });
 
   tabPayCard?.addEventListener("click", () => {
@@ -1326,7 +1423,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const resp = await fetch(`${backendUrl}/api/payment/create-card-checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: 'individual' })
+        body: JSON.stringify({ type: 'subscription' })
       });
 
       if (!resp.ok) {
@@ -1347,16 +1444,25 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Não foi possível iniciar o pagamento com cartão. Tente via Pix ou recarregue a página.");
       btnIniciarCheckoutCartao.disabled = false;
       btnIniciarCheckoutCartao.innerHTML = `
-        <span>Ir para Pagamento com Cartão</span>
+        <span>Ativar Assinatura com Cartão (R$ 9,90/mês)</span>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
       `;
     }
   });
 
-  async function abrirCheckoutPix(tipo = 'individual') {
+  function abrirModalAssinatura() {
     if (!pixModalOverlay) return;
 
+    // Cartão é a aba padrão (cobrança mensal automática)
+    if (tabPayCard) tabPayCard.classList.add("active");
+    if (tabPayPix) tabPayPix.classList.remove("active");
+    if (viewPayCard) viewPayCard.style.display = "flex";
+    if (viewPayPix) viewPayPix.style.display = "none";
+
     pixModalOverlay.style.display = "flex";
+  }
+
+  async function gerarChavePixModal(tipo = 'individual') {
     if (pixQrPlaceholder) {
       pixQrPlaceholder.style.display = "flex";
       pixQrPlaceholder.innerHTML = '<div class="spinner-small"></div><span>Gerando chave Pix no Mercado Pago...</span>';
@@ -1388,7 +1494,7 @@ document.addEventListener("DOMContentLoaded", () => {
         pixQrImg.style.display = "block";
         if (pixQrPlaceholder) pixQrPlaceholder.style.display = "none";
       } else if (pixQrPlaceholder) {
-        // Fallback para modo demo: gera placeholder elegante
+        // Fallback elegante
         pixQrPlaceholder.innerHTML = `
           <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="3" height="3"/><rect x="14" y="7" width="3" height="3"/><rect x="7" y="14" width="3" height="3"/></svg>
           <span style="font-size:0.75rem; color:#047857; font-weight:700;">Pix Copia e Cola</span>
@@ -1440,22 +1546,15 @@ document.addEventListener("DOMContentLoaded", () => {
       activePaymentPolling = null;
     }
 
-    isLaudoDesbloqueado = true;
+    ativarAssinatura(30, 'pix', false);
 
     if (pixStatusText) {
-      pixStatusText.innerHTML = `<strong style="color:#16a34a;">✓ Pagamento Aprovado! Liberando laudo...</strong>`;
+      pixStatusText.innerHTML = `<strong style="color:#16a34a;">✓ Pagamento Aprovado! 30 Dias de Acesso Ilimitado Liberados!</strong>`;
     }
 
     setTimeout(() => {
       fecharModalPix();
-
-      // Destrava a área premium
-      if (premiumLockedWrapper) {
-        premiumLockedWrapper.classList.remove("is-locked");
-      }
-      if (paywallCardIndividual) {
-        paywallCardIndividual.style.display = "none";
-      }
+      aplicarEstadoAssinatura();
 
       // Rola suavemente até o Raio-X agora desbloqueado
       const raioxEl = document.getElementById("raioxIngredientesContainer");
@@ -1477,7 +1576,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Eventos de clique
   btnDesbloquearIndividual?.addEventListener("click", () => {
-    abrirCheckoutPix('individual');
+    abrirModalAssinatura();
   });
 
   btnFecharPix?.addEventListener("click", fecharModalPix);

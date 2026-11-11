@@ -440,6 +440,16 @@
          ========================================== -->
     <section class="result-section" id="resultSection">
 
+      <!-- BADGE DE ASSINATURA ATIVA (30 DIAS ILIMITADO) -->
+      <div class="active-subscription-pill" id="activeSubPill" style="display:none;">
+        <span class="sub-pill-dot"></span>
+        <div class="sub-pill-info">
+          <strong id="activeSubPillTitle">Plano Mensal Ativo • Acesso Ilimitado</strong>
+          <span id="activeSubPillCountdown">Restam 30 dias de acesso</span>
+        </div>
+        <span class="sub-pill-badge" id="activeSubPillBadge">Renovação Automática</span>
+      </div>
+
       <!-- Barra Superior de Ações Mobile -->
       <div class="result-top-bar">
         <div>
@@ -570,8 +580,9 @@
           </div>
         </div>
 
-        <!-- BANNER DE PAYWALL FREEMIUM (DESTRAVA LAUDO COMPLETO) -->
+        <!-- BANNER DE PAYWALL — PLANO MENSAL 30 DIAS RECORRENTE -->
         <div class="paywall-unlock-card paywall-pet-capsule" id="paywallCardIndividual">
+          <div class="paywall-floating-glow"></div>
           <div class="paywall-emblem-circle">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="14" r="4"></circle>
@@ -583,31 +594,34 @@
           </div>
           <div class="paywall-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-            <span>Raio-X Completo Liberado</span>
+            <span>Plano Mensal • 30 Dias de Acesso Ilimitado</span>
           </div>
-          <h3>Quer o Raio-X completo da ração do seu pet?</h3>
-          <p>Descubra conservantes ocultos, sobrecarga para os rins a longo prazo e se a ração realmente vale o preço que custa.</p>
+          <h3>Acesso Ilimitado a Todos os Laudos & Tira-Teimas</h3>
+          <p>Proteja a nutrição do seu pet o mês inteiro. Analise rótulos, compare marcas no Tira-Teima e consulte quando quiser durante 30 dias.</p>
           <div class="paywall-perks-pills">
             <span class="pet-perk-pill">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Ingredientes & Corantes
+              30 Dias de Consultas Ilimitadas
             </span>
             <span class="pet-perk-pill">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Saúde Renal & Digestão
+              Cobrança Automática no Cartão
             </span>
             <span class="pet-perk-pill">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Veredito Custo-Benefício
+              Cancele Quando Quiser
             </span>
           </div>
           <div class="paywall-cta-row">
             <div class="paywall-price">
-              <span class="price-val">R$ 4,90</span>
-              <span class="price-desc">Pix ou Cartão • Liberação Instantânea</span>
+              <div class="price-val-row">
+                <span class="price-val">R$ 9,90</span>
+                <span class="price-period">/mês</span>
+              </div>
+              <span class="price-desc">No Cartão: renovação automática mensal • No Pix: passe 30 dias</span>
             </div>
             <button type="button" class="btn-unlock-pix btn-pet-pill-cta" id="btnDesbloquearIndividual">
-              <span>Desbloquear Laudo Completo</span>
+              <span>Assinar Plano Mensal (30 Dias)</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
             </button>
           </div>
@@ -758,6 +772,16 @@
          ========================================== -->
     <section class="result-section" id="resultCompareSection" style="display:none;">
 
+      <!-- BADGE DE ASSINATURA ATIVA NO COMPARATIVO -->
+      <div class="active-subscription-pill" id="activeSubPillCompare" style="display:none;">
+        <span class="sub-pill-dot"></span>
+        <div class="sub-pill-info">
+          <strong>Plano Mensal Ativo • Acesso Ilimitado</strong>
+          <span id="activeSubPillCompareCountdown">Restam 30 dias de acesso</span>
+        </div>
+        <span class="sub-pill-badge">Renovação Automática</span>
+      </div>
+
       <!-- Topo do Resultado do Comparativo -->
       <div class="result-top-bar">
         <div>
@@ -887,7 +911,7 @@
     </section>
 
     <!-- ==========================================
-         MODAL DE PAGAMENTO PIX (MERCADO PAGO)
+         MODAL DE PAGAMENTO — ASSINATURA RECORRENTE (MERCADO PAGO)
          ========================================== -->
     <div class="pix-modal-overlay" id="pixModalOverlay" style="display:none;">
       <div class="pix-modal-card">
@@ -900,24 +924,82 @@
             </svg>
             <span>Ambiente Seguro • Mercado Pago</span>
           </div>
-          <h3 id="pixModalTitle">Desbloqueio do Laudo Completo</h3>
-          <div class="pix-price-badge">R$ 4,90</div>
+          <h3 id="pixModalTitle">Plano Mensal (30 Dias de Acesso)</h3>
+          <div class="pix-price-badge">
+            <span class="pix-price-val">R$ 9,90</span>
+            <span class="pix-price-period">/mês</span>
+          </div>
+          <p class="pix-modal-subtitle">Acesso ilimitado a todas as análises e tira-teimas de ração</p>
         </div>
 
         <!-- SELETOR DE FORMA DE PAGAMENTO -->
         <div class="payment-tabs-row">
-          <button type="button" class="btn-pay-tab active" id="tabPayPix">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-            <span>Pix Instantâneo</span>
-          </button>
-          <button type="button" class="btn-pay-tab" id="tabPayCard">
+          <button type="button" class="btn-pay-tab active" id="tabPayCard">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
-            <span>Cartão de Crédito / Débito</span>
+            <span>Cartão (Cobrança Automática)</span>
+          </button>
+          <button type="button" class="btn-pay-tab" id="tabPayPix">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>Pix (Passe 30 Dias)</span>
           </button>
         </div>
 
-        <!-- ── ABA 1: PIX ── -->
-        <div class="pix-pay-view" id="viewPayPix">
+        <!-- ── ABA 1: CARTÃO DE CRÉDITO COM COBRANÇA AUTOMÁTICA (PADRÃO) ── -->
+        <div class="card-pay-view" id="viewPayCard">
+          <div class="card-security-badge">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <div class="card-security-text">
+              <strong>Cobrança Recorrente 100% Automática</strong>
+              <span>Certificação PCI-DSS Nível 1 pelo Mercado Pago</span>
+            </div>
+          </div>
+
+          <p class="card-explain-text">
+            O valor de <strong>R$ 9,90/mês</strong> será cobrado automaticamente a cada 30 dias no seu cartão. Você <strong>não precisa se preocupar em lembrar de pagar todo mês</strong> para manter as consultas liberadas. Cancele a qualquer momento com total transparência.
+          </p>
+
+          <div class="card-benefits-recurrent">
+            <div class="rec-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>30 dias de acesso ilimitado a todas as análises e comparações</span>
+            </div>
+            <div class="rec-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Renovação automática mensal: zero preocupação com vencimentos</span>
+            </div>
+            <div class="rec-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Cancelamento imediato sem multas ou burocracia</span>
+            </div>
+          </div>
+
+          <div class="card-brands-row">
+            <span class="card-brand-pill">Visa</span>
+            <span class="card-brand-pill">Mastercard</span>
+            <span class="card-brand-pill">Elo</span>
+            <span class="card-brand-pill">Hipercard</span>
+            <span class="card-brand-pill">American Express</span>
+            <span class="card-brand-pill debit">Débito Caixa, BB, Bradesco, Santander, Itaú</span>
+          </div>
+
+          <button type="button" class="btn-pay-card-cta" id="btnIniciarCheckoutCartao">
+            <span>Ativar Assinatura com Cartão (R$ 9,90/mês)</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+          </button>
+
+          <div class="card-sub-info">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span>Aprovação imediata • O laudo destrava assim que o pagamento for confirmado</span>
+          </div>
+        </div>
+
+        <!-- ── ABA 2: PIX (PASSE DE 30 DIAS) ── -->
+        <div class="pix-pay-view" id="viewPayPix" style="display:none;">
+          <div class="pix-pass-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span>Passe de 30 Dias (Renovação Manual)</span>
+          </div>
+
           <!-- ÁREA DO QR CODE -->
           <div class="pix-qr-container">
             <div class="pix-qr-box" id="pixQrBox">
@@ -927,7 +1009,7 @@
                 <span>Gerando chave Pix...</span>
               </div>
             </div>
-            <p class="pix-instruction">Abra o app do seu banco, escolha <strong>Pix</strong> e aponte a câmera para o QR Code ou copie o código abaixo:</p>
+            <p class="pix-instruction">Pague <strong>R$ 9,90</strong> via Pix para liberar 30 dias de acesso. Aponte a câmera para o QR Code ou copie o código abaixo:</p>
           </div>
 
           <!-- COPIA E COLA -->
@@ -947,41 +1029,7 @@
           <!-- MODO DEMO / SIMULAÇÃO -->
           <div class="pix-demo-notice" id="pixDemoNotice" style="display:none;">
             <p>Modo de Demonstração ativo (sem cobrança real):</p>
-            <button type="button" class="btn-pix-simular" id="btnSimularPixAprovado">Simular Pagamento Aprovado</button>
-          </div>
-        </div>
-
-        <!-- ── ABA 2: CARTÃO DE CRÉDITO E DÉBITO ── -->
-        <div class="card-pay-view" id="viewPayCard" style="display:none;">
-          <div class="card-security-badge">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-            <div class="card-security-text">
-              <strong>Pagamento 100% Blindado & Criptografado</strong>
-              <span>Certificação PCI-DSS Nível 1 pelo Mercado Pago</span>
-            </div>
-          </div>
-
-          <p class="card-explain-text">
-            Seus dados são transmitidos diretamente para o cofre seguro do Mercado Pago com criptografia de ponta a ponta. Nosso site <strong>nunca tem acesso aos números do seu cartão</strong>.
-          </p>
-
-          <div class="card-brands-row">
-            <span class="card-brand-pill">Visa</span>
-            <span class="card-brand-pill">Mastercard</span>
-            <span class="card-brand-pill">Elo</span>
-            <span class="card-brand-pill">Hipercard</span>
-            <span class="card-brand-pill">American Express</span>
-            <span class="card-brand-pill debit">Débito Caixa, BB, Bradesco, Santander, Itaú</span>
-          </div>
-
-          <button type="button" class="btn-pay-card-cta" id="btnIniciarCheckoutCartao">
-            <span>Ir para Pagamento com Cartão</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-          </button>
-
-          <div class="card-sub-info">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            <span>Aprovação imediata • O laudo destrava assim que o pagamento for concluído</span>
+            <button type="button" class="btn-pix-simular" id="btnSimularPixAprovado">Simular Pagamento Aprovado (30 Dias)</button>
           </div>
         </div>
       </div>

@@ -9,20 +9,19 @@
 // ============================================================
 
 import { Router } from 'express';
-import { createPixPayment, getPaymentStatus, createCardCheckoutPreference } from '../services/mercadopago.js';
+import { createPixPayment, getPaymentStatus, createCardCheckoutPreference, createSubscriptionPreference } from '../services/mercadopago.js';
 
 export function createPaymentRouter() {
   const router = Router();
 
   // ── POST /api/payment/create-pix ──────────────────────────
+  // Gera cobrança Pix para Passe Mensal de 30 Dias de Acesso Ilimitado
   router.post('/create-pix', async (req, res, next) => {
     try {
-      const defaultPrice = parseFloat(process.env.PIX_ANALYSIS_PRICE) || 4.90;
-      const { description, email, type } = req.body || {};
+      const defaultPrice = parseFloat(process.env.SUBSCRIPTION_MONTHLY_PRICE || process.env.PIX_ANALYSIS_PRICE) || 9.90;
+      const { description, email } = req.body || {};
 
-      const desc = description || (type === 'compare' 
-        ? 'Tira-Teima de Rações - Laudo Comparativo' 
-        : 'Raio-X Completo da Ração - Laudo Nutricional');
+      const desc = description || 'Passe Mensal Pet - 30 Dias de Acesso Ilimitado';
 
       const payment = await createPixPayment({
         amount: defaultPrice,
@@ -41,18 +40,16 @@ export function createPaymentRouter() {
   });
 
   // ── POST /api/payment/create-card-checkout ────────────────
-  // Gera preferência oficial de pagamento seguro com Cartão de Crédito e Débito (Mercado Pago)
+  // Gera assinatura mensal recorrente com cobrança automática no Cartão (Mercado Pago)
   router.post('/create-card-checkout', async (req, res, next) => {
     try {
-      const defaultPrice = parseFloat(process.env.PIX_ANALYSIS_PRICE) || 4.90;
-      const { description, type } = req.body || {};
+      const defaultPrice = parseFloat(process.env.SUBSCRIPTION_MONTHLY_PRICE || process.env.PIX_ANALYSIS_PRICE) || 9.90;
+      const { description } = req.body || {};
       const originUrl = req.headers.origin || 'https://novo-pet-beta.vercel.app';
 
-      const desc = description || (type === 'compare'
-        ? 'Tira-Teima de Rações - Laudo Comparativo'
-        : 'Raio-X Completo da Ração - Laudo Nutricional');
+      const desc = description || 'Assinatura Mensal - Tradutor de Ração (30 Dias de Acesso Ilimitado com Renovação Automática)';
 
-      const checkout = await createCardCheckoutPreference({
+      const checkout = await createSubscriptionPreference({
         amount: defaultPrice,
         description: desc,
         originUrl
