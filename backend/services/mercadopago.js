@@ -16,12 +16,12 @@ const MP_PREAPPROVAL_PLAN_URL = 'https://api.mercadopago.com/preapproval_plan';
 /**
  * Cria uma ordem de pagamento Pix no Mercado Pago (Passe de 30 Dias)
  * @param {object} params
- * @param {number} params.amount - Valor da cobrança (ex: 9.90)
+ * @param {number} params.amount - Valor da cobrança (ex: 12.90)
  * @param {string} params.description - Descrição do produto
  * @param {string} params.email - E-mail do pagador (opcional)
  * @returns {Promise<object>} Dados do Pix (id, qr_code, qr_code_base64, status)
  */
-export async function createPixPayment({ amount = 9.90, description = 'Plano Mensal Pet - 30 Dias de Acesso', email = 'tutor@pet.com' }) {
+export async function createPixPayment({ amount = 12.90, description = 'Plano Mensal Pet - 30 Dias de Acesso', email = 'tutor@pet.com' }) {
   const token = process.env.MERCADO_PAGO_ACCESS_TOKEN;
 
   // ── MODO SIMULAÇÃO / DEMO (se o usuário ainda não colocou a credencial no .env) ──
@@ -216,7 +216,7 @@ export async function createCardCheckoutPreference({ amount = 4.90, description 
  * O cliente autoriza a cobrança mensal uma única vez e o Mercado Pago
  * debita automaticamente a cada 30 dias.
  */
-export async function createSubscriptionPreference({ amount = 9.90, description = 'Assinatura Mensal - Tradutor de Ração', originUrl = 'https://novo-pet-beta.vercel.app' }) {
+export async function createSubscriptionPreference({ amount = 12.90, description = 'Assinatura Mensal - Tradutor de Ração', originUrl = 'https://novo-pet-beta.vercel.app' }) {
   const token = process.env.MERCADO_PAGO_ACCESS_TOKEN;
 
   if (!token || token.startsWith('SEU_') || token === 'SUA_CHAVE_AQUI') {

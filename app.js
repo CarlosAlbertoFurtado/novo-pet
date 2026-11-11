@@ -1444,7 +1444,7 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Não foi possível iniciar o pagamento com cartão. Tente via Pix ou recarregue a página.");
       btnIniciarCheckoutCartao.disabled = false;
       btnIniciarCheckoutCartao.innerHTML = `
-        <span>Ativar Assinatura com Cartão (R$ 9,90/mês)</span>
+        <span>Ativar Assinatura com Cartão (R$ 12,90/mês)</span>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
       `;
     }

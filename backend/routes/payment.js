@@ -18,7 +18,7 @@ export function createPaymentRouter() {
   // Gera cobrança Pix para Passe Mensal de 30 Dias de Acesso Ilimitado
   router.post('/create-pix', async (req, res, next) => {
     try {
-      const defaultPrice = parseFloat(process.env.SUBSCRIPTION_MONTHLY_PRICE || process.env.PIX_ANALYSIS_PRICE) || 9.90;
+      const defaultPrice = parseFloat(process.env.SUBSCRIPTION_MONTHLY_PRICE || process.env.PIX_ANALYSIS_PRICE) || 12.90;
       const { description, email } = req.body || {};
 
       const desc = description || 'Passe Mensal Pet - 30 Dias de Acesso Ilimitado';
@@ -43,7 +43,7 @@ export function createPaymentRouter() {
   // Gera assinatura mensal recorrente com cobrança automática no Cartão (Mercado Pago)
   router.post('/create-card-checkout', async (req, res, next) => {
     try {
-      const defaultPrice = parseFloat(process.env.SUBSCRIPTION_MONTHLY_PRICE || process.env.PIX_ANALYSIS_PRICE) || 9.90;
+      const defaultPrice = parseFloat(process.env.SUBSCRIPTION_MONTHLY_PRICE || process.env.PIX_ANALYSIS_PRICE) || 12.90;
       const { description } = req.body || {};
       const originUrl = req.headers.origin || 'https://novo-pet-beta.vercel.app';
 
