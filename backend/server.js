@@ -59,6 +59,7 @@ const customOrigins = (process.env.ALLOWED_ORIGINS || '')
 const defaultAllowed = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
+  'https://novo-pet.vercel.app',
   'https://novo-pet-beta.vercel.app'
 ];
 

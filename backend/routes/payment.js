@@ -45,7 +45,7 @@ export function createPaymentRouter() {
     try {
       const defaultPrice = parseFloat(process.env.SUBSCRIPTION_MONTHLY_PRICE || process.env.PIX_ANALYSIS_PRICE) || 12.90;
       const { description } = req.body || {};
-      const originUrl = req.headers.origin || 'https://novo-pet-beta.vercel.app';
+      const originUrl = req.headers.origin || 'https://novo-pet.vercel.app';
 
       const desc = description || 'Assinatura Mensal - Tradutor de Ração (30 Dias de Acesso Ilimitado com Renovação Automática)';
 

@@ -417,14 +417,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 2. Fallback automático para a API em nuvem na Vercel (garante que a IA funcione em qualquer ambiente)
     try {
-      const prodResp = await fetch('https://novo-pet-beta.vercel.app/api/analysis/status', {
+      const prodResp = await fetch('https://novo-pet.vercel.app/api/analysis/status', {
         signal: AbortSignal.timeout(3500)
       });
       if (prodResp.ok) {
         const data = await prodResp.json();
         if (data.ready) {
+          activeBackendUrl = 'https://novo-pet.vercel.app';
+          console.log('[API] Backend local não detectado. Usando API em nuvem (Vercel): https://novo-pet.vercel.app');
+          return activeBackendUrl;
+        }
+      }
+    } catch {
+      // Testar fallback alternativo
+    }
+
+    try {
+      const betaResp = await fetch('https://novo-pet-beta.vercel.app/api/analysis/status', {
+        signal: AbortSignal.timeout(2500)
+      });
+      if (betaResp.ok) {
+        const data = await betaResp.json();
+        if (data.ready) {
           activeBackendUrl = 'https://novo-pet-beta.vercel.app';
-          console.log('[API] Backend local não detectado. Usando API em nuvem (Vercel): https://novo-pet-beta.vercel.app');
           return activeBackendUrl;
         }
       }

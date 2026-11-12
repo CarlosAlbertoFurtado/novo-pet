@@ -143,7 +143,7 @@ export async function getPaymentStatus(paymentId) {
  * @param {string} params.originUrl - URL base para retorno do cliente após pagamento
  * @returns {Promise<object>} { id, init_point, isDemo }
  */
-export async function createCardCheckoutPreference({ amount = 4.90, description = 'Laudo Nutricional Pet', originUrl = 'https://novo-pet-beta.vercel.app' }) {
+export async function createCardCheckoutPreference({ amount = 4.90, description = 'Laudo Nutricional Pet', originUrl = 'https://novo-pet.vercel.app' }) {
   const token = process.env.MERCADO_PAGO_ACCESS_TOKEN;
 
   if (!token || token.startsWith('SEU_') || token === 'SUA_CHAVE_AQUI') {
@@ -216,7 +216,7 @@ export async function createCardCheckoutPreference({ amount = 4.90, description 
  * O cliente autoriza a cobrança mensal uma única vez e o Mercado Pago
  * debita automaticamente a cada 30 dias.
  */
-export async function createSubscriptionPreference({ amount = 12.90, description = 'Assinatura Mensal - Tradutor de Ração', originUrl = 'https://novo-pet-beta.vercel.app' }) {
+export async function createSubscriptionPreference({ amount = 12.90, description = 'Assinatura Mensal - Tradutor de Ração', originUrl = 'https://novo-pet.vercel.app' }) {
   const token = process.env.MERCADO_PAGO_ACCESS_TOKEN;
 
   if (!token || token.startsWith('SEU_') || token === 'SUA_CHAVE_AQUI') {
