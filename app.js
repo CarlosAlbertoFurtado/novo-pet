@@ -1035,15 +1035,53 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/^[-=_]{3,}\s*$/gm, '')
       .trim();
 
-    // 2. Transforma cada linha em tópico ou parágrafo legível
+    // 2. Transforma cada linha em tópico visual estruturado (Micro-Cards)
     const lines = text.split('\n');
     const htmlParts = lines.map(line => {
       const trimmed = line.trim();
       if (!trimmed) return '';
-      if (/^[•\-–—]\s*/.test(trimmed)) {
-        return `<div class="clean-bullet-item"><span class="bullet-dot">•</span><span>${trimmed.replace(/^[•\-–—]\s*/, '')}</span></div>`;
+      const cleanLine = trimmed.replace(/^[•\-–—]\s*/, '').trim();
+
+      // Detecta padrão Título: Descrição com ou sem <strong>
+      const strongKeyMatch = cleanLine.match(/^<strong>([^<]+)<\/strong>[:–—]?\s*(.*)$/i);
+      const plainKeyMatch = !strongKeyMatch ? cleanLine.match(/^([A-Za-zÀ-ÿ0-9\s\/\(\)\,\-\+]{3,45})[:–—]\s+(.+)$/) : null;
+
+      if (strongKeyMatch && strongKeyMatch[2].trim()) {
+        const title = strongKeyMatch[1].replace(/[:–—\s]+$/, '').trim();
+        const body = strongKeyMatch[2].trim();
+        return `
+          <div class="ai-topic-card">
+            <div class="ai-topic-header">
+              <span class="ai-topic-tag">${title}</span>
+            </div>
+            <p class="ai-topic-body">${body}</p>
+          </div>
+        `;
+      } else if (plainKeyMatch) {
+        const title = plainKeyMatch[1].replace(/[:–—\s]+$/, '').trim();
+        const body = plainKeyMatch[2].trim();
+        return `
+          <div class="ai-topic-card">
+            <div class="ai-topic-header">
+              <span class="ai-topic-tag">${title}</span>
+            </div>
+            <p class="ai-topic-body">${body}</p>
+          </div>
+        `;
       }
-      return `<p class="clean-paragraph">${trimmed}</p>`;
+
+      if (/^[•\-–—]/.test(trimmed)) {
+        return `
+          <div class="clean-bullet-item">
+            <span class="bullet-dot">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </span>
+            <span class="bullet-text">${cleanLine}</span>
+          </div>
+        `;
+      }
+
+      return `<p class="clean-paragraph">${cleanLine}</p>`;
     });
 
     return htmlParts.filter(Boolean).join('');
@@ -1128,9 +1166,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const raioxList = document.getElementById("raioxIngredientesList");
       if (raioxList) {
         raioxList.innerHTML = "";
-        res.ingredientesAnalisados.forEach(ing => {
+        raioxList.classList.remove("show-all");
+        const totalIng = res.ingredientesAnalisados.length;
+        res.ingredientesAnalisados.forEach((ing, index) => {
           const item = document.createElement("div");
-          item.className = `raiox-ingrediente-item ${ing.status}`;
+          const isHiddenMobile = index >= 4 ? "raiox-hidden-mobile" : "";
+          item.className = `raiox-ingrediente-item ${ing.status} ${isHiddenMobile}`.trim();
           const iconSvgMap = {
             positivo: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
             atencao: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>',
@@ -1140,12 +1181,44 @@ document.addEventListener("DOMContentLoaded", () => {
           item.innerHTML = `
             <span class="raiox-icon">${iconSvgMap[ing.status] || iconSvgMap.neutro}</span>
             <div class="raiox-info">
-              <strong>${escapeHTML(ing.nome)}</strong>
+              <div class="raiox-info-top">
+                <strong>${escapeHTML(ing.nome)}</strong>
+                <span class="raiox-status-badge status-${ing.status}">${ing.status === 'positivo' ? 'Positivo' : (ing.status === 'atencao' ? 'Atenção' : (ing.status === 'negativo' ? 'Evitável' : 'Neutro'))}</span>
+              </div>
               ${ing.explicacao ? `<span>${escapeHTML(ing.explicacao)}</span>` : ''}
             </div>
           `;
           raioxList.appendChild(item);
         });
+
+        // Botão para expandir/recolher no celular caso tenha mais de 4 ingredientes
+        const existingToggle = raioxContainer.querySelector(".btn-toggle-raiox");
+        if (existingToggle) existingToggle.remove();
+
+        if (totalIng > 4) {
+          const btnToggle = document.createElement("button");
+          btnToggle.type = "button";
+          btnToggle.className = "btn-toggle-raiox";
+          btnToggle.innerHTML = `
+            <span>Ver todos os ${totalIng} ingredientes (+${totalIng - 4})</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          `;
+          btnToggle.addEventListener("click", () => {
+            const isExpanded = raioxList.classList.toggle("show-all");
+            if (isExpanded) {
+              btnToggle.innerHTML = `
+                <span>Recolher lista de ingredientes</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+              `;
+            } else {
+              btnToggle.innerHTML = `
+                <span>Ver todos os ${totalIng} ingredientes (+${totalIng - 4})</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              `;
+            }
+          });
+          raioxList.after(btnToggle);
+        }
       }
     } else if (raioxContainer) {
       raioxContainer.style.display = "none";
@@ -1233,6 +1306,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (honestyEl && res.declaracaoHonestidade) {
       honestyEl.textContent = res.declaracaoHonestidade;
     }
+
+    // Ativa a primeira aba no celular (Veredito)
+    ativarAbaMobile('resultMobileNav', 'tab-veredito', resultSection);
 
     // Exibir seção e scroll suave
     if (resultCompareSection) resultCompareSection.style.display = "none";
@@ -1359,6 +1435,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dicaEl && dicaSection) {
       dicaEl.textContent = limpar(dicaSection);
     }
+
+    // Ativa a primeira aba no comparativo celular (Vencedor)
+    ativarAbaMobile('compareMobileNav', 'tab-comp-vencedor', resultCompareSection);
 
     // Exibir seção e scroll suave
     resultSection.style.display = "none";
@@ -1634,4 +1713,61 @@ document.addEventListener("DOMContentLoaded", () => {
   btnPrintReport?.addEventListener("click", () => {
     window.print();
   });
+
+  // ==========================================
+  // 9. NAVEGAÇÃO POR ABAS NO CELULAR (REDUZ ROLAGEM)
+  // ==========================================
+  function ativarAbaMobile(navId, targetTab, containerEl) {
+    const nav = document.getElementById(navId);
+    if (nav) {
+      const buttons = nav.querySelectorAll(".mobile-nav-btn");
+      buttons.forEach(btn => {
+        if (btn.dataset.targetTab === targetTab) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+    }
+
+    if (containerEl) {
+      const tabItems = containerEl.querySelectorAll(".mobile-tab-item");
+      tabItems.forEach(item => {
+        const groups = (item.dataset.mobileGroup || "").split(/\s+/);
+        if (groups.includes(targetTab)) {
+          item.classList.add("mobile-group-active");
+        } else {
+          item.classList.remove("mobile-group-active");
+        }
+      });
+    }
+  }
+
+  function initMobileTabs() {
+    const navResult = document.getElementById("resultMobileNav");
+    if (navResult) {
+      navResult.addEventListener("click", (e) => {
+        const btn = e.target.closest(".mobile-nav-btn");
+        if (!btn) return;
+        const targetTab = btn.dataset.targetTab;
+        if (!targetTab) return;
+        ativarAbaMobile("resultMobileNav", targetTab, resultSection);
+        navResult.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+    }
+
+    const navCompare = document.getElementById("compareMobileNav");
+    if (navCompare) {
+      navCompare.addEventListener("click", (e) => {
+        const btn = e.target.closest(".mobile-nav-btn");
+        if (!btn) return;
+        const targetTab = btn.dataset.targetTab;
+        if (!targetTab) return;
+        ativarAbaMobile("compareMobileNav", targetTab, resultCompareSection);
+        navCompare.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+    }
+  }
+
+  initMobileTabs();
 });

@@ -475,8 +475,28 @@
         </div>
       </div>
 
+      <!-- SELETOR DE ABAS MOBILE (ELIMINA EXCESSO DE ROLAGEM NO CELULAR) -->
+      <nav class="result-mobile-nav" id="resultMobileNav" aria-label="Navegação do Laudo no Celular">
+        <button type="button" class="mobile-nav-btn active" data-target-tab="tab-veredito">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span>Veredito</span>
+        </button>
+        <button type="button" class="mobile-nav-btn" data-target-tab="tab-raiox">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <span>Raio-X</span>
+        </button>
+        <button type="button" class="mobile-nav-btn" data-target-tab="tab-nutrientes">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
+          <span>Nutrientes</span>
+        </button>
+        <button type="button" class="mobile-nav-btn" data-target-tab="tab-cuidados">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg>
+          <span>Cuidados</span>
+        </button>
+      </nav>
+
       <!-- ★ NOTA GERAL & CLASSIFICAÇÃO COMERCIAL (IA) ★ -->
-      <div class="nota-geral-card" id="notaGeralCard" style="display:none;">
+      <div class="nota-geral-card mobile-tab-item mobile-group-active" id="notaGeralCard" data-mobile-group="tab-veredito" style="display:none;">
         <div class="nota-geral-score-area">
           <div class="nota-geral-circle">
             <span class="nota-geral-valor" id="notaGeralValor">--</span>
@@ -498,7 +518,7 @@
       </div>
 
       <!-- 1. SEMÁFORO DE QUALIDADE TÉCNICA -->
-      <div class="semaphore-card verde" id="semaphoreCard">
+      <div class="semaphore-card verde mobile-tab-item mobile-group-active" id="semaphoreCard" data-mobile-group="tab-veredito">
         <div class="semaphore-lights">
           <div class="light-bulb red" id="lightRed"></div>
           <div class="light-bulb yellow" id="lightYellow"></div>
@@ -517,7 +537,7 @@
       <div class="result-grid-two">
 
         <!-- CARD: O QUE O RÓTULO DECLARA -->
-        <div class="result-card">
+        <div class="result-card mobile-tab-item" id="boxParametrosRotulo" data-mobile-group="tab-nutrientes">
           <div class="result-card-header">
             <span class="result-card-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -581,7 +601,7 @@
         </div>
 
         <!-- BANNER DE PAYWALL — PLANO MENSAL 30 DIAS RECORRENTE -->
-        <div class="paywall-unlock-card paywall-pet-capsule" id="paywallCardIndividual">
+        <div class="paywall-unlock-card paywall-pet-capsule mobile-tab-item mobile-group-active" id="paywallCardIndividual" data-mobile-group="tab-veredito tab-raiox">
           <div class="paywall-floating-glow"></div>
           <div class="paywall-emblem-circle">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -631,7 +651,7 @@
         <div class="premium-locked-wrapper is-locked" id="premiumLockedWrapper">
 
         <!-- ★ RAIO-X DOS INGREDIENTES (IA) ★ -->
-        <div class="result-card raiox-card" id="raioxIngredientesContainer" style="display:none;">
+        <div class="result-card raiox-card mobile-tab-item" id="raioxIngredientesContainer" data-mobile-group="tab-raiox" style="display:none;">
           <div class="result-card-header">
             <span class="result-card-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -647,7 +667,7 @@
         </div>
 
         <!-- ★ QUALIDADE DA PROTEÍNA (IA) ★ -->
-        <div class="result-card qualidade-proteina-card" id="qualidadeProteinaCard" style="display:none;">
+        <div class="result-card qualidade-proteina-card mobile-tab-item" id="qualidadeProteinaCard" data-mobile-group="tab-raiox" style="display:none;">
           <div class="result-card-header">
             <span class="result-card-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -665,7 +685,7 @@
         </div>
 
         <!-- CARD: O QUE OBSERVAR NO SEU PET (INTEGRAÇÃO DA RESPOSTA DO TUTOR) -->
-        <div class="result-card">
+        <div class="result-card mobile-tab-item" id="boxRespostaClinica" data-mobile-group="tab-cuidados">
           <div class="result-card-header">
             <span class="result-card-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -716,7 +736,7 @@
         </div>
 
         <!-- ★ VEREDITO DE CUSTO-BENEFÍCIO (IA) ★ -->
-        <div class="result-card veredito-custo-card" id="veredictCustoBeneficioCard" style="display:none;">
+        <div class="result-card veredito-custo-card mobile-tab-item mobile-group-active" id="veredictCustoBeneficioCard" data-mobile-group="tab-veredito" style="display:none;">
           <div class="result-card-header">
             <span class="result-card-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -733,7 +753,7 @@
         </div>
 
         <!-- CARD: O QUE VOCÊ PODE FAZER (SUGESTÕES PRÁTICAS) -->
-        <div class="result-card">
+        <div class="result-card mobile-tab-item" id="boxRecomendacoesPraticas" data-mobile-group="tab-cuidados">
           <div class="result-card-header">
             <span class="result-card-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -754,7 +774,7 @@
       </div>
 
       <!-- CARD DE CONVITE AO TIRA-TEIMA (ALTA CONVERSÃO) -->
-      <div class="invite-compare-card">
+      <div class="invite-compare-card mobile-tab-item mobile-group-active" id="boxConviteComparador" data-mobile-group="tab-veredito">
         <div class="invite-compare-info">
           <span class="invite-badge">Tira-Teima de Balcão</span>
           <h4>Ficou em dúvida entre esta ração e outra?</h4>
@@ -799,15 +819,31 @@
         </div>
       </div>
 
+      <!-- SELETOR DE ABAS MOBILE NO COMPARATIVO (REDUZ ROLAGEM) -->
+      <nav class="result-mobile-nav" id="compareMobileNav" aria-label="Navegação do Comparativo no Celular">
+        <button type="button" class="mobile-nav-btn active" data-target-tab="tab-comp-vencedor">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span>Vencedor</span>
+        </button>
+        <button type="button" class="mobile-nav-btn" data-target-tab="tab-comp-ladolado">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <span>Lado a Lado</span>
+        </button>
+        <button type="button" class="mobile-nav-btn" data-target-tab="tab-comp-transicao">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg>
+          <span>Transição (7d)</span>
+        </button>
+      </nav>
+
       <!-- CARD: VEREDITO DA TROCA (DESTAQUE MÁXIMO) -->
-      <div class="veredito-troca-card" id="vereditoTrocaCard">
+      <div class="veredito-troca-card mobile-tab-item mobile-group-active" id="vereditoTrocaCard" data-mobile-group="tab-comp-vencedor">
         <div class="veredito-troca-badge" id="vereditoTrocaBadge">TROCA RECOMENDADA</div>
         <h3 class="veredito-troca-titulo" id="vereditoTrocaTitulo">Veredito do Especialista</h3>
         <p class="veredito-troca-texto" id="vereditoTrocaTexto"></p>
       </div>
 
       <!-- CARDS FRENTE A FRENTE DAS DUAS RAÇÕES -->
-      <div class="compare-cards-row">
+      <div class="compare-cards-row mobile-tab-item mobile-group-active" data-mobile-group="tab-comp-vencedor">
         <!-- Ração Atual -->
         <div class="compare-racao-card" id="cardRacaoAtual">
           <div class="compare-racao-header">
@@ -874,7 +910,7 @@
       </div>
 
       <!-- CARD: COMPARATIVO DETALHADO PONTO A PONTO -->
-      <div class="result-card">
+      <div class="result-card mobile-tab-item" id="cardComparativoLadoLado" data-mobile-group="tab-comp-ladolado">
         <div class="result-card-header">
           <span class="result-card-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -891,7 +927,7 @@
       </div>
 
       <!-- CARD: DICA DE TRANSIÇÃO (7 DIAS) -->
-      <div class="transicao-guia-card">
+      <div class="transicao-guia-card mobile-tab-item" id="cardTransicaoGuia" data-mobile-group="tab-comp-transicao">
         <div class="transicao-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">

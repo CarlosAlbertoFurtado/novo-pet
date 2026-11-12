@@ -1974,9 +1974,143 @@ body {
     margin-bottom: 8px;
   }
 
+  /* Seletor de Abas Mobile (Veredito / Raio-X / Nutrientes / Cuidados) */
+  .result-mobile-nav {
+    display: flex;
+    position: sticky;
+    top: 8px;
+    z-index: 45;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid #e2e8f0;
+    border-radius: 9999px;
+    padding: 4px;
+    gap: 4px;
+    margin: 10px 0 16px 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .result-mobile-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-nav-btn {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 8px 10px;
+    border-radius: 9999px;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-nav-btn svg {
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-btn.active {
+    background: var(--primary, #059669);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35);
+  }
+
+  /* Filtro de cards por aba ativa no celular — ELIMINA ROLAGEM EXCESSIVA */
+  .result-section .mobile-tab-item:not(.mobile-group-active),
+  .result-compare-section .mobile-tab-item:not(.mobile-group-active) {
+    display: none !important;
+  }
+
+  /* Oculta ingredientes 5+ por padrão no celular até clicar em 'Ver todos' */
+  .raiox-ingredientes-list:not(.show-all) .raiox-hidden-mobile {
+    display: none !important;
+  }
+
+  .btn-toggle-raiox {
+    display: flex !important;
+  }
+
+  /* Compactação de cards no celular */
+  .result-card {
+    padding: 16px 14px;
+    margin-bottom: 12px;
+    border-radius: 16px;
+  }
+
+  .result-card-header {
+    margin-bottom: 12px;
+  }
+
+  .result-card-title {
+    font-size: 1.05rem;
+  }
+
+  /* 2x2 Grid para Níveis Nutricionais no Celular (economiza ~350px de rolagem) */
   .nutritional-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    margin-bottom: 12px;
+  }
+
+  .nutrient-item {
+    padding: 10px !important;
+    border-radius: 12px !important;
+  }
+
+  .nutrient-item-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .nutrient-name {
+    font-size: 0.82rem;
+  }
+
+  .nutrient-status-tag {
+    font-size: 0.65rem;
+    padding: 1px 6px;
+  }
+
+  .nutrient-value {
+    font-size: 1.15rem;
+    margin-bottom: 3px;
+  }
+
+  .nutrient-desc {
+    font-size: 0.72rem;
+    line-height: 1.35;
+    -webkit-line-clamp: 3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .action-card-item {
+    padding: 12px 14px;
+    margin-bottom: 8px;
+  }
+
+  .action-card-item h4 {
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+  }
+
+  .action-card-item p {
+    font-size: 0.85rem;
+    line-height: 1.45;
   }
 
   .education-cards {
@@ -2036,7 +2170,7 @@ body {
 }
 
 /* ==========================================
-   TIPOGRAFIA LIMPA PARA RESPOSTAS DA IA (SEM ASTERISCOS / POLUIÇÃO)
+   TIPOGRAFIA ESTRUTURADA PARA RESPOSTAS DA IA (MICRO-CARDS VISUAIS)
    ========================================== */
 .clean-paragraph {
   margin: 0 0 10px 0;
@@ -2048,16 +2182,134 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  margin: 7px 0;
-  line-height: 1.55;
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  line-height: 1.5;
   color: var(--slate-700, #334155);
 }
 
 .clean-bullet-item .bullet-dot {
   color: var(--primary, #059669);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.clean-bullet-item .bullet-text {
+  flex: 1;
+  font-size: 0.92rem;
+}
+
+/* Micro-Cards de Tópicos da IA (Organização Visual de Alto Nível) */
+.ai-topic-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3.5px solid var(--primary, #059669);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 8px 0;
+  transition: all 0.2s ease;
+}
+
+.ai-topic-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.ai-topic-tag {
+  display: inline-block;
+  font-size: 0.74rem;
   font-weight: 800;
-  font-size: 1.15rem;
-  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #047857;
+  background: #ecfdf5;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid #a7f3d0;
+}
+
+.ai-topic-body {
+  margin: 0;
+  font-size: 0.90rem;
+  line-height: 1.55;
+  color: #334155;
+}
+
+/* Raio-X Topo & Badges */
+.raiox-info-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.raiox-status-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 1px 7px;
+  border-radius: 6px;
+  letter-spacing: 0.4px;
+}
+
+.raiox-status-badge.status-positivo {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+
+.raiox-status-badge.status-atencao {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.raiox-status-badge.status-negativo {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+.raiox-status-badge.status-neutro {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+/* Botão Toggle Raio-X & Barra de Abas (Ocultos no Desktop) */
+.result-mobile-nav {
+  display: none;
+}
+
+.btn-toggle-raiox {
+  display: none;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 14px;
+  border: 1px dashed var(--primary, #059669);
+  background: #f0fdf4;
+  color: var(--primary-dark, #065f46);
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: 10px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-toggle-raiox:hover {
+  background: #dcfce7;
 }
 
 /* Ocultar elementos de poluição visual / avisos redundantes */
