@@ -7,15 +7,20 @@
 
 :root {
   /* Cores Principais — Vibe Pet: Calor, Vitalidade Natural e Acolhimento */
-  --primary: #059669;          /* Verde Natural / Vitalidade Pet */
-  --primary-hover: #047857;    /* Verde Floresta Aconchegante */
-  --primary-light: #d1fae5;    /* Verde Suave Acolhedor */
-  --primary-subtle: #f0fdf4;   /* Fundo Verde Leve */
-  
+  --primary: #059669;
+  /* Verde Natural / Vitalidade Pet */
+  --primary-hover: #047857;
+  /* Verde Floresta Aconchegante */
+  --primary-light: #d1fae5;
+  /* Verde Suave Acolhedor */
+  --primary-subtle: #f0fdf4;
+  /* Fundo Verde Leve */
+
   --secondary: #2563eb;
   --secondary-light: #dbeafe;
 
-  --accent-pet: #f59e0b;       /* Dourado / Caramelo Pet (calor, afeto e cuidado) */
+  --accent-pet: #f59e0b;
+  /* Dourado / Caramelo Pet (calor, afeto e cuidado) */
   --accent-pet-hover: #d97706;
   --accent-pet-light: #fef3c7;
 
@@ -23,7 +28,7 @@
   --color-green: #10b981;
   --color-green-light: #ecfdf5;
   --color-green-border: #a7f3d0;
-  
+
   --color-yellow: #f59e0b;
   --color-yellow-light: #fffbeb;
   --color-yellow-border: #fde68a;
@@ -33,15 +38,18 @@
   --color-red-border: #fecaca;
 
   /* Neutros & Superfícies Acolhedoras (Creme / Linho Pet) */
-  --bg-page: #fbfaf8;          /* Fundo suave e quentinho, zero tom cinza-frio de hospital */
+  --bg-page: #fbfaf8;
+  /* Fundo suave e quentinho, zero tom cinza-frio de hospital */
   --bg-surface: #ffffff;
   --bg-surface-elevated: #ffffff;
   --bg-subtle: #f5f3ef;
 
-  --text-main: #1c1917;        /* Grafite quente e elegante */
-  --text-muted: #57534e;        /* Texto secundário legível e acolhedor */
+  --text-main: #1c1917;
+  /* Grafite quente e elegante */
+  --text-muted: #57534e;
+  /* Texto secundário legível e acolhedor */
   --text-light: #a8a29e;
-  
+
   --border-color: #e7e5e4;
   --border-focus: #10b981;
 
@@ -61,7 +69,9 @@
 }
 
 /* Reset Básico */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -241,9 +251,20 @@ body {
 }
 
 @keyframes pulse {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(13, 148, 136, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(13, 148, 136, 0); }
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(13, 148, 136, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(13, 148, 136, 0);
+  }
 }
 
 .hero-title {
@@ -387,7 +408,8 @@ body {
   overflow: hidden;
 }
 
-.upload-dropzone:hover, .upload-dropzone.drag-over {
+.upload-dropzone:hover,
+.upload-dropzone.drag-over {
   border-color: var(--primary);
   background: var(--primary-subtle);
 }
@@ -453,8 +475,13 @@ body {
 }
 
 @keyframes scanning {
-  0% { top: 5%; }
-  100% { top: 92%; }
+  0% {
+    top: 5%;
+  }
+
+  100% {
+    top: 92%;
+  }
 }
 
 .preview-remove-btn {
@@ -518,7 +545,7 @@ body {
   color: var(--text-main);
 }
 
-.species-option input[type="radio"]:checked + .species-card {
+.species-option input[type="radio"]:checked+.species-card {
   border-color: var(--primary);
   background: var(--primary-subtle);
   box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
@@ -582,7 +609,7 @@ body {
   display: none;
 }
 
-.segmented-control input[type="radio"]:checked + span {
+.segmented-control input[type="radio"]:checked+span {
   display: block;
 }
 
@@ -751,7 +778,9 @@ body {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .processing-steps {
@@ -788,8 +817,15 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Top Result Bar */
@@ -1174,7 +1210,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
   flex-shrink: 0;
 }
 
@@ -1186,9 +1222,17 @@ body {
   transition: all 0.3s ease;
 }
 
-.light-bulb.red { background-color: #ef4444; }
-.light-bulb.yellow { background-color: #f59e0b; }
-.light-bulb.green { background-color: #10b981; }
+.light-bulb.red {
+  background-color: #ef4444;
+}
+
+.light-bulb.yellow {
+  background-color: #f59e0b;
+}
+
+.light-bulb.green {
+  background-color: #10b981;
+}
 
 .semaphore-card.verde .light-bulb.green {
   opacity: 1;
@@ -1351,7 +1395,9 @@ body {
   border: 1px solid var(--color-yellow-border);
 }
 
-.nutrient-status-tag.alerta, .nutrient-status-tag.baixo, .nutrient-status-tag.inferior {
+.nutrient-status-tag.alerta,
+.nutrient-status-tag.baixo,
+.nutrient-status-tag.inferior {
   background: var(--color-red-light);
   color: #991b1b;
   border: 1px solid var(--color-red-border);
@@ -1780,7 +1826,7 @@ body {
 /* ========================================================
    RESPONSIVIDADE ESPECIALIZADA PARA SMARTPHONES (MOBILE-FIRST)
    ======================================================== */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   body {
     font-size: 0.95rem;
   }
@@ -1802,7 +1848,8 @@ body {
   }
 
   .header-badges {
-    display: none; /* Simplifica o topo em telas estreitas */
+    display: none;
+    /* Simplifica o topo em telas estreitas */
   }
 
   .disclaimer-banner {
@@ -1898,7 +1945,8 @@ body {
   }
 
   .species-card.disabled {
-    display: none; /* Oculta na tela do celular para focar nos animais ativos */
+    display: none;
+    /* Oculta na tela do celular para focar nos animais ativos */
   }
 
   .pet-details-row {
@@ -1983,11 +2031,11 @@ body {
 
   /* Seletor de Abas Mobile (Veredito / Raio-X / Nutrientes / Cuidados) */
   .result-mobile-nav {
-    display: flex;
+    display: flex !important;
     position: sticky;
     top: 8px;
     z-index: 45;
-    background: rgba(255, 255, 255, 0.94);
+    background: rgba(255, 255, 255, 0.96);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid #e2e8f0;
@@ -2158,18 +2206,52 @@ body {
   .footer-meta {
     text-align: left;
   }
+
+  /* Compactação e fluidez editorial dos laudos no celular — ELIMINA EFEITO TORRE */
+  .ai-report-point {
+    margin: 5px 0 !important;
+    gap: 7px !important;
+    line-height: 1.45 !important;
+  }
+
+  .ai-point-marker {
+    width: 5px !important;
+    height: 5px !important;
+    margin-top: 6px !important;
+  }
+
+  .ai-point-content {
+    font-size: 0.88rem !important;
+  }
+
+  .ai-point-title {
+    font-size: 0.88rem !important;
+  }
+
+  .ai-point-text {
+    font-size: 0.88rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .ai-report-paragraph {
+    margin: 0 0 6px 0 !important;
+    line-height: 1.48 !important;
+    font-size: 0.88rem !important;
+  }
 }
 
-@media (min-width: 641px) and (max-width: 860px) {
+@media (min-width: 769px) and (max-width: 900px) {
   .species-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+
   .presets-buttons {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media print {
+
   .site-header,
   .hero-section,
   .analysis-card,
@@ -2193,7 +2275,8 @@ body {
     color: #000 !important;
   }
 
-  .semaphore-card, .result-card {
+  .semaphore-card,
+  .result-card {
     border: 1px solid #ccc !important;
     box-shadow: none !important;
     break-inside: avoid;
@@ -2293,13 +2376,17 @@ body {
   border: 1px solid #e2e8f0;
 }
 
-/* Botão Toggle Raio-X & Barra de Abas (Ocultos no Desktop) */
-.result-mobile-nav {
-  display: none;
+/* Botão Toggle Raio-X & Barra de Abas (Ocultos no Desktop > 768px) */
+@media (min-width: 769px) {
+  .result-mobile-nav {
+    display: none !important;
+  }
+  .btn-toggle-raiox {
+    display: none !important;
+  }
 }
 
 .btn-toggle-raiox {
-  display: none;
   width: 100%;
   margin-top: 10px;
   padding: 10px 14px;
@@ -2338,7 +2425,7 @@ body {
   margin: 0 auto 24px auto;
   max-width: 520px;
   border: 1px solid var(--border-color, #e7e5e4);
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.04);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .mode-tab {
@@ -2585,7 +2672,8 @@ body {
   margin-top: 4px;
 }
 
-.pro-item, .con-item {
+.pro-item,
+.con-item {
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -2593,10 +2681,16 @@ body {
   line-height: 1.45;
 }
 
-.pro-item { color: #166534; }
-.con-item { color: #854d0e; }
+.pro-item {
+  color: #166534;
+}
 
-.pro-icon, .con-icon {
+.con-item {
+  color: #854d0e;
+}
+
+.pro-icon,
+.con-icon {
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -2736,8 +2830,15 @@ body {
 }
 
 @keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .sub-pill-dot {
@@ -2751,9 +2852,20 @@ body {
 }
 
 @keyframes pulseSubDot {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
-  70% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+  }
+
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
 }
 
 .sub-pill-info {
@@ -2794,6 +2906,7 @@ body {
     padding: 16px 20px;
     gap: 10px;
   }
+
   .sub-pill-info {
     text-align: center;
   }
@@ -3061,8 +3174,15 @@ body {
 }
 
 @keyframes modalPop {
-  from { opacity: 0; transform: scale(0.94); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .pix-modal-close {
@@ -3279,9 +3399,20 @@ body {
 }
 
 @keyframes pulse {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(5, 150, 105, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(5, 150, 105, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(5, 150, 105, 0);
+  }
 }
 
 .pix-demo-notice {
@@ -3444,5 +3575,3 @@ body {
   color: #64748b;
   text-align: center;
 }
-
-
