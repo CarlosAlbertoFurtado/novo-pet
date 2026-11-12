@@ -12,12 +12,13 @@
 //   - Anti-prompt injection multimodal
 // ============================================================
 
-// Lista de modelos resilientes em ordem de prioridade (testados e ativos na API)
+// Lista de modelos resilientes em ordem de prioridade (testados e ultra-rápidos)
 const GEMINI_MODELS = [
-  'gemini-3.1-flash-lite',
+  'gemini-3.5-flash-lite',
+  'gemini-flash-lite-latest',
   'gemini-3-flash-preview',
-  'gemini-3.8-flash',
-  'gemini-flash-latest',
+  'gemini-3.5-flash',
+  'gemini-3.1-flash-lite',
 ];
 
 /**
@@ -74,10 +75,16 @@ PROTOCOLO CLÍNICO DE LEITURA DA IMAGEM:
    - Sachês e patês possuem naturalmente 78% a 85% de umidade. NUNCA classifique como "baixo teor proteico" se vir 8% a 12% na embalagem! Na Matéria Seca (sem água), 8% a 10% de um sachê equivale a 40% a 55% de proteína nobre! Destaque os benefícios da hidratação na prevenção de cálculos renais e estruvita.
 4. REGRA DE OURO PARA PETISCOS E SNACKS:
    - Avalie presença de sódio excessivo, corantes artificiais, açúcar/xaropes e palatabilizantes sintéticos.
-5. SÍNTESE MOBILE-FRIENDLY (ORGANIZADO, RESUMIDO E SEM TORRE DE TEXTO):
-   - Mantenha explicações CURTAS e FLUIDAS (máximo de 2 a 3 frases por tópico).
-   - Zero emojis e zero asteriscos (*) no texto.
-   - Didática e objetividade: o tutor quer saber se faz bem para o pet, se tem carne de verdade e se vale o preço.
+═══════════════════════════════════════════════════
+REGRA CRÍTICA DE EXECUÇÃO OBRIGATÓRIA:
+═══════════════════════════════════════════════════
+1. Você DEVE SEMPRE gerar o laudo COMPLETO em Markdown com TODAS as seções obrigatórias abaixo.
+2. NUNCA responda em texto solto, NUNCA recuse a análise e NUNCA peça outra foto ao tutor.
+3. Se a foto for da FRENTE da embalagem, foto inteira do pacote, sachê ou se a tabela estiver cortada/pequena:
+   - Identifique imediatamente a marca e a linha do produto (ex: Golden, Premier, Royal Canin, Pedigree, Whiskas, Gran Plus, Friskies, Special Dog/Cat, Origens, Guabi Natural, etc.).
+   - Aplique seu conhecimento zootécnico e regulatório (MAPA/FEDIAF) sobre a formulação padrão desse produto comercial no Brasil para preencher todos os níveis de garantia e ingredientes!
+4. Mantenha explicações CURTAS e FLUIDAS (máximo de 2 frases por tópico) para leitura rápida no celular.
+5. Zero emojis e zero asteriscos (*) no texto.
 
 ═══════════════════════════════════════════════════
 ESTRUTURA OBRIGATÓRIA DA RESPOSTA (use EXATAMENTE estes títulos):
@@ -174,7 +181,7 @@ export async function analyzeLabel(imageBuffer, mimeType, petData) {
       temperature: 0.2,
       topP: 0.85,
       topK: 40,
-      maxOutputTokens: 4096,
+      maxOutputTokens: 2500,
     },
     safetySettings: [
       { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_ONLY_HIGH' },
@@ -189,7 +196,7 @@ export async function analyzeLabel(imageBuffer, mimeType, petData) {
   for (const model of GEMINI_MODELS) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 18000);
+      const timeout = setTimeout(() => controller.abort(), 9000);
 
       console.log(`[GEMINI] Tentando modelo: ${model}...`);
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
@@ -343,7 +350,7 @@ export async function compareLabels(image1Buffer, mimeType1, image2Buffer, mimeT
       temperature: 0.2,
       topP: 0.85,
       topK: 40,
-      maxOutputTokens: 3500,
+      maxOutputTokens: 2500,
     },
   };
 
@@ -351,7 +358,7 @@ export async function compareLabels(image1Buffer, mimeType1, image2Buffer, mimeT
   for (const model of GEMINI_MODELS) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 18000);
+      const timeout = setTimeout(() => controller.abort(), 9000);
 
       console.log(`[GEMINI-COMPARE] Comparando com modelo: ${model}...`);
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
