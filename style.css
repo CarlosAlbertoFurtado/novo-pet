@@ -2899,7 +2899,7 @@ body {
   white-space: nowrap;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .active-subscription-pill {
     flex-direction: column;
     text-align: center;
@@ -3042,7 +3042,7 @@ body {
   margin-top: 10px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .paywall-unlock-card {
     padding: 28px 20px 24px 20px;
     border-radius: 28px;
@@ -3063,7 +3063,7 @@ body {
   text-align: left;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .paywall-price {
     text-align: center;
   }
@@ -3075,7 +3075,7 @@ body {
   gap: 6px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .price-val-row {
     justify-content: center;
   }

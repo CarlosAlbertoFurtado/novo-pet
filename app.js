@@ -293,13 +293,13 @@ document.addEventListener("DOMContentLoaded", () => {
       tabModoAnalise?.classList.remove("active");
       stepSingleUpload.style.display = "none";
       stepCompareUpload.style.display = "block";
-      if (btnSubmitText) btnSubmitText.textContent = "Comparar Rações Agora (Tira-Teima)";
+      if (btnSubmitText) btnSubmitText.textContent = "Comparar Alimentos Agora (Tira-Teima)";
     } else {
       tabModoAnalise?.classList.add("active");
       tabModoComparar?.classList.remove("active");
       stepSingleUpload.style.display = "block";
       stepCompareUpload.style.display = "none";
-      if (btnSubmitText) btnSubmitText.textContent = "Analisar Ração Agora";
+      if (btnSubmitText) btnSubmitText.textContent = "Analisar Alimento Agora";
     }
   }
 
@@ -595,14 +595,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ── 1. NOTA GERAL (0-10) ──
-    const notaSection = sections['nota geral da ração'] || '';
+    const notaSection = sections['nota geral da ração'] || sections['nota geral do alimento'] || sections['nota geral'] || '';
     const notaMatch = notaSection.match(/NOTA:\s*(\d+[\.,]?\d*)\s*\/\s*10/i) 
       || notaSection.match(/(\d+[\.,]?\d*)\s*\/\s*10/i);
     const nota = notaMatch ? parseFloat(notaMatch[1].replace(',', '.')) : null;
     const notaResumo = limpar(notaSection.replace(/NOTA:\s*\d+[\.,]?\d*\s*\/\s*10/i, '').replace(/^\s*[-–—]\s*/gm, '').trim().split('\n')[0] || '');
 
     // ── 2. CLASSIFICAÇÃO COMERCIAL ──
-    const classSection = sections['classificação comercial'] || '';
+    const classSection = sections['classificação comercial'] || sections['classificação'] || '';
     let classificacao = 'standard';
     const classLower = classSection.toLowerCase();
     if (classLower.includes('super premium') || classLower.includes('superpremium')) {
@@ -615,7 +615,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const classificacaoTexto = limpar(classSection.slice(0, 500));
 
     // ── 3. SEMÁFORO ──
-    const semaforoSection = sections['semáforo de qualidade'] || '';
+    const semaforoSection = sections['semáforo de qualidade'] || sections['semáforo'] || sections['semaforo'] || '';
     let semaforoCor = 'amarelo';
     const semaforoLower = semaforoSection.toLowerCase();
     if (semaforoLower.includes('🟢') || semaforoLower.includes('verde')) {
@@ -631,7 +631,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .slice(0, 400));
 
     // ── 4. RAIO-X DOS INGREDIENTES ──
-    const raioxSection = sections['raio-x dos ingredientes'] || '';
+    const raioxSection = sections['raio-x dos ingredientes'] || sections['raio-x'] || sections['raio x dos ingredientes'] || '';
     const ingredientLines = raioxSection.split('\n').filter(l => l.trim().startsWith('-') || l.trim().startsWith('*') || l.trim().startsWith('•'));
     const ingredientesAnalisados = ingredientLines.map(line => {
       const clean = line.replace(/^[\s\-*•]+/, '').trim();
@@ -649,7 +649,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }).filter(i => i.nome.length > 1);
 
     // ── 5. NÍVEIS DE GARANTIA ──
-    const niveisSection = sections['níveis de garantia — decodificados'] || sections['níveis de garantia - decodificados'] || '';
+    const niveisSection = sections['níveis de garantia — decodificados'] || sections['níveis de garantia - decodificados'] || sections['níveis de garantia'] || '';
     // Extrair valores da tabela ou texto
     const proteinaMatch = niveisSection.match(/prote[ií]na[^|]*\|\s*(\d+[\.,]?\d*)\s*%/i)
       || analysisText.match(/prote[ií]na[^:]*(?:mín|min)[^:]*:\s*(\d+[\.,]?\d*)\s*%/i)
@@ -670,7 +670,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const umidade = umidadeMatch ? parseFloat(umidadeMatch[1].replace(',', '.')) : 0;
 
     // ── 6. QUALIDADE DA PROTEÍNA ──
-    const qualProtSection = limpar(sections['qualidade da proteína'] || '');
+    const qualProtSection = limpar(sections['qualidade da proteína'] || sections['qualidade da proteina'] || sections['fonte proteica'] || '');
 
     // ── 7. OBSERVAR NO PET ──
     const obsSection = limpar(sections['o que observar no seu pet (30 dias)'] || sections['o que observar no seu pet'] || '');
@@ -679,7 +679,7 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (observation === 'leve') obsTipo = 'atencao';
 
     // ── 8. VEREDITO DE CUSTO-BENEFÍCIO ──
-    const veredictSection = limpar(sections['veredito de custo-benefício'] || sections['veredito de custo-beneficio'] || '');
+    const veredictSection = limpar(sections['veredito de custo-benefício'] || sections['veredito de custo-beneficio'] || sections['veredito'] || sections['veredito custo-benefício'] || '');
 
     // ── 9. SUGESTÕES PRÁTICAS ──
     const sugestoesSection = sections['sugestões práticas'] || sections['o que você pode fazer'] || '';
