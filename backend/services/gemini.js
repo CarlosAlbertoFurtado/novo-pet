@@ -233,7 +233,7 @@ export async function analyzeLabel(imageBuffer, mimeType, petData) {
     }
   }
 
-  throw lastError || new Error('Não foi possível obter resposta dos modelos de IA no momento.');
+  throw lastError || new Error('Não foi possível obter resposta do sistema no momento.');
 }
 
 /**
@@ -386,6 +386,6 @@ export async function compareLabels(image1Buffer, mimeType1, image2Buffer, mimeT
     }
   }
 
-  throw lastError || new Error('Não foi possível obter o comparativo da IA no momento.');
+  throw lastError || new Error('Não foi possível obter o comparativo do sistema no momento.');
 }
 

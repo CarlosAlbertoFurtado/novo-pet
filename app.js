@@ -753,7 +753,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Sobrescrever primeiro ingrediente e aditivos com dados refinados da IA
     if (resultado.oQueORotuloDiz) {
       resultado.oQueORotuloDiz.primeiroIngrediente.valor = ingredientePrincipal;
-      resultado.oQueORotuloDiz.primeiroIngrediente.explicacao = `Fonte de proteína identificada no laudo da IA: ${ingredientePrincipal}.`;
+      resultado.oQueORotuloDiz.primeiroIngrediente.explicacao = `Fonte de proteína identificada no laudo do sistema: ${ingredientePrincipal}.`;
 
       // Injetar explicações clínicas personalizadas da IA nos níveis de garantia
       const niveisLines = niveisSection.split('\n').map(l => l.trim()).filter(Boolean);
@@ -790,7 +790,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       if (semCorantes) {
         resultado.oQueORotuloDiz.aditivos.contemCorantes = false;
-        aditivosTexto += 'Ausência de corantes sintéticos confirmada pelo laudo pericial da IA.';
+        aditivosTexto += 'Ausência de corantes sintéticos confirmada pelo laudo pericial do sistema.';
       } else {
         aditivosTexto += 'Presença de aditivos e conservantes detalhada no Raio-X dos ingredientes.';
       }
@@ -825,8 +825,8 @@ document.addEventListener("DOMContentLoaded", () => {
       processingModal.style.display = "flex";
       const procTitle = document.getElementById("processingTitle");
       const procSub = document.getElementById("processingSub");
-      if (procTitle) procTitle.textContent = "Comparando as duas rações...";
-      if (procSub) procSub.textContent = "A IA está cruzando a composição e os ingredientes das duas embalagens.";
+      if (procTitle) procTitle.textContent = "Comparando as duas embalagens...";
+      if (procSub) procSub.textContent = "O sistema está cruzando a composição e os ingredientes das duas embalagens.";
 
       const steps = [
         document.getElementById("pstep1"),
@@ -966,7 +966,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (err) {
         processingModal.style.display = "none";
         console.error('[BACKEND ERROR]', err);
-        alert(`Erro na análise por IA: ${err.message}\n\nUsando análise local como alternativa.`);
+        alert(`Erro na análise do sistema: ${err.message}\n\nUsando análise local como alternativa.`);
 
         // Fallback: usar análise local
         iniciarProcessamento(() => {

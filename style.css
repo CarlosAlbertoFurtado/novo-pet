@@ -1865,29 +1865,31 @@ body {
   }
 
   .hero-section {
-    padding: 24px 0 16px;
+    padding: 16px 0 10px;
   }
 
   .hero-pill {
     font-size: 0.75rem;
     padding: 4px 12px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
   .hero-title {
-    font-size: 1.65rem;
-    line-height: 1.2;
-    margin-bottom: 12px;
+    font-size: 1.35rem;
+    line-height: 1.25;
+    margin-bottom: 8px;
   }
 
   .hero-subtitle {
-    font-size: 0.95rem;
-    margin-bottom: 18px;
-    line-height: 1.5;
+    font-size: 0.88rem;
+    margin-bottom: 12px;
+    line-height: 1.45;
   }
 
   .hero-banner-img {
-    max-height: 200px;
+    max-height: 130px;
+    object-fit: cover;
+    border-radius: 12px;
   }
 
   .hero-media-caption {
@@ -2001,32 +2003,102 @@ body {
   }
 
   .nota-geral-card {
-    padding: 20px 16px;
+    padding: 14px 14px;
+    margin-bottom: 10px;
+    border-radius: 14px;
   }
 
   .nota-geral-score-area {
-    flex-direction: column;
-    text-align: center;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
     gap: 12px;
+    margin-bottom: 8px;
   }
 
   .nota-geral-circle {
-    margin: 0 auto;
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    margin: 0;
+  }
+
+  .nota-geral-valor {
+    font-size: 1.45rem;
+  }
+
+  .nota-geral-de {
+    font-size: 0.6rem;
+  }
+
+  .nota-geral-label {
+    font-size: 0.82rem;
+    margin-bottom: 2px;
+  }
+
+  .nota-geral-resumo {
+    font-size: 0.82rem;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .nota-bar-track {
+    margin: 8px 0;
+    height: 6px;
   }
 
   .classificacao-area {
-    justify-content: center;
+    justify-content: flex-start;
+    padding-top: 8px;
+    gap: 8px;
+  }
+
+  .classificacao-label {
+    font-size: 0.75rem;
+  }
+
+  .classificacao-tag {
+    font-size: 0.72rem;
+    padding: 3px 10px;
+  }
+
+  .classificacao-texto {
+    font-size: 0.82rem;
+    line-height: 1.35;
+    margin-top: 6px;
   }
 
   .semaphore-card {
-    flex-direction: column;
-    text-align: center;
-    padding: 20px 14px;
+    flex-direction: row;
+    text-align: left;
+    align-items: center;
+    padding: 12px 14px;
+    gap: 10px;
+    border-radius: 14px;
+    margin-bottom: 10px;
   }
 
   .semaphore-lights {
-    flex-direction: row;
-    margin-bottom: 8px;
+    display: none !important;
+  }
+
+  .semaphore-info {
+    flex: 1;
+  }
+
+  .semaphore-badge {
+    font-size: 0.68rem;
+    margin-bottom: 4px;
+  }
+
+  .semaphore-title {
+    font-size: 1.0rem;
+    margin-bottom: 2px;
+  }
+
+  .semaphore-desc {
+    font-size: 0.82rem;
+    line-height: 1.35;
   }
 
   /* Seletor de Abas Mobile (Veredito / Raio-X / Nutrientes / Cuidados) */
@@ -2170,6 +2242,80 @@ body {
     line-height: 1.45;
   }
 
+  /* Compactação dos textos de resposta do sistema (elimina a "torre") */
+  .ai-report-paragraph {
+    font-size: 0.84rem;
+    line-height: 1.4;
+    margin: 0 0 6px 0;
+  }
+
+  .ai-report-point {
+    gap: 6px;
+    margin: 5px 0;
+    line-height: 1.4;
+  }
+
+  .ai-point-content {
+    font-size: 0.84rem;
+  }
+
+  .ai-point-marker {
+    width: 5px;
+    height: 5px;
+    margin-top: 6px;
+  }
+
+  .clean-paragraph {
+    font-size: 0.84rem;
+    line-height: 1.4;
+    margin: 0 0 6px 0;
+  }
+
+  .veredito-custo-content,
+  .qualidade-proteina-content {
+    font-size: 0.84rem;
+    line-height: 1.4;
+  }
+
+  .veredito-custo-content p,
+  .qualidade-proteina-content p {
+    margin: 0 0 6px 0;
+    font-size: 0.84rem;
+    line-height: 1.4;
+  }
+
+  /* Checklist 30 dias mais compacta */
+  .checklist-30-days {
+    padding: 12px 14px;
+  }
+
+  .checklist-title {
+    font-size: 0.88rem;
+    margin-bottom: 6px;
+  }
+
+  .checklist-items li {
+    font-size: 0.82rem;
+    line-height: 1.35;
+    margin-bottom: 4px;
+  }
+
+  /* Observação clínica mais compacta */
+  .pet-observation-alert-box {
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+
+  .obs-alert-header {
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+  }
+
+  .obs-alert-body {
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
   /* Compactação de cards do comparativo */
   .compare-cards-row {
     gap: 8px !important;
@@ -2284,7 +2430,7 @@ body {
 }
 
 /* ==========================================
-   TIPOGRAFIA EDITORIAL PARA LAUDOS DA IA (FLUIDO, ELEGANTE E SEM CAIXAS)
+   TIPOGRAFIA EDITORIAL PARA LAUDOS DO SISTEMA (FLUIDO, ELEGANTE E SEM CAIXAS)
    ========================================== */
 .ai-report-paragraph {
   margin: 0 0 10px 0;
@@ -2463,7 +2609,7 @@ body {
   margin-top: 10px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .compare-upload-grid {
     grid-template-columns: 1fr;
   }
@@ -2601,7 +2747,7 @@ body {
   margin-bottom: 20px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .compare-cards-row {
     grid-template-columns: 1fr;
   }
@@ -2761,7 +2907,7 @@ body {
   margin-top: 24px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .invite-compare-card {
     flex-direction: column;
     text-align: center;
