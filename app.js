@@ -1191,7 +1191,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 1. Nota Geral (se disponível da IA)
     const notaCard = document.getElementById("notaGeralCard");
     if (notaCard && res.notaGeral !== null && res.notaGeral !== undefined) {
-      notaCard.style.display = "flex";
+      notaCard.style.display = "block";
       const notaValor = document.getElementById("notaGeralValor");
       const notaLabel = document.getElementById("notaGeralLabel");
       const notaResumo = document.getElementById("notaGeralResumo");

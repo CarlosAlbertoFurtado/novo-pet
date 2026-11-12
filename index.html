@@ -7,7 +7,7 @@
   <title>Tradutor Pet | Análise de Ração, Sachê e Alimentos para Cães e Gatos</title>
   <meta name="description"
     content="Tire foto do rótulo da ração, sachê úmido, lata, patê ou petisco do seu pet e descubra se os ingredientes são saudáveis, se tem carne de verdade e se vale o preço.">
-  <link rel="stylesheet" href="style.css?v=20261112_v5">
+  <link rel="stylesheet" href="style.css?v=20261112_v6">
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23059669%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><circle cx=%2212%22 cy=%2214%22 r=%224%22/><circle cx=%226.5%22 cy=%229.5%22 r=%222.5%22/><circle cx=%2217.5%22 cy=%229.5%22 r=%222.5%22/><circle cx=%229%22 cy=%225.5%22 r=%222%22/><circle cx=%2215%22 cy=%225.5%22 r=%222%22/></svg>">
 </head>
@@ -103,7 +103,8 @@
             <span class="step-required">*Obrigatório</span>
           </div>
           <p class="form-step-desc">
-            Tire foto nítida da tabela de <strong>Níveis de Garantia</strong> ou da <strong>lista de ingredientes</strong> de qualquer ração seca, sachê úmido, comida natural ou petisco.
+            Tire foto nítida da tabela de <strong>Níveis de Garantia</strong> ou da <strong>lista de
+              ingredientes</strong> de qualquer ração seca, sachê úmido, comida natural ou petisco.
           </p>
 
           <div class="upload-dropzone" id="dropzoneArea">
@@ -477,25 +478,35 @@
       <!-- SELETOR DE ABAS MOBILE (ELIMINA EXCESSO DE ROLAGEM NO CELULAR) -->
       <nav class="result-mobile-nav" id="resultMobileNav" aria-label="Navegação do Laudo no Celular">
         <button type="button" class="mobile-nav-btn active" data-target-tab="tab-veredito">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
           <span>Veredito</span>
         </button>
         <button type="button" class="mobile-nav-btn" data-target-tab="tab-raiox">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
           <span>Raio-X</span>
         </button>
         <button type="button" class="mobile-nav-btn" data-target-tab="tab-nutrientes">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          </svg>
           <span>Nutrientes</span>
         </button>
         <button type="button" class="mobile-nav-btn" data-target-tab="tab-cuidados">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+          </svg>
           <span>Cuidados</span>
         </button>
       </nav>
 
       <!-- ★ NOTA GERAL & CLASSIFICAÇÃO COMERCIAL (IA) ★ -->
-      <div class="nota-geral-card mobile-tab-item mobile-group-active" id="notaGeralCard" data-mobile-group="tab-veredito" style="display:none;">
+      <div class="nota-geral-card mobile-tab-item mobile-group-active" id="notaGeralCard"
+        data-mobile-group="tab-veredito" style="display:none;">
         <div class="nota-geral-score-area">
           <div class="nota-geral-circle">
             <span class="nota-geral-valor" id="notaGeralValor">--</span>
@@ -517,7 +528,8 @@
       </div>
 
       <!-- 1. SEMÁFORO DE QUALIDADE TÉCNICA -->
-      <div class="semaphore-card verde mobile-tab-item mobile-group-active" id="semaphoreCard" data-mobile-group="tab-veredito">
+      <div class="semaphore-card verde mobile-tab-item mobile-group-active" id="semaphoreCard"
+        data-mobile-group="tab-veredito">
         <div class="semaphore-lights">
           <div class="light-bulb red" id="lightRed"></div>
           <div class="light-bulb yellow" id="lightYellow"></div>
@@ -600,10 +612,12 @@
         </div>
 
         <!-- BANNER DE PAYWALL — PLANO MENSAL 30 DIAS RECORRENTE -->
-        <div class="paywall-unlock-card paywall-pet-capsule mobile-tab-item" id="paywallCardIndividual" data-mobile-group="tab-raiox">
+        <div class="paywall-unlock-card paywall-pet-capsule mobile-tab-item" id="paywallCardIndividual"
+          data-mobile-group="tab-raiox">
           <div class="paywall-floating-glow"></div>
           <div class="paywall-emblem-circle">
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="14" r="4"></circle>
               <circle cx="6.5" cy="9.5" r="2.5"></circle>
               <circle cx="17.5" cy="9.5" r="2.5"></circle>
@@ -612,22 +626,32 @@
             </svg>
           </div>
           <div class="paywall-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
             <span>Plano Mensal • 30 Dias de Acesso Ilimitado</span>
           </div>
           <h3>Acesso Ilimitado ao Raio-X & Tira-Teima</h3>
-          <p>Desbloqueie o Raio-X aprofundado dos ingredientes, análise da fonte proteica e comparador ilimitado por 30 dias.</p>
+          <p>Desbloqueie o Raio-X aprofundado dos ingredientes, análise da fonte proteica e comparador ilimitado por 30
+            dias.</p>
           <div class="paywall-perks-pills">
             <span class="pet-perk-pill">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
               30 Dias Ilimitados
             </span>
             <span class="pet-perk-pill">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
               Cobrança Automática no Cartão
             </span>
             <span class="pet-perk-pill">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
               Cancele Quando Quiser
             </span>
           </div>
@@ -641,47 +665,53 @@
             </div>
             <button type="button" class="btn-unlock-pix btn-pet-pill-cta" id="btnDesbloquearIndividual">
               <span>Assinar Plano Mensal (30 Dias)</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
             </button>
           </div>
         </div>
 
         <!-- ÁREA BLOQUEADA (REVELADA APÓS ASSINATURA) -->
-        <div class="premium-locked-wrapper is-locked mobile-tab-item" id="premiumLockedWrapper" data-mobile-group="tab-raiox">
+        <div class="premium-locked-wrapper is-locked mobile-tab-item" id="premiumLockedWrapper"
+          data-mobile-group="tab-raiox">
 
-        <!-- ★ RAIO-X DOS INGREDIENTES (IA) ★ -->
-        <div class="result-card raiox-card mobile-tab-item" id="raioxIngredientesContainer" data-mobile-group="tab-raiox" style="display:none;">
-          <div class="result-card-header">
-            <span class="result-card-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.3-4.3"></path>
-              </svg>
-            </span>
-            <h3 class="result-card-title">Raio-X dos Ingredientes</h3>
+          <!-- ★ RAIO-X DOS INGREDIENTES (IA) ★ -->
+          <div class="result-card raiox-card mobile-tab-item" id="raioxIngredientesContainer"
+            data-mobile-group="tab-raiox" style="display:none;">
+            <div class="result-card-header">
+              <span class="result-card-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.3-4.3"></path>
+                </svg>
+              </span>
+              <h3 class="result-card-title">Raio-X dos Ingredientes</h3>
+            </div>
+            <div class="raiox-ingredientes-list" id="raioxIngredientesList">
+              <!-- Gerado dinamicamente pelo JS -->
+            </div>
           </div>
-          <div class="raiox-ingredientes-list" id="raioxIngredientesList">
-            <!-- Gerado dinamicamente pelo JS -->
-          </div>
-        </div>
 
-        <!-- ★ QUALIDADE DA PROTEÍNA (IA) ★ -->
-        <div class="result-card qualidade-proteina-card mobile-tab-item" id="qualidadeProteinaCard" data-mobile-group="tab-raiox" style="display:none;">
-          <div class="result-card-header">
-            <span class="result-card-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path
-                  d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z">
-                </path>
-                <line x1="6" y1="17" x2="18" y2="17"></line>
-              </svg>
-            </span>
-            <h3 class="result-card-title">Análise da Fonte Proteica</h3>
+          <!-- ★ QUALIDADE DA PROTEÍNA (IA) ★ -->
+          <div class="result-card qualidade-proteina-card mobile-tab-item" id="qualidadeProteinaCard"
+            data-mobile-group="tab-raiox" style="display:none;">
+            <div class="result-card-header">
+              <span class="result-card-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z">
+                  </path>
+                  <line x1="6" y1="17" x2="18" y2="17"></line>
+                </svg>
+              </span>
+              <h3 class="result-card-title">Análise da Fonte Proteica</h3>
+            </div>
+            <div class="qualidade-proteina-content" id="qualidadeProteinaText">
+              <!-- Gerado dinamicamente pelo JS -->
+            </div>
           </div>
-          <div class="qualidade-proteina-content" id="qualidadeProteinaText">
-            <!-- Gerado dinamicamente pelo JS -->
-          </div>
-        </div>
 
         </div> <!-- /premium-locked-wrapper (Bloqueia apenas Raio-X e Proteína profunda) -->
 
@@ -737,7 +767,8 @@
         </div>
 
         <!-- ★ VEREDITO DE CUSTO-BENEFÍCIO (IA) ★ -->
-        <div class="result-card veredito-custo-card mobile-tab-item mobile-group-active" id="veredictCustoBeneficioCard" data-mobile-group="tab-veredito" style="display:none;">
+        <div class="result-card veredito-custo-card mobile-tab-item mobile-group-active" id="veredictCustoBeneficioCard"
+          data-mobile-group="tab-veredito" style="display:none;">
           <div class="result-card-header">
             <span class="result-card-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -777,7 +808,8 @@
         <div class="invite-compare-info">
           <span class="invite-badge">Tira-Teima de Balcão</span>
           <h4>Ficou em dúvida entre esta ração e outra?</h4>
-          <p>Tire foto do outro produto e o sistema avalia na hora qual das duas é a melhor escolha e se compensa a troca.</p>
+          <p>Tire foto do outro produto e o sistema avalia na hora qual das duas é a melhor escolha e se compensa a
+            troca.</p>
         </div>
         <button type="button" class="btn-invite-compare" id="btnIrParaComparador">
           Comparar com Outra Ração
@@ -821,21 +853,29 @@
       <!-- SELETOR DE ABAS MOBILE NO COMPARATIVO (REDUZ ROLAGEM) -->
       <nav class="result-mobile-nav" id="compareMobileNav" aria-label="Navegação do Comparativo no Celular">
         <button type="button" class="mobile-nav-btn active" data-target-tab="tab-comp-vencedor">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
           <span>Vencedor</span>
         </button>
         <button type="button" class="mobile-nav-btn" data-target-tab="tab-comp-ladolado">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
           <span>Lado a Lado</span>
         </button>
         <button type="button" class="mobile-nav-btn" data-target-tab="tab-comp-transicao">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+          </svg>
           <span>Transição (7d)</span>
         </button>
       </nav>
 
       <!-- CARD: VEREDITO DA TROCA (DESTAQUE MÁXIMO) -->
-      <div class="veredito-troca-card mobile-tab-item mobile-group-active" id="vereditoTrocaCard" data-mobile-group="tab-comp-vencedor">
+      <div class="veredito-troca-card mobile-tab-item mobile-group-active" id="vereditoTrocaCard"
+        data-mobile-group="tab-comp-vencedor">
         <div class="veredito-troca-badge" id="vereditoTrocaBadge">TROCA RECOMENDADA</div>
         <h3 class="veredito-troca-titulo" id="vereditoTrocaTitulo">Veredito do Especialista</h3>
         <p class="veredito-troca-texto" id="vereditoTrocaTexto"></p>
@@ -951,10 +991,11 @@
     <div class="pix-modal-overlay" id="pixModalOverlay" style="display:none;">
       <div class="pix-modal-card">
         <button type="button" class="pix-modal-close" id="btnFecharPix" aria-label="Fechar">&times;</button>
-        
+
         <div class="pix-modal-header">
           <div class="pix-brand-tag">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
             </svg>
             <span>Ambiente Seguro • Mercado Pago</span>
@@ -970,11 +1011,16 @@
         <!-- SELETOR DE FORMA DE PAGAMENTO -->
         <div class="payment-tabs-row">
           <button type="button" class="btn-pay-tab active" id="tabPayCard">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+              <line x1="2" y1="10" x2="22" y2="10"></line>
+            </svg>
             <span>Cartão (Cobrança Automática)</span>
           </button>
           <button type="button" class="btn-pay-tab" id="tabPayPix">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
             <span>Pix (Passe 30 Dias)</span>
           </button>
         </div>
@@ -982,7 +1028,9 @@
         <!-- ── ABA 1: CARTÃO DE CRÉDITO COM COBRANÇA AUTOMÁTICA (PADRÃO) ── -->
         <div class="card-pay-view" id="viewPayCard">
           <div class="card-security-badge">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
             <div class="card-security-text">
               <strong>Cobrança Recorrente 100% Automática</strong>
               <span>Certificação PCI-DSS Nível 1 pelo Mercado Pago</span>
@@ -990,20 +1038,28 @@
           </div>
 
           <p class="card-explain-text">
-            O valor de <strong>R$ 12,90/mês</strong> será cobrado automaticamente a cada 30 dias no seu cartão. Você <strong>não precisa se preocupar em lembrar de pagar todo mês</strong> para manter as consultas liberadas. Cancele a qualquer momento com total transparência.
+            O valor de <strong>R$ 12,90/mês</strong> será cobrado automaticamente a cada 30 dias no seu cartão. Você
+            <strong>não precisa se preocupar em lembrar de pagar todo mês</strong> para manter as consultas liberadas.
+            Cancele a qualquer momento com total transparência.
           </p>
 
           <div class="card-benefits-recurrent">
             <div class="rec-item">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
               <span>30 dias de acesso ilimitado a todas as análises e comparações</span>
             </div>
             <div class="rec-item">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
               <span>Renovação automática mensal: zero preocupação com vencimentos</span>
             </div>
             <div class="rec-item">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
               <span>Cancelamento imediato sem multas ou burocracia</span>
             </div>
           </div>
@@ -1019,11 +1075,17 @@
 
           <button type="button" class="btn-pay-card-cta" id="btnIniciarCheckoutCartao">
             <span>Ativar Assinatura com Cartão (R$ 12,90/mês)</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
           </button>
 
           <div class="card-sub-info">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
             <span>Aprovação imediata • O laudo destrava assim que o pagamento for confirmado</span>
           </div>
         </div>
@@ -1031,7 +1093,10 @@
         <!-- ── ABA 2: PIX (PASSE DE 30 DIAS) ── -->
         <div class="pix-pay-view" id="viewPayPix" style="display:none;">
           <div class="pix-pass-badge">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
             <span>Passe de 30 Dias (Renovação Manual)</span>
           </div>
 
@@ -1044,7 +1109,8 @@
                 <span>Gerando chave Pix...</span>
               </div>
             </div>
-            <p class="pix-instruction">Pague <strong>R$ 12,90</strong> via Pix para liberar 30 dias de acesso. Aponte a câmera para o QR Code ou copie o código abaixo:</p>
+            <p class="pix-instruction">Pague <strong>R$ 12,90</strong> via Pix para liberar 30 dias de acesso. Aponte a
+              câmera para o QR Code ou copie o código abaixo:</p>
           </div>
 
           <!-- COPIA E COLA -->
@@ -1064,7 +1130,8 @@
           <!-- MODO DEMO / SIMULAÇÃO -->
           <div class="pix-demo-notice" id="pixDemoNotice" style="display:none;">
             <p>Modo de Demonstração ativo (sem cobrança real):</p>
-            <button type="button" class="btn-pix-simular" id="btnSimularPixAprovado">Simular Pagamento Aprovado (30 Dias)</button>
+            <button type="button" class="btn-pix-simular" id="btnSimularPixAprovado">Simular Pagamento Aprovado (30
+              Dias)</button>
           </div>
         </div>
       </div>
@@ -1101,9 +1168,9 @@
   </footer>
 
   <!-- Scripts da Aplicação com Cache Buster -->
-  <script src="species_config.js?v=20261112_v5"></script>
-  <script src="analyzer.js?v=20261112_v5"></script>
-  <script src="app.js?v=20261112_v5"></script>
+  <script src="species_config.js?v=20261112_v6"></script>
+  <script src="analyzer.js?v=20261112_v6"></script>
+  <script src="app.js?v=20261112_v6"></script>
 </body>
 
 </html>
