@@ -601,7 +601,7 @@
         </div>
 
         <!-- BANNER DE PAYWALL — PLANO MENSAL 30 DIAS RECORRENTE -->
-        <div class="paywall-unlock-card paywall-pet-capsule mobile-tab-item mobile-group-active" id="paywallCardIndividual" data-mobile-group="tab-veredito tab-raiox">
+        <div class="paywall-unlock-card paywall-pet-capsule mobile-tab-item" id="paywallCardIndividual" data-mobile-group="tab-raiox">
           <div class="paywall-floating-glow"></div>
           <div class="paywall-emblem-circle">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -616,12 +616,12 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
             <span>Plano Mensal • 30 Dias de Acesso Ilimitado</span>
           </div>
-          <h3>Acesso Ilimitado a Todos os Laudos & Tira-Teimas</h3>
-          <p>Proteja a nutrição do seu pet o mês inteiro. Analise rótulos, compare marcas no Tira-Teima e consulte quando quiser durante 30 dias.</p>
+          <h3>Acesso Ilimitado ao Raio-X & Tira-Teima</h3>
+          <p>Desbloqueie o Raio-X aprofundado dos ingredientes, análise da fonte proteica e comparador ilimitado por 30 dias.</p>
           <div class="paywall-perks-pills">
             <span class="pet-perk-pill">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              30 Dias de Consultas Ilimitadas
+              30 Dias Ilimitados
             </span>
             <span class="pet-perk-pill">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -638,7 +638,7 @@
                 <span class="price-val">R$ 12,90</span>
                 <span class="price-period">/mês</span>
               </div>
-              <span class="price-desc">No Cartão: renovação automática mensal • No Pix: passe 30 dias</span>
+              <span class="price-desc">No Cartão: renovação automática • No Pix: passe 30 dias</span>
             </div>
             <button type="button" class="btn-unlock-pix btn-pet-pill-cta" id="btnDesbloquearIndividual">
               <span>Assinar Plano Mensal (30 Dias)</span>
@@ -647,7 +647,7 @@
           </div>
         </div>
 
-        <!-- ÁREA BLOQUEADA (REVELADA APÓS PIX APROVADO) -->
+        <!-- ÁREA BLOQUEADA (REVELADA APÓS ASSINATURA) -->
         <div class="premium-locked-wrapper is-locked" id="premiumLockedWrapper">
 
         <!-- ★ RAIO-X DOS INGREDIENTES (IA) ★ -->
@@ -683,6 +683,8 @@
             <!-- Gerado dinamicamente pelo JS -->
           </div>
         </div>
+
+        </div> <!-- /premium-locked-wrapper (Bloqueia apenas Raio-X e Proteína profunda) -->
 
         <!-- CARD: O QUE OBSERVAR NO SEU PET (INTEGRAÇÃO DA RESPOSTA DO TUTOR) -->
         <div class="result-card mobile-tab-item" id="boxRespostaClinica" data-mobile-group="tab-cuidados">
@@ -769,12 +771,10 @@
           </div>
         </div>
 
-        </div> <!-- /premium-locked-wrapper -->
-
       </div>
 
       <!-- CARD DE CONVITE AO TIRA-TEIMA (ALTA CONVERSÃO) -->
-      <div class="invite-compare-card mobile-tab-item mobile-group-active" id="boxConviteComparador" data-mobile-group="tab-veredito">
+      <div class="invite-compare-card mobile-tab-item" id="boxConviteComparador" data-mobile-group="tab-cuidados">
         <div class="invite-compare-info">
           <span class="invite-badge">Tira-Teima de Balcão</span>
           <h4>Ficou em dúvida entre esta ração e outra?</h4>

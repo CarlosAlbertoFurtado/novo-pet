@@ -1035,56 +1035,71 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/^[-=_]{3,}\s*$/gm, '')
       .trim();
 
-    // 2. Transforma cada linha em tópico visual estruturado (Micro-Cards)
+    // 2. Transforma cada linha em texto fluido, editorial e organizado
     const lines = text.split('\n');
-    const htmlParts = lines.map(line => {
-      const trimmed = line.trim();
-      if (!trimmed) return '';
-      const cleanLine = trimmed.replace(/^[•\-–—]\s*/, '').trim();
+    const htmlParts = [];
 
-      // Detecta padrão Título: Descrição com ou sem <strong>
-      const strongKeyMatch = cleanLine.match(/^<strong>([^<]+)<\/strong>[:–—]?\s*(.*)$/i);
-      const plainKeyMatch = !strongKeyMatch ? cleanLine.match(/^([A-Za-zÀ-ÿ0-9\s\/\(\)\,\-\+]{3,45})[:–—]\s+(.+)$/) : null;
+    for (let i = 0; i < lines.length; i++) {
+      const trimmed = lines[i].trim();
+      if (!trimmed) continue;
 
-      if (strongKeyMatch && strongKeyMatch[2].trim()) {
-        const title = strongKeyMatch[1].replace(/[:–—\s]+$/, '').trim();
-        const body = strongKeyMatch[2].trim();
-        return `
-          <div class="ai-topic-card">
-            <div class="ai-topic-header">
-              <span class="ai-topic-tag">${title}</span>
+      const isBullet = /^[•\-–—*]\s*/.test(trimmed);
+      const cleanLine = trimmed.replace(/^[•\-–—*]\s*/, '').trim();
+
+      // Caso 1: Negrito com título: <strong>Título</strong>: Descrição
+      const strongMatch = cleanLine.match(/^<strong>([^<]+)<\/strong>[:–—]?\s*(.*)$/i);
+      if (strongMatch && strongMatch[2].trim()) {
+        const title = strongMatch[1].replace(/[:–—\s]+$/, '').trim();
+        const desc = strongMatch[2].trim();
+        htmlParts.push(`
+          <div class="ai-report-point">
+            <span class="ai-point-marker"></span>
+            <div class="ai-point-content">
+              <strong class="ai-point-title">${title}:</strong>
+              <span class="ai-point-text">${desc}</span>
             </div>
-            <p class="ai-topic-body">${body}</p>
           </div>
-        `;
-      } else if (plainKeyMatch) {
-        const title = plainKeyMatch[1].replace(/[:–—\s]+$/, '').trim();
-        const body = plainKeyMatch[2].trim();
-        return `
-          <div class="ai-topic-card">
-            <div class="ai-topic-header">
-              <span class="ai-topic-tag">${title}</span>
-            </div>
-            <p class="ai-topic-body">${body}</p>
-          </div>
-        `;
+        `);
+        continue;
       }
 
-      if (/^[•\-–—]/.test(trimmed)) {
-        return `
-          <div class="clean-bullet-item">
-            <span class="bullet-dot">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            </span>
-            <span class="bullet-text">${cleanLine}</span>
-          </div>
-        `;
+      // Caso 2: Linha de tópico com hífen/marcador e dois-pontos: "- Título: Descrição"
+      const colonIndex = cleanLine.indexOf(':');
+      if (isBullet && colonIndex > 2 && colonIndex <= 50) {
+        const title = cleanLine.substring(0, colonIndex).trim();
+        const desc = cleanLine.substring(colonIndex + 1).trim();
+        if (!/[.!?]/.test(title) && desc.length > 0) {
+          htmlParts.push(`
+            <div class="ai-report-point">
+              <span class="ai-point-marker"></span>
+              <div class="ai-point-content">
+                <strong class="ai-point-title">${title}:</strong>
+                <span class="ai-point-text">${desc}</span>
+              </div>
+            </div>
+          `);
+          continue;
+        }
       }
 
-      return `<p class="clean-paragraph">${cleanLine}</p>`;
-    });
+      // Caso 3: Marcador comum de lista sem dois-pontos
+      if (isBullet) {
+        htmlParts.push(`
+          <div class="ai-report-point">
+            <span class="ai-point-marker"></span>
+            <div class="ai-point-content">
+              <span class="ai-point-text">${cleanLine}</span>
+            </div>
+          </div>
+        `);
+        continue;
+      }
 
-    return htmlParts.filter(Boolean).join('');
+      // Caso 4: Parágrafo regular limpo e respirado
+      htmlParts.push(`<p class="ai-report-paragraph">${cleanLine}</p>`);
+    }
+
+    return htmlParts.join('');
   }
 
   // ==========================================
