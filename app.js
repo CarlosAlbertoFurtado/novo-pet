@@ -106,12 +106,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const lockedWrapperComp = premiumLockedWrapperCompare || document.getElementById("premiumLockedWrapperCompare");
     const paywallCardComp = paywallCardCompare || document.getElementById("paywallCardCompare");
     const compareCardsRow = document.querySelector(".compare-cards-row");
+    const notaCard = document.getElementById("notaGeralCard");
+    const semaphoreCard = document.getElementById("semaphoreCard");
+    const vereditoTrocaCard = document.getElementById("vereditoTrocaCard");
 
     if (sub.active) {
       isLaudoDesbloqueado = true;
+      if (notaCard) notaCard.classList.remove("is-locked");
+      if (semaphoreCard) semaphoreCard.classList.remove("is-locked");
+      if (vereditoTrocaCard) vereditoTrocaCard.classList.remove("is-locked");
+      if (compareCardsRow) compareCardsRow.classList.remove("is-locked");
+
       if (lockedWrapper) {
         lockedWrapper.classList.remove("is-locked");
-        lockedWrapper.dataset.mobileGroup = "tab-veredito tab-raiox tab-cuidados";
+        lockedWrapper.dataset.mobileGroup = "tab-veredito tab-raiox tab-cuidados tab-nutrientes";
       }
       if (paywallCard) paywallCard.style.display = "none";
 
@@ -120,7 +128,6 @@ document.addEventListener("DOMContentLoaded", () => {
         lockedWrapperComp.dataset.mobileGroup = "tab-comp-vencedor tab-comp-ladolado tab-comp-transicao";
       }
       if (paywallCardComp) paywallCardComp.style.display = "none";
-      if (compareCardsRow) compareCardsRow.classList.remove("is-locked");
 
       if (activePill) {
         activePill.style.display = "flex";
@@ -140,15 +147,20 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } else {
       isLaudoDesbloqueado = false;
+      if (notaCard) notaCard.classList.add("is-locked");
+      if (semaphoreCard) semaphoreCard.classList.add("is-locked");
+      if (vereditoTrocaCard) vereditoTrocaCard.classList.add("is-locked");
+      if (compareCardsRow) compareCardsRow.classList.add("is-locked");
+
       if (activePill) activePill.style.display = "none";
       if (activePillCompare) activePillCompare.style.display = "none";
       if (lockedWrapper) {
         lockedWrapper.classList.add("is-locked");
-        lockedWrapper.dataset.mobileGroup = "tab-veredito tab-raiox tab-cuidados";
+        lockedWrapper.dataset.mobileGroup = "tab-veredito tab-raiox tab-cuidados tab-nutrientes";
       }
       if (paywallCard) {
         paywallCard.style.display = "block";
-        paywallCard.dataset.mobileGroup = "tab-veredito tab-raiox tab-cuidados";
+        paywallCard.dataset.mobileGroup = "tab-veredito tab-raiox tab-cuidados tab-nutrientes";
       }
       if (lockedWrapperComp) {
         lockedWrapperComp.classList.add("is-locked");
@@ -158,7 +170,6 @@ document.addEventListener("DOMContentLoaded", () => {
         paywallCardComp.style.display = "block";
         paywallCardComp.dataset.mobileGroup = "tab-comp-vencedor tab-comp-ladolado tab-comp-transicao";
       }
-      if (compareCardsRow) compareCardsRow.classList.add("is-locked");
     }
   }
 
@@ -1467,7 +1478,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (vereditoBadge) vereditoBadge.textContent = badgeText;
-    if (vereditoCard) vereditoCard.className = `veredito-troca-card ${cardClass}`;
+    const isSubActiveComp = getAssinaturaState().active;
+    if (vereditoCard) {
+      vereditoCard.className = `veredito-troca-card ${cardClass} ${isSubActiveComp ? '' : 'is-locked'}`.trim();
+    }
     if (vereditoTexto) {
       const cleanVeredito = vereditoSection
         .replace(/^(TROCA RECOMENDADA|NÃO COMPENSA TROCAR|EQUIVALENTES|VALE A PENA TROCAR|MANTENHA A ATUAL)[^\n]*\n?/i, '')
