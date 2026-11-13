@@ -40,6 +40,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultCompareSection = document.getElementById("resultCompareSection");
   const premiumLockedWrapper = document.getElementById("premiumLockedWrapper");
   const paywallCardIndividual = document.getElementById("paywallCardIndividual");
+  const premiumLockedWrapperCompare = document.getElementById("premiumLockedWrapperCompare");
+  const paywallCardCompare = document.getElementById("paywallCardCompare");
+  const btnDesbloquearCompare = document.getElementById("btnDesbloquearCompare");
 
   // ==========================================
   // GERENCIAMENTO DA ASSINATURA MENSAL (30 DIAS)
@@ -100,11 +103,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const countdownCompEl = document.getElementById("activeSubPillCompareCountdown");
     const lockedWrapper = premiumLockedWrapper || document.getElementById("premiumLockedWrapper");
     const paywallCard = paywallCardIndividual || document.getElementById("paywallCardIndividual");
+    const lockedWrapperComp = premiumLockedWrapperCompare || document.getElementById("premiumLockedWrapperCompare");
+    const paywallCardComp = paywallCardCompare || document.getElementById("paywallCardCompare");
 
     if (sub.active) {
       isLaudoDesbloqueado = true;
-      if (lockedWrapper) lockedWrapper.classList.remove("is-locked");
+      if (lockedWrapper) {
+        lockedWrapper.classList.remove("is-locked");
+        lockedWrapper.dataset.mobileGroup = "tab-raiox";
+      }
       if (paywallCard) paywallCard.style.display = "none";
+
+      if (lockedWrapperComp) {
+        lockedWrapperComp.classList.remove("is-locked");
+        lockedWrapperComp.dataset.mobileGroup = "tab-comp-ladolado";
+      }
+      if (paywallCardComp) paywallCardComp.style.display = "none";
 
       if (activePill) {
         activePill.style.display = "flex";
@@ -123,11 +137,24 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     } else {
+      isLaudoDesbloqueado = false;
       if (activePill) activePill.style.display = "none";
       if (activePillCompare) activePillCompare.style.display = "none";
-      if (!isLaudoDesbloqueado) {
-        if (lockedWrapper) lockedWrapper.classList.add("is-locked");
-        if (paywallCard) paywallCard.style.display = "block";
+      if (lockedWrapper) {
+        lockedWrapper.classList.add("is-locked");
+        lockedWrapper.dataset.mobileGroup = "tab-veredito tab-raiox";
+      }
+      if (paywallCard) {
+        paywallCard.style.display = "block";
+        paywallCard.dataset.mobileGroup = "tab-veredito tab-raiox";
+      }
+      if (lockedWrapperComp) {
+        lockedWrapperComp.classList.add("is-locked");
+        lockedWrapperComp.dataset.mobileGroup = "tab-comp-vencedor tab-comp-ladolado";
+      }
+      if (paywallCardComp) {
+        paywallCardComp.style.display = "block";
+        paywallCardComp.dataset.mobileGroup = "tab-comp-vencedor tab-comp-ladolado";
       }
     }
   }
@@ -1176,16 +1203,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 7. RENDERIZAÇÃO DO VEREDITO (v2 — Raio-X)
   // ==========================================
   function renderizarResultado(res) {
-    // Configura o estado inicial do Paywall com base na assinatura mensal ativa
-    const sub = getAssinaturaState();
-    if (sub.active) {
-      isLaudoDesbloqueado = true;
-      if (premiumLockedWrapper) premiumLockedWrapper.classList.remove("is-locked");
-      if (paywallCardIndividual) paywallCardIndividual.style.display = "none";
-    } else if (!isLaudoDesbloqueado) {
-      if (premiumLockedWrapper) premiumLockedWrapper.classList.add("is-locked");
-      if (paywallCardIndividual) paywallCardIndividual.style.display = "block";
-    }
+    // Aplica o estado do Paywall (bloqueado/desbloqueado)
     aplicarEstadoAssinatura();
 
     // 1. Nota Geral (se disponível da IA)
@@ -1406,6 +1424,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   function renderizarComparativo(text) {
     if (!text) return;
+
+    // Aplica o estado do Paywall no comparativo (bloqueado/desbloqueado)
+    aplicarEstadoAssinatura();
 
     // Extrair seções do markdown retornado pela IA
     const sections = {};
@@ -1740,6 +1761,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Eventos de clique
   btnDesbloquearIndividual?.addEventListener("click", () => {
+    abrirModalAssinatura();
+  });
+
+  btnDesbloquearCompare?.addEventListener("click", () => {
     abrirModalAssinatura();
   });
 

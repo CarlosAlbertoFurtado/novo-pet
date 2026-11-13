@@ -7,7 +7,7 @@
   <title>Tradutor Pet | Análise de Ração, Sachê e Alimentos para Cães e Gatos</title>
   <meta name="description"
     content="Tire foto do rótulo da ração, sachê úmido, lata, patê ou petisco do seu pet e descubra se os ingredientes são saudáveis, se tem carne de verdade e se vale o preço.">
-  <link rel="stylesheet" href="style.css?v=20261112_v6">
+  <link rel="stylesheet" href="style.css?v=20261113_v1">
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23059669%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><circle cx=%2212%22 cy=%2214%22 r=%224%22/><circle cx=%226.5%22 cy=%229.5%22 r=%222.5%22/><circle cx=%2217.5%22 cy=%229.5%22 r=%222.5%22/><circle cx=%229%22 cy=%225.5%22 r=%222%22/><circle cx=%2215%22 cy=%225.5%22 r=%222%22/></svg>">
 </head>
@@ -613,7 +613,7 @@
 
         <!-- BANNER DE PAYWALL — PLANO MENSAL 30 DIAS RECORRENTE -->
         <div class="paywall-unlock-card paywall-pet-capsule mobile-tab-item" id="paywallCardIndividual"
-          data-mobile-group="tab-raiox">
+          data-mobile-group="tab-veredito tab-raiox">
           <div class="paywall-floating-glow"></div>
           <div class="paywall-emblem-circle">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
@@ -675,11 +675,10 @@
 
         <!-- ÁREA BLOQUEADA (REVELADA APÓS ASSINATURA) -->
         <div class="premium-locked-wrapper is-locked mobile-tab-item" id="premiumLockedWrapper"
-          data-mobile-group="tab-raiox">
+          data-mobile-group="tab-veredito tab-raiox">
 
-          <!-- ★ RAIO-X DOS INGREDIENTES (IA) ★ -->
-          <div class="result-card raiox-card mobile-tab-item" id="raioxIngredientesContainer"
-            data-mobile-group="tab-raiox" style="display:none;">
+          <!-- ★ RAIO-X DOS INGREDIENTES (SISTEMA) ★ -->
+          <div class="result-card raiox-card" id="raioxIngredientesContainer" style="display:none;">
             <div class="result-card-header">
               <span class="result-card-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -694,9 +693,8 @@
             </div>
           </div>
 
-          <!-- ★ QUALIDADE DA PROTEÍNA (IA) ★ -->
-          <div class="result-card qualidade-proteina-card mobile-tab-item" id="qualidadeProteinaCard"
-            data-mobile-group="tab-raiox" style="display:none;">
+          <!-- ★ QUALIDADE DA PROTEÍNA (SISTEMA) ★ -->
+          <div class="result-card qualidade-proteina-card" id="qualidadeProteinaCard" style="display:none;">
             <div class="result-card-header">
               <span class="result-card-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -821,7 +819,7 @@
     <!-- ==========================================
          PÁGINA DE RESULTADO DO COMPARATIVO (TIRA-TEIMA)
          ========================================== -->
-    <section class="result-section" id="resultCompareSection" style="display:none;">
+    <section class="result-section result-compare-section" id="resultCompareSection" style="display:none;">
 
       <!-- BADGE DE ASSINATURA ATIVA NO COMPARATIVO -->
       <div class="active-subscription-pill" id="activeSubPillCompare" style="display:none;">
@@ -948,22 +946,89 @@
         </div>
       </div>
 
-      <!-- CARD: COMPARATIVO DETALHADO PONTO A PONTO -->
-      <div class="result-card mobile-tab-item" id="cardComparativoLadoLado" data-mobile-group="tab-comp-ladolado">
-        <div class="result-card-header">
-          <span class="result-card-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="20" x2="18" y2="10"></line>
-              <line x1="12" y1="20" x2="12" y2="4"></line>
-              <line x1="6" y1="20" x2="6" y2="14"></line>
-            </svg>
-          </span>
-          <h3 class="result-card-title">Comparativo Lado a Lado</h3>
+      <!-- BANNER DE PAYWALL COMPARATIVO — PLANO MENSAL 30 DIAS RECORRENTE -->
+      <div class="paywall-unlock-card paywall-pet-capsule mobile-tab-item" id="paywallCardCompare"
+        data-mobile-group="tab-comp-vencedor tab-comp-ladolado">
+        <div class="paywall-floating-glow"></div>
+        <div class="paywall-emblem-circle">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="14" r="4"></circle>
+            <circle cx="6.5" cy="9.5" r="2.5"></circle>
+            <circle cx="17.5" cy="9.5" r="2.5"></circle>
+            <circle cx="9" cy="5.5" r="2"></circle>
+            <circle cx="15" cy="5.5" r="2"></circle>
+          </svg>
         </div>
-        <div class="compare-breakdown-content" id="compareBreakdownText">
-          <!-- Gerado dinamicamente -->
+        <div class="paywall-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>Plano Mensal • 30 Dias de Acesso Ilimitado</span>
+        </div>
+        <h3>Desbloqueie o Comparativo Lado a Lado Completo</h3>
+        <p>Acesse o raio-x detalhado de nutrientes, digestibilidade das proteínas, aditivos controversos e comparador ilimitado por 30 dias.</p>
+        <div class="paywall-perks-pills">
+          <span class="pet-perk-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            30 Dias Ilimitados
+          </span>
+          <span class="pet-perk-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Cobrança Automática no Cartão
+          </span>
+          <span class="pet-perk-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Cancele Quando Quiser
+          </span>
+        </div>
+        <div class="paywall-cta-row">
+          <div class="paywall-price">
+            <div class="price-val-row">
+              <span class="price-val">R$ 12,90</span>
+              <span class="price-period">/mês</span>
+            </div>
+            <span class="price-desc">No Cartão: renovação automática • No Pix: passe 30 dias</span>
+          </div>
+          <button type="button" class="btn-unlock-pix btn-pet-pill-cta" id="btnDesbloquearCompare">
+            <span>Assinar Plano Mensal (30 Dias)</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </button>
         </div>
       </div>
+
+      <!-- ÁREA BLOQUEADA DO COMPARATIVO (REVELADA APÓS ASSINATURA) -->
+      <div class="premium-locked-wrapper is-locked mobile-tab-item" id="premiumLockedWrapperCompare"
+        data-mobile-group="tab-comp-vencedor tab-comp-ladolado">
+
+        <!-- CARD: COMPARATIVO DETALHADO PONTO A PONTO -->
+        <div class="result-card" id="cardComparativoLadoLado">
+          <div class="result-card-header">
+            <span class="result-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+            </span>
+            <h3 class="result-card-title">Comparativo Lado a Lado</h3>
+          </div>
+          <div class="compare-breakdown-content" id="compareBreakdownText">
+            <!-- Gerado dinamicamente -->
+          </div>
+        </div>
+
+      </div> <!-- /premiumLockedWrapperCompare -->
 
       <!-- CARD: DICA DE TRANSIÇÃO (7 DIAS) -->
       <div class="transicao-guia-card mobile-tab-item" id="cardTransicaoGuia" data-mobile-group="tab-comp-transicao">
@@ -1168,9 +1233,9 @@
   </footer>
 
   <!-- Scripts da Aplicação com Cache Buster -->
-  <script src="species_config.js?v=20261112_v6"></script>
-  <script src="analyzer.js?v=20261112_v6"></script>
-  <script src="app.js?v=20261112_v6"></script>
+  <script src="species_config.js?v=20261113_v1"></script>
+  <script src="analyzer.js?v=20261113_v1"></script>
+  <script src="app.js?v=20261113_v1"></script>
 </body>
 
 </html>
