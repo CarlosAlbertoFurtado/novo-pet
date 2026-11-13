@@ -105,20 +105,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const paywallCard = paywallCardIndividual || document.getElementById("paywallCardIndividual");
     const lockedWrapperComp = premiumLockedWrapperCompare || document.getElementById("premiumLockedWrapperCompare");
     const paywallCardComp = paywallCardCompare || document.getElementById("paywallCardCompare");
+    const compareCardsRow = document.querySelector(".compare-cards-row");
 
     if (sub.active) {
       isLaudoDesbloqueado = true;
       if (lockedWrapper) {
         lockedWrapper.classList.remove("is-locked");
-        lockedWrapper.dataset.mobileGroup = "tab-raiox";
+        lockedWrapper.dataset.mobileGroup = "tab-veredito tab-raiox tab-cuidados";
       }
       if (paywallCard) paywallCard.style.display = "none";
 
       if (lockedWrapperComp) {
         lockedWrapperComp.classList.remove("is-locked");
-        lockedWrapperComp.dataset.mobileGroup = "tab-comp-ladolado";
+        lockedWrapperComp.dataset.mobileGroup = "tab-comp-vencedor tab-comp-ladolado tab-comp-transicao";
       }
       if (paywallCardComp) paywallCardComp.style.display = "none";
+      if (compareCardsRow) compareCardsRow.classList.remove("is-locked");
 
       if (activePill) {
         activePill.style.display = "flex";
@@ -142,25 +144,30 @@ document.addEventListener("DOMContentLoaded", () => {
       if (activePillCompare) activePillCompare.style.display = "none";
       if (lockedWrapper) {
         lockedWrapper.classList.add("is-locked");
-        lockedWrapper.dataset.mobileGroup = "tab-veredito tab-raiox";
+        lockedWrapper.dataset.mobileGroup = "tab-veredito tab-raiox tab-cuidados";
       }
       if (paywallCard) {
         paywallCard.style.display = "block";
-        paywallCard.dataset.mobileGroup = "tab-veredito tab-raiox";
+        paywallCard.dataset.mobileGroup = "tab-veredito tab-raiox tab-cuidados";
       }
       if (lockedWrapperComp) {
         lockedWrapperComp.classList.add("is-locked");
-        lockedWrapperComp.dataset.mobileGroup = "tab-comp-vencedor tab-comp-ladolado";
+        lockedWrapperComp.dataset.mobileGroup = "tab-comp-vencedor tab-comp-ladolado tab-comp-transicao";
       }
       if (paywallCardComp) {
         paywallCardComp.style.display = "block";
-        paywallCardComp.dataset.mobileGroup = "tab-comp-vencedor tab-comp-ladolado";
+        paywallCardComp.dataset.mobileGroup = "tab-comp-vencedor tab-comp-ladolado tab-comp-transicao";
       }
+      if (compareCardsRow) compareCardsRow.classList.add("is-locked");
     }
   }
 
-  // ── DETECTAR RETORNO DE PAGAMENTO COM CARTÃO APROVADO (MERCADO PAGO) ──
+  // ── DETECTAR RETORNO DE PAGAMENTO COM CARTÃO APROVADO OU RESET DE TESTE VISITANTE ──
   const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get("visitante") === "1" || urlParams.get("free") === "1" || urlParams.get("reset_sub") === "1") {
+    try { localStorage.removeItem(SUB_STORAGE_KEY); } catch(e){}
+    isLaudoDesbloqueado = false;
+  }
   const paymentReturnStatus = urlParams.get("payment") || urlParams.get("collection_status") || urlParams.get("status");
   if (paymentReturnStatus === "approved" || paymentReturnStatus === "success") {
     ativarAssinatura(30, 'card', true);
@@ -654,7 +661,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ── 1. NOTA GERAL (0-10) ──
     const notaSection = sections['nota geral da ração'] || sections['nota geral do alimento'] || sections['nota geral'] || '';
-    const notaMatch = notaSection.match(/NOTA:\s*(\d+[\.,]?\d*)\s*\/\s*10/i) 
+    const notaMatch = notaSection.match(/NOTA:\s*(\d+[\.,]?\d*)\s*\/\s*10/i)
       || notaSection.match(/(\d+[\.,]?\d*)\s*\/\s*10/i)
       || analysisText.match(/NOTA:\s*(\d+[\.,]?\d*)\s*\/\s*10/i)
       || analysisText.match(/(\d+[\.,]?\d*)\s*\/\s*10/i);
@@ -765,7 +772,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const umidade = umidadeMatch ? parseFloat(umidadeMatch[1].replace(',', '.')) : 0;
 
     // ── 6. QUALIDADE DA PROTEÍNA ──
-    const qualProtSection = limpar(sections['qualidade da proteína'] || sections['qualidade da proteina'] || sections['fonte proteica'] || '') 
+    const qualProtSection = limpar(sections['qualidade da proteína'] || sections['qualidade da proteina'] || sections['fonte proteica'] || '')
       || 'A fonte proteica foi decodificada com base nas matérias-primas e níveis de garantia da composição.';
 
     // ── 7. OBSERVAR NO PET ──
@@ -859,10 +866,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const analiseLower = analysisText.toLowerCase();
-      const semCorantes = analiseLower.includes('ausência de corantes') || 
-                          analiseLower.includes('sem corantes') || 
-                          analiseLower.includes('livre de corantes');
-      
+      const semCorantes = analiseLower.includes('ausência de corantes') ||
+        analiseLower.includes('sem corantes') ||
+        analiseLower.includes('livre de corantes');
+
       let aditivosTexto = '';
       if (lineEnn) {
         aditivosTexto += `${limpar(lineEnn.replace(/^[-*•]\s*/, ''))}. `;
@@ -1350,9 +1357,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const tagIngrediente = document.getElementById("tagPrimeiroIngrediente");
     tagIngrediente.className = `nutrient-status-tag ${res.oQueORotuloDiz.primeiroIngrediente.status}`;
     tagIngrediente.textContent = res.oQueORotuloDiz.primeiroIngrediente.status === "qualidade_inferior" ? "Qualidade Inferior" : (res.oQueORotuloDiz.primeiroIngrediente.status === "qualidade_nobre" ? "Fonte Nobre" : "Padrão");
-    document.getElementById("descPrimeiroIngrediente").textContent = res.oQueORotuloDiz.primeiroIngrediente.explicacao;
-
-    document.getElementById("descAditivos").textContent = res.oQueORotuloDiz.aditivos.explicacao;
+    const isSubActive = getAssinaturaState().active;
+    if (isSubActive) {
+      document.getElementById("descPrimeiroIngrediente").textContent = res.oQueORotuloDiz.primeiroIngrediente.explicacao;
+      document.getElementById("descAditivos").textContent = res.oQueORotuloDiz.aditivos.explicacao;
+    } else {
+      document.getElementById("descPrimeiroIngrediente").innerHTML = '🔒 <em>Identificação de subprodutos e digestibilidade bloqueada no laudo completo</em>';
+      document.getElementById("descAditivos").innerHTML = '🔒 <em>Classificação de conservantes químicos e riscos bloqueada no laudo completo</em>';
+    }
 
     // 5. Qualidade da Proteína (se disponível)
     const qualProtCard = document.getElementById("qualidadeProteinaCard");
@@ -1371,7 +1383,7 @@ document.addEventListener("DOMContentLoaded", () => {
     alertBox.className = `pet-observation-alert-box ${res.oQueObservarNoSeuPet.tipo}`;
     document.getElementById("obsAlertTitle").textContent = res.oQueObservarNoSeuPet.titulo;
     document.getElementById("obsAlertText").innerHTML = formatarTextoVisual(res.oQueObservarNoSeuPet.mensagem);
-    
+
     const obsIconMap = {
       normal: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`,
       atencao: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`,
@@ -1766,6 +1778,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   btnDesbloquearCompare?.addEventListener("click", () => {
     abrirModalAssinatura();
+  });
+
+  document.getElementById("btnResetSubTest")?.addEventListener("click", () => {
+    try { localStorage.removeItem(SUB_STORAGE_KEY); } catch(e){}
+    isLaudoDesbloqueado = false;
+    aplicarEstadoAssinatura();
+    if (resultSection && resultSection.style.display !== "none") {
+      ativarAbaMobile('resultMobileNav', 'tab-veredito', resultSection);
+    }
+  });
+
+  document.getElementById("btnResetSubTestCompare")?.addEventListener("click", () => {
+    try { localStorage.removeItem(SUB_STORAGE_KEY); } catch(e){}
+    isLaudoDesbloqueado = false;
+    aplicarEstadoAssinatura();
+    if (resultCompareSection && resultCompareSection.style.display !== "none") {
+      ativarAbaMobile('compareMobileNav', 'tab-comp-vencedor', resultCompareSection);
+    }
   });
 
   btnFecharPix?.addEventListener("click", fecharModalPix);

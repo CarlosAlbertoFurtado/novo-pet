@@ -3316,22 +3316,53 @@ body {
   transform: translateY(0);
 }
 
-/* Área Bloqueada por Blur */
+/* Área Bloqueada por Blur — Engenharia Social com Efeito Vidro Fosco & Fade */
 .premium-locked-wrapper {
   grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  transition: filter 0.4s ease, opacity 0.4s ease;
+  gap: 20px;
+  transition: filter 0.4s ease, opacity 0.4s ease, max-height 0.4s ease;
+  position: relative;
 }
 
 .premium-locked-wrapper.is-locked {
-  filter: blur(5px);
-  opacity: 0.45;
+  filter: blur(8px);
+  opacity: 0.38;
   pointer-events: none;
   user-select: none;
   max-height: 480px;
   overflow: hidden;
+  position: relative;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
+}
+
+.premium-locked-wrapper.is-locked::after {
+  content: "🔒 CONTEÚDO RESTRITO — ASSINE PARA DESBLOQUEAR";
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.94);
+  border: 1px solid rgba(52, 211, 153, 0.6);
+  color: #34d399;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.compare-cards-row.is-locked .compare-pro-con {
+  filter: blur(4px);
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.4;
 }
 
 /* Modal de Pagamento Pix */

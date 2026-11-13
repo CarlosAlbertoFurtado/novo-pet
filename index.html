@@ -7,7 +7,7 @@
   <title>Tradutor Pet | Análise de Ração, Sachê e Alimentos para Cães e Gatos</title>
   <meta name="description"
     content="Tire foto do rótulo da ração, sachê úmido, lata, patê ou petisco do seu pet e descubra se os ingredientes são saudáveis, se tem carne de verdade e se vale o preço.">
-  <link rel="stylesheet" href="style.css?v=20261113_v1">
+  <link rel="stylesheet" href="style.css?v=20261113_v2">
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23059669%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><circle cx=%2212%22 cy=%2214%22 r=%224%22/><circle cx=%226.5%22 cy=%229.5%22 r=%222.5%22/><circle cx=%2217.5%22 cy=%229.5%22 r=%222.5%22/><circle cx=%229%22 cy=%225.5%22 r=%222%22/><circle cx=%2215%22 cy=%225.5%22 r=%222%22/></svg>">
 </head>
@@ -448,6 +448,7 @@
           <span id="activeSubPillCountdown">Restam 30 dias de acesso</span>
         </div>
         <span class="sub-pill-badge" id="activeSubPillBadge">Renovação Automática</span>
+        <button type="button" class="btn-reset-sub-test" id="btnResetSubTest" title="Alternar para visualização de visitante (com paywall)" style="background:none;border:none;color:#94a3b8;font-size:0.75rem;cursor:pointer;text-decoration:underline;margin-left:auto;padding:4px 8px;">(Testar como Visitante)</button>
       </div>
 
       <!-- Barra Superior de Ações Mobile -->
@@ -613,7 +614,7 @@
 
         <!-- BANNER DE PAYWALL — PLANO MENSAL 30 DIAS RECORRENTE -->
         <div class="paywall-unlock-card paywall-pet-capsule mobile-tab-item" id="paywallCardIndividual"
-          data-mobile-group="tab-veredito tab-raiox">
+          data-mobile-group="tab-veredito tab-raiox tab-cuidados">
           <div class="paywall-floating-glow"></div>
           <div class="paywall-emblem-circle">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
@@ -675,7 +676,7 @@
 
         <!-- ÁREA BLOQUEADA (REVELADA APÓS ASSINATURA) -->
         <div class="premium-locked-wrapper is-locked mobile-tab-item" id="premiumLockedWrapper"
-          data-mobile-group="tab-veredito tab-raiox">
+          data-mobile-group="tab-veredito tab-raiox tab-cuidados">
 
           <!-- ★ RAIO-X DOS INGREDIENTES (SISTEMA) ★ -->
           <div class="result-card raiox-card" id="raioxIngredientesContainer" style="display:none;">
@@ -711,93 +712,92 @@
             </div>
           </div>
 
-        </div> <!-- /premium-locked-wrapper (Bloqueia apenas Raio-X e Proteína profunda) -->
-
-        <!-- CARD: O QUE OBSERVAR NO SEU PET (INTEGRAÇÃO DA RESPOSTA DO TUTOR) -->
-        <div class="result-card mobile-tab-item" id="boxRespostaClinica" data-mobile-group="tab-cuidados">
-          <div class="result-card-header">
-            <span class="result-card-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path
-                  d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3">
-                </path>
-                <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"></path>
-                <circle cx="20" cy="10" r="2"></circle>
-              </svg>
-            </span>
-            <h3 class="result-card-title">Resposta Clínica Observacional</h3>
-          </div>
-
-          <!-- Mensagem Integrada com Pelo e Fezes -->
-          <div class="pet-observation-alert-box atencao" id="petObservationAlertBox">
-            <div class="obs-alert-header">
-              <span id="obsAlertIcon"></span>
-              <span id="obsAlertTitle">Sua observação física é um indicativo essencial</span>
+          <!-- ★ VEREDITO DE CUSTO-BENEFÍCIO (SISTEMA) ★ -->
+          <div class="result-card veredito-custo-card" id="veredictCustoBeneficioCard" style="display:none;">
+            <div class="result-card-header">
+              <span class="result-card-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </span>
+              <h3 class="result-card-title">Veredito & Vale a Pena Pagar?</h3>
             </div>
-            <div class="obs-alert-body" id="obsAlertText">
-              Sua observação sobre o pelo/fezes é um sinal importante. Consulte um médico-veterinário para descartar
-              causas sistêmicas. O alimento pode ser um fator contribuinte, mas não o único.
+            <div class="veredito-custo-content" id="veredictCustoBeneficioText">
+              <!-- Gerado dinamicamente pelo JS -->
             </div>
           </div>
 
-          <!-- Guia de 30 Dias -->
-          <div class="checklist-30-days">
-            <div class="checklist-title">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-              Protocolo de Monitoramento dos 30 Dias:
+          <!-- CARD: O QUE OBSERVAR NO SEU PET (INTEGRAÇÃO DA RESPOSTA DO TUTOR) -->
+          <div class="result-card" id="boxRespostaClinica">
+            <div class="result-card-header">
+              <span class="result-card-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3">
+                  </path>
+                  <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"></path>
+                  <circle cx="20" cy="10" r="2"></circle>
+                </svg>
+              </span>
+              <h3 class="result-card-title">Resposta Clínica Observacional</h3>
             </div>
-            <ul class="checklist-items">
-              <li><strong>Consistência Fecal:</strong> Fezes cilíndricas, firmes, sem muco, sangue ou odor
-                desproporcional.</li>
-              <li><strong>Qualidade da Pelagem:</strong> Brilho homogêneo, sem descamação excessiva ou alopecia focal.
-              </li>
-              <li><strong>Nível de Atividade:</strong> Preservação de vitalidade para caminhadas e interações regulares.
-              </li>
-              <li><strong>Condição Corporal:</strong> Costelas palpáveis sob leve pressão, sem acúmulo adiposo visível.
-              </li>
-            </ul>
-          </div>
-        </div>
 
-        <!-- ★ VEREDITO DE CUSTO-BENEFÍCIO (IA) ★ -->
-        <div class="result-card veredito-custo-card mobile-tab-item mobile-group-active" id="veredictCustoBeneficioCard"
-          data-mobile-group="tab-veredito" style="display:none;">
-          <div class="result-card-header">
-            <span class="result-card-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
-            </span>
-            <h3 class="result-card-title">Veredito & Vale a Pena Pagar?</h3>
-          </div>
-          <div class="veredito-custo-content" id="veredictCustoBeneficioText">
-            <!-- Gerado dinamicamente pelo JS -->
-          </div>
-        </div>
+            <!-- Mensagem Integrada com Pelo e Fezes -->
+            <div class="pet-observation-alert-box atencao" id="petObservationAlertBox">
+              <div class="obs-alert-header">
+                <span id="obsAlertIcon"></span>
+                <span id="obsAlertTitle">Sua observação física é um indicativo essencial</span>
+              </div>
+              <div class="obs-alert-body" id="obsAlertText">
+                Sua observação sobre o pelo/fezes é um sinal importante. Consulte um médico-veterinário para descartar
+                causas sistêmicas. O alimento pode ser um fator contribuinte, mas não o único.
+              </div>
+            </div>
 
-        <!-- CARD: O QUE VOCÊ PODE FAZER (SUGESTÕES PRÁTICAS) -->
-        <div class="result-card mobile-tab-item" id="boxRecomendacoesPraticas" data-mobile-group="tab-cuidados">
-          <div class="result-card-header">
-            <span class="result-card-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
-              </svg>
-            </span>
-            <h3 class="result-card-title">Recomendações Práticas de Manejo</h3>
+            <!-- Guia de 30 Dias -->
+            <div class="checklist-30-days">
+              <div class="checklist-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                Protocolo de Monitoramento dos 30 Dias:
+              </div>
+              <ul class="checklist-items">
+                <li><strong>Consistência Fecal:</strong> Fezes cilíndricas, firmes, sem muco, sangue ou odor
+                  desproporcional.</li>
+                <li><strong>Qualidade da Pelagem:</strong> Brilho homogêneo, sem descamação excessiva ou alopecia focal.
+                </li>
+                <li><strong>Nível de Atividade:</strong> Preservação de vitalidade para caminhadas e interações regulares.
+                </li>
+                <li><strong>Condição Corporal:</strong> Costelas palpáveis sob leve pressão, sem acúmulo adiposo visível.
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div class="action-cards-grid" id="actionCardsContainer">
-            <!-- Gerado dinamicamente via analyzer.js -->
+          <!-- CARD: O QUE VOCÊ PODE FAZER (SUGESTÕES PRÁTICAS) -->
+          <div class="result-card" id="boxRecomendacoesPraticas">
+            <div class="result-card-header">
+              <span class="result-card-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                  <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+                </svg>
+              </span>
+              <h3 class="result-card-title">Recomendações Práticas de Manejo</h3>
+            </div>
+
+            <div class="action-cards-grid" id="actionCardsContainer">
+              <!-- Gerado dinamicamente via analyzer.js -->
+            </div>
           </div>
-        </div>
+
+        </div> <!-- /premium-locked-wrapper -->
 
       </div>
 
@@ -829,6 +829,7 @@
           <span id="activeSubPillCompareCountdown">Restam 30 dias de acesso</span>
         </div>
         <span class="sub-pill-badge">Renovação Automática</span>
+        <button type="button" class="btn-reset-sub-test" id="btnResetSubTestCompare" title="Alternar para visualização de visitante (com paywall)" style="background:none;border:none;color:#94a3b8;font-size:0.75rem;cursor:pointer;text-decoration:underline;margin-left:auto;padding:4px 8px;">(Testar como Visitante)</button>
       </div>
 
       <!-- Topo do Resultado do Comparativo -->
@@ -948,7 +949,7 @@
 
       <!-- BANNER DE PAYWALL COMPARATIVO — PLANO MENSAL 30 DIAS RECORRENTE -->
       <div class="paywall-unlock-card paywall-pet-capsule mobile-tab-item" id="paywallCardCompare"
-        data-mobile-group="tab-comp-vencedor tab-comp-ladolado">
+        data-mobile-group="tab-comp-vencedor tab-comp-ladolado tab-comp-transicao">
         <div class="paywall-floating-glow"></div>
         <div class="paywall-emblem-circle">
           <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
@@ -1009,7 +1010,7 @@
 
       <!-- ÁREA BLOQUEADA DO COMPARATIVO (REVELADA APÓS ASSINATURA) -->
       <div class="premium-locked-wrapper is-locked mobile-tab-item" id="premiumLockedWrapperCompare"
-        data-mobile-group="tab-comp-vencedor tab-comp-ladolado">
+        data-mobile-group="tab-comp-vencedor tab-comp-ladolado tab-comp-transicao">
 
         <!-- CARD: COMPARATIVO DETALHADO PONTO A PONTO -->
         <div class="result-card" id="cardComparativoLadoLado">
@@ -1028,25 +1029,25 @@
           </div>
         </div>
 
-      </div> <!-- /premiumLockedWrapperCompare -->
+        <!-- CARD: DICA DE TRANSIÇÃO (7 DIAS) -->
+        <div class="transicao-guia-card" id="cardTransicaoGuia">
+          <div class="transicao-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 8l4 4-4 4"></path>
+              <path d="M3 12h18"></path>
+            </svg>
+          </div>
+          <div class="transicao-info">
+            <h4>Como Fazer a Troca Sem Dor de Barriga (Regra dos 7 Dias)</h4>
+            <p id="compareDicaTexto">
+              Dias 1 e 2: 75% ração atual + 25% nova. Dias 3 e 4: 50% de cada. Dias 5 e 6: 25% atual + 75% nova. Dia 7:
+              100% ração nova. Isso evita diarreia e vômitos pela troca brusca.
+            </p>
+          </div>
+        </div>
 
-      <!-- CARD: DICA DE TRANSIÇÃO (7 DIAS) -->
-      <div class="transicao-guia-card mobile-tab-item" id="cardTransicaoGuia" data-mobile-group="tab-comp-transicao">
-        <div class="transicao-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 8l4 4-4 4"></path>
-            <path d="M3 12h18"></path>
-          </svg>
-        </div>
-        <div class="transicao-info">
-          <h4>Como Fazer a Troca Sem Dor de Barriga (Regra dos 7 Dias)</h4>
-          <p id="compareDicaTexto">
-            Dias 1 e 2: 75% ração atual + 25% nova. Dias 3 e 4: 50% de cada. Dias 5 e 6: 25% atual + 75% nova. Dia 7:
-            100% ração nova. Isso evita diarreia e vômitos pela troca brusca.
-          </p>
-        </div>
-      </div>
+      </div> <!-- /premiumLockedWrapperCompare -->
 
     </section>
 
@@ -1233,9 +1234,9 @@
   </footer>
 
   <!-- Scripts da Aplicação com Cache Buster -->
-  <script src="species_config.js?v=20261113_v1"></script>
-  <script src="analyzer.js?v=20261113_v1"></script>
-  <script src="app.js?v=20261113_v1"></script>
+  <script src="species_config.js?v=20261113_v2"></script>
+  <script src="analyzer.js?v=20261113_v2"></script>
+  <script src="app.js?v=20261113_v2"></script>
 </body>
 
 </html>
