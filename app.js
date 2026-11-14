@@ -1480,7 +1480,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (vereditoBadge) vereditoBadge.textContent = badgeText;
     const isSubActiveComp = getAssinaturaState().active;
     if (vereditoCard) {
-      vereditoCard.className = `veredito-troca-card ${cardClass} ${isSubActiveComp ? '' : 'is-locked'}`.trim();
+      vereditoCard.className = `veredito-troca-card mobile-tab-item mobile-group-active ${cardClass} ${isSubActiveComp ? '' : 'is-locked'}`.trim();
+    }
+    const compareRowEl = document.querySelector(".compare-cards-row");
+    if (compareRowEl) {
+      compareRowEl.classList.toggle('is-locked', !isSubActiveComp);
     }
     if (vereditoTexto) {
       const cleanVeredito = vereditoSection

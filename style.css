@@ -3376,19 +3376,75 @@ body {
   transition: filter 0.3s ease, opacity 0.3s ease;
 }
 
+.veredito-troca-card.is-locked {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  border: 2px dashed #cbd5e1 !important;
+  position: relative;
+}
+
+.veredito-troca-card.is-locked .veredito-troca-titulo {
+  filter: none !important;
+  opacity: 1 !important;
+  color: #0f172a !important;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.veredito-troca-card.is-locked .veredito-troca-badge {
+  filter: blur(8px) !important;
+  user-select: none !important;
+  pointer-events: none !important;
+  opacity: 0.35 !important;
+  background: #64748b !important;
+  color: #64748b !important;
+  margin-bottom: 10px;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
 .veredito-troca-card.is-locked .veredito-troca-texto {
-  filter: blur(6px);
-  user-select: none;
-  pointer-events: none;
-  opacity: 0.45;
+  filter: blur(6.5px) !important;
+  user-select: none !important;
+  pointer-events: none !important;
+  opacity: 0.35 !important;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.veredito-troca-card.is-locked::after {
+  content: "🔒 Resultado Bloqueado — Assine para Ver se Compensa a Troca";
+  display: inline-block;
+  margin-top: 14px;
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid rgba(52, 211, 153, 0.55);
+  color: #34d399;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.compare-cards-row.is-locked .card-vencedor {
+  border: 1px solid var(--border, rgba(0, 0, 0, 0.08)) !important;
+  box-shadow: none !important;
+}
+
+.compare-cards-row.is-locked .compare-score {
+  filter: blur(6px) !important;
+  user-select: none !important;
+  pointer-events: none !important;
+  opacity: 0.35 !important;
   transition: filter 0.3s ease, opacity 0.3s ease;
 }
 
 .compare-cards-row.is-locked .compare-pro-con {
-  filter: blur(5px);
-  user-select: none;
-  pointer-events: none;
-  opacity: 0.4;
+  filter: blur(6px) !important;
+  user-select: none !important;
+  pointer-events: none !important;
+  opacity: 0.35 !important;
   transition: filter 0.3s ease, opacity 0.3s ease;
 }
 
