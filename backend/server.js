@@ -23,7 +23,7 @@ import { requestLogger } from './middleware/logger.js';
 
 const app = express();
 const PORT = parseInt(process.env.PORT, 10) || 3001;
-const NODE_ENV = process.env.NODE_ENV || 'development';
+const NODE_ENV = process.env.NODE_ENV || (process.env.VERCEL ? 'production' : 'development');
 
 // Desativar header identificador de servidor por segurança
 app.disable('x-powered-by');

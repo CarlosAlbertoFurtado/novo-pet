@@ -116,7 +116,7 @@ export function createPaymentRouter() {
   // ── POST /api/payment/simulate-approval ───────────────────
   // Permite testar a liberação imediata apenas em desenvolvimento/demo
   router.post('/simulate-approval', (req, res) => {
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
       return res.status(403).json({ error: 'Endpoint desabilitado em produção por segurança.' });
     }
     const { id } = req.body || {};
