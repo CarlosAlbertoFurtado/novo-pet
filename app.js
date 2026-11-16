@@ -973,7 +973,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (err) {
         processingModal.style.display = "none";
         console.error('[COMPARE ERROR]', err);
-        alert(`Erro ao comparar rações: ${err.message}\n\nVerifique se as fotos estão nítidas e tente novamente.`);
+        alert(`Erro ao comparar rações: ${err.message}\n\nVerifique se as fotos estão nítidas. Caso precise de ajuda, contate nosso suporte no WhatsApp: +55 (19) 99586-4926.`);
       }
       return;
     }
@@ -1066,7 +1066,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (err) {
         processingModal.style.display = "none";
         console.error('[BACKEND ERROR]', err);
-        alert(`Erro na análise do sistema: ${err.message}\n\nUsando análise local como alternativa.`);
+        alert(`Erro na análise do sistema: ${err.message}\n\nUsando análise local como alternativa. Suporte WhatsApp: +55 (19) 99586-4926.`);
 
         // Fallback: usar análise local
         iniciarProcessamento(() => {

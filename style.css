@@ -3875,3 +3875,165 @@ body {
   color: #64748b;
   text-align: center;
 }
+
+/* ========================================================
+   SUPORTE WHATSAPP — CANAL OFICIAL & BOTÃO FLUTUANTE
+   ======================================================== */
+
+/* 1. Suporte no Footer */
+.footer-support {
+  background: rgba(30, 41, 59, 0.75);
+  border: 1px solid rgba(51, 65, 85, 0.85);
+  border-radius: 16px;
+  padding: 18px 22px;
+  max-width: 440px;
+  width: 100%;
+}
+
+.footer-support-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.support-status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+  display: inline-block;
+}
+
+.footer-support h4 {
+  color: #f1f5f9;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.footer-support p {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  margin: 0 0 12px 0;
+  line-height: 1.45;
+}
+
+.footer-whatsapp-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #25d366;
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 10px 18px;
+  border-radius: var(--radius-full);
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+}
+
+.footer-whatsapp-link:hover {
+  background: #20ba5a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+}
+
+.support-availability {
+  display: block;
+  font-size: 0.74rem;
+  color: #64748b;
+  margin-top: 8px;
+}
+
+/* 2. Suporte no Modal de Pagamento Pix */
+.pix-checkout-support {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-top: 14px;
+  font-size: 0.78rem;
+  color: #475569;
+}
+
+.pix-checkout-support a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #059669;
+  font-weight: 700;
+  text-decoration: none;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.pix-checkout-support a:hover {
+  background: #059669;
+  color: #ffffff;
+}
+
+/* 3. Botão Flutuante de WhatsApp */
+.floating-whatsapp-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #25d366;
+  color: #ffffff !important;
+  padding: 12px 18px 12px 14px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45), 0 2px 6px rgba(0, 0, 0, 0.12);
+  text-decoration: none !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.floating-whatsapp-btn svg {
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+}
+
+.floating-whatsapp-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+.floating-whatsapp-btn:hover {
+  background: #20ba5a;
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 28px rgba(37, 211, 102, 0.55), 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Ajustes Responsivos Mobile */
+@media (max-width: 768px) {
+  .floating-whatsapp-btn {
+    bottom: 84px;
+    right: 14px;
+    padding: 11px;
+    border-radius: 50%;
+  }
+
+  .floating-whatsapp-label {
+    display: none;
+  }
+
+  .pix-checkout-support {
+    flex-direction: column;
+    text-align: center;
+  }
+}

@@ -41,13 +41,17 @@ export async function createPixPayment({ amount = 12.90, description = 'Plano Me
   }
 
   const idempotencyKey = crypto.randomUUID();
+  const safeDesc = String(description || 'Plano Mensal Pet').replace(/[<>'"`;${}]/g, '').slice(0, 100);
+  const safeEmail = (email && typeof email === 'string' && email.includes('@'))
+    ? email.trim().replace(/[<>'"`;${}]/g, '').slice(0, 80)
+    : 'cliente@tradutorderacao.com.br';
 
   const body = {
     transaction_amount: Number(amount),
-    description: description.slice(0, 100),
+    description: safeDesc,
     payment_method_id: 'pix',
     payer: {
-      email: email && email.includes('@') ? email : 'cliente@tradutorderacao.com.br',
+      email: safeEmail,
       first_name: 'Tutor',
       last_name: 'Pet'
     }

@@ -25,6 +25,9 @@ const app = express();
 const PORT = parseInt(process.env.PORT, 10) || 3001;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
+// Desativar header identificador de servidor por segurança
+app.disable('x-powered-by');
+
 // ── 0. TRUST PROXY (Vercel / Cloudflare / Nginx) ───────────
 // Necessário para identificar corretamente o IP do cliente através do proxy reverso
 app.set('trust proxy', 1);
@@ -106,6 +109,21 @@ const limiter = rateLimit({
 
 app.use('/api/', limiter);
 
+// Rate limiter específico para criação de ordens de pagamento (anti-spam / anti-carding)
+const paymentOrderLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutos
+  max: 15,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: 'Muitas tentativas de pagamento geradas. Por favor, aguarde alguns minutos ou contate o suporte via WhatsApp.',
+  },
+  keyGenerator: (req) => req.ip,
+});
+
+app.use('/api/payment/create-pix', paymentOrderLimiter);
+app.use('/api/payment/create-card-checkout', paymentOrderLimiter);
+
 // ── 4. BODY PARSING SEGURO ─────────────────────────────────
 // Limitar tamanho do body JSON para evitar payload bombing
 app.use(express.json({ limit: '1kb' }));
@@ -155,7 +173,7 @@ if (!process.env.VERCEL) {
     console.log('══════════════════════════════════════════════');
     console.log(`  Ambiente:  ${NODE_ENV}`);
     console.log(`  Porta:     ${PORT}`);
-    console.log(`  CORS:      ${allowedOrigins.join(', ')}`);
+    console.log(`  CORS:      ${[...defaultAllowed, ...customOrigins].join(', ')}`);
     console.log(`  Rate Limit: ${process.env.RATE_LIMIT_MAX || 30} req/15min`);
     console.log(`  Gemini:    ${process.env.GEMINI_API_KEY ? '✓ Configurada' : '✗ NÃO CONFIGURADA'}`);
     console.log('══════════════════════════════════════════════');

@@ -69,11 +69,17 @@ export function createPaymentRouter() {
   router.get('/status/:id', async (req, res, next) => {
     try {
       const { id } = req.params;
-      if (!id) {
+      if (!id || typeof id !== 'string') {
         return res.status(400).json({ error: 'ID de pagamento obrigatório.' });
       }
 
-      const statusData = await getPaymentStatus(id);
+      // Sanitização estrita contra injection / directory traversal
+      const cleanId = id.trim().replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 80);
+      if (!cleanId) {
+        return res.status(400).json({ error: 'ID de pagamento inválido.' });
+      }
+
+      const statusData = await getPaymentStatus(cleanId);
       res.json({
         success: true,
         ...statusData
@@ -90,12 +96,13 @@ export function createPaymentRouter() {
     try {
       const { type, data } = req.body || {};
       const queryId = req.query['data.id'] || req.query.id;
-      const paymentId = data?.id || queryId;
+      const rawPaymentId = data?.id || queryId;
 
-      if (paymentId && (type === 'payment' || req.query.topic === 'payment')) {
-        console.log(`[PAYMENT WEBHOOK] Notificação recebida para o pagamento ${paymentId}`);
-        const status = await getPaymentStatus(paymentId);
-        console.log(`[PAYMENT WEBHOOK] Status atualizado:`, status);
+      if (rawPaymentId && (type === 'payment' || req.query.topic === 'payment')) {
+        const cleanId = String(rawPaymentId).trim().replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 80);
+        console.log(`[PAYMENT WEBHOOK] Notificação recebida para o pagamento ${cleanId}`);
+        const status = await getPaymentStatus(cleanId);
+        console.log(`[PAYMENT WEBHOOK] Status atualizado:`, status?.status);
       }
 
       // Mercado Pago exige resposta 200/204 rápida
@@ -107,8 +114,11 @@ export function createPaymentRouter() {
   });
 
   // ── POST /api/payment/simulate-approval ───────────────────
-  // Permite testar a liberação imediata sem gastar dinheiro real em desenvolvimento/demo
+  // Permite testar a liberação imediata apenas em desenvolvimento/demo
   router.post('/simulate-approval', (req, res) => {
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(403).json({ error: 'Endpoint desabilitado em produção por segurança.' });
+    }
     const { id } = req.body || {};
     res.json({
       success: true,
