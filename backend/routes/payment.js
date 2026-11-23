@@ -19,14 +19,15 @@ export function createPaymentRouter() {
   router.post('/create-pix', async (req, res, next) => {
     try {
       const defaultPrice = parseFloat(process.env.SUBSCRIPTION_MONTHLY_PRICE || process.env.PIX_ANALYSIS_PRICE) || 12.90;
-      const { description, email } = req.body || {};
+      const { description, email, referredBy } = req.body || {};
 
       const desc = description || 'Passe Mensal Pet - 30 Dias de Acesso Ilimitado';
 
       const payment = await createPixPayment({
         amount: defaultPrice,
         description: desc,
-        email: email || 'tutor@pet.com'
+        email: email || 'tutor@pet.com',
+        referredBy
       });
 
       res.json({
@@ -44,7 +45,7 @@ export function createPaymentRouter() {
   router.post('/create-card-checkout', async (req, res, next) => {
     try {
       const defaultPrice = parseFloat(process.env.SUBSCRIPTION_MONTHLY_PRICE || process.env.PIX_ANALYSIS_PRICE) || 12.90;
-      const { description } = req.body || {};
+      const { description, referredBy } = req.body || {};
       const originUrl = req.headers.origin || 'https://novo-pet.vercel.app';
 
       const desc = description || 'Assinatura Mensal - Tradutor de Ração (30 Dias de Acesso Ilimitado com Renovação Automática)';
@@ -52,7 +53,8 @@ export function createPaymentRouter() {
       const checkout = await createSubscriptionPreference({
         amount: defaultPrice,
         description: desc,
-        originUrl
+        originUrl,
+        referredBy
       });
 
       res.json({

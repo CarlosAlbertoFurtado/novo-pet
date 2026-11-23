@@ -21,7 +21,7 @@ const MP_PREAPPROVAL_PLAN_URL = 'https://api.mercadopago.com/preapproval_plan';
  * @param {string} params.email - E-mail do pagador (opcional)
  * @returns {Promise<object>} Dados do Pix (id, qr_code, qr_code_base64, status)
  */
-export async function createPixPayment({ amount = 12.90, description = 'Plano Mensal Pet - 30 Dias de Acesso', email = 'tutor@pet.com' }) {
+export async function createPixPayment({ amount = 12.90, description = 'Plano Mensal Pet - 30 Dias de Acesso', email = 'tutor@pet.com', referredBy = null }) {
   const token = process.env.MERCADO_PAGO_ACCESS_TOKEN;
 
   // ── MODO SIMULAÇÃO / DEMO (se o usuário ainda não colocou a credencial no .env) ──
@@ -45,6 +45,7 @@ export async function createPixPayment({ amount = 12.90, description = 'Plano Me
   const safeEmail = (email && typeof email === 'string' && email.includes('@'))
     ? email.trim().replace(/[<>'"`;${}]/g, '').slice(0, 80)
     : 'cliente@tradutorderacao.com.br';
+  const safeRef = referredBy ? String(referredBy).replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 50) : null;
 
   const body = {
     transaction_amount: Number(amount),
@@ -54,7 +55,8 @@ export async function createPixPayment({ amount = 12.90, description = 'Plano Me
       email: safeEmail,
       first_name: 'Tutor',
       last_name: 'Pet'
-    }
+    },
+    ...(safeRef ? { external_reference: safeRef, metadata: { referred_by: safeRef } } : {})
   };
 
   try {
@@ -220,8 +222,9 @@ export async function createCardCheckoutPreference({ amount = 4.90, description 
  * O cliente autoriza a cobrança mensal uma única vez e o Mercado Pago
  * debita automaticamente a cada 30 dias.
  */
-export async function createSubscriptionPreference({ amount = 12.90, description = 'Assinatura Mensal - Tradutor de Ração', originUrl = 'https://novo-pet.vercel.app' }) {
+export async function createSubscriptionPreference({ amount = 12.90, description = 'Assinatura Mensal - Tradutor de Ração', originUrl = 'https://novo-pet.vercel.app', referredBy = null }) {
   const token = process.env.MERCADO_PAGO_ACCESS_TOKEN;
+  const safeRef = referredBy ? String(referredBy).replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 50) : null;
 
   if (!token || token.startsWith('SEU_') || token === 'SUA_CHAVE_AQUI') {
     return {
@@ -244,7 +247,8 @@ export async function createSubscriptionPreference({ amount = 12.90, description
         transaction_amount: Number(amount),
         currency_id: 'BRL'
       },
-      back_url: `${baseReturn}/?payment=approved&type=subscription`
+      back_url: `${baseReturn}/?payment=approved&type=subscription`,
+      ...(safeRef ? { external_reference: safeRef } : {})
     };
 
     const respPlan = await fetch(MP_PREAPPROVAL_PLAN_URL, {

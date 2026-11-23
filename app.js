@@ -175,6 +175,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ── DETECTAR RETORNO DE PAGAMENTO COM CARTÃO APROVADO OU RESET DE TESTE VISITANTE ──
   const urlParams = new URLSearchParams(window.location.search);
+  const refParam = urlParams.get("ref");
+  if (refParam) {
+    try {
+      localStorage.setItem("pet_referred_by", refParam.trim().slice(0, 40));
+    } catch(e){}
+  }
   if (urlParams.get("visitante") === "1" || urlParams.get("free") === "1" || urlParams.get("reset_sub") === "1") {
     try { localStorage.removeItem(SUB_STORAGE_KEY); } catch(e){}
     isLaudoDesbloqueado = false;
@@ -1635,10 +1641,12 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
 
       const backendUrl = await resolveBackendUrl();
+      let refBy = null;
+      try { refBy = localStorage.getItem("pet_referred_by"); } catch(e){}
       const resp = await fetch(`${backendUrl}/api/payment/create-card-checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: 'subscription' })
+        body: JSON.stringify({ type: 'subscription', referredBy: refBy })
       });
 
       if (!resp.ok) {
@@ -1689,10 +1697,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const backendUrl = await resolveBackendUrl();
+      let refBy = null;
+      try { refBy = localStorage.getItem("pet_referred_by"); } catch(e){}
       const resp = await fetch(`${backendUrl}/api/payment/create-pix`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: tipo })
+        body: JSON.stringify({ type: tipo, referredBy: refBy })
       });
 
       if (!resp.ok) {
@@ -1928,4 +1938,146 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   initMobileTabs();
+
+  // ── SISTEMA DE INDICAÇÃO ORGÂNICA (INDIQUE & GANHE R$ 3,00) ──
+  function initReferralSystem() {
+    function getOrCreateReferralCode() {
+      let code = null;
+      try {
+        code = localStorage.getItem("pet_user_referral_code");
+        if (!code) {
+          const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+          let rand = "";
+          for (let i = 0; i < 5; i++) {
+            rand += chars.charAt(Math.floor(Math.random() * chars.length));
+          }
+          code = "TUTOR-" + rand;
+          localStorage.setItem("pet_user_referral_code", code);
+        }
+      } catch (e) {
+        code = "TUTOR-PETS";
+      }
+      return code;
+    }
+
+    function getReferralUrl() {
+      const code = getOrCreateReferralCode();
+      const origin = window.location.origin;
+      const path = window.location.pathname;
+      return `${origin}${path}?ref=${code}`;
+    }
+
+    const myRefUrl = getReferralUrl();
+    const myCode = getOrCreateReferralCode();
+
+    // Preenche os inputs de link
+    const inputCard = document.getElementById("referralLinkInput");
+    if (inputCard) inputCard.value = myRefUrl;
+
+    const inputModal = document.getElementById("modalReferralInput");
+    if (inputModal) inputModal.value = myRefUrl;
+
+    // Configura o link de resgate do Pix para o WhatsApp do suporte
+    const btnResgatar = document.getElementById("btnResgatarPixWhatsApp");
+    if (btnResgatar) {
+      const msgResgate = `Olá! Meu código de indicação no Tradutor Pet é ${myCode} e gostaria de solicitar meu Pix de R$ 3,00 de indicação.`;
+      btnResgatar.href = `https://wa.me/5519995864926?text=${encodeURIComponent(msgResgate)}`;
+    }
+
+    // Modal de Indicação
+    const modal = document.getElementById("referralModal");
+    const btnOpenHeader = document.getElementById("btnOpenReferralHeader");
+    const btnCloseModal = document.getElementById("btnCloseReferralModal");
+
+    if (btnOpenHeader && modal) {
+      btnOpenHeader.addEventListener("click", () => {
+        modal.style.display = "flex";
+      });
+    }
+
+    if (btnCloseModal && modal) {
+      btnCloseModal.addEventListener("click", () => {
+        modal.style.display = "none";
+      });
+    }
+
+    if (modal) {
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.style.display = "none";
+        }
+      });
+    }
+
+    // Função de cópia com feedback
+    async function copiarParaClipboard(texto, btnEl, originalText) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(texto);
+        } else {
+          const ta = document.createElement("textarea");
+          ta.value = texto;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+        }
+        if (btnEl) {
+          btnEl.textContent = "✓ Copiado!";
+          setTimeout(() => {
+            btnEl.textContent = originalText;
+          }, 2500);
+        }
+      } catch (err) {
+        alert(`Link de indicação: ${texto}`);
+      }
+    }
+
+    const btnCopiarCard = document.getElementById("btnCopiarReferralLink");
+    const spanTextCard = document.getElementById("btnCopiarReferralLinkText");
+    if (btnCopiarCard) {
+      btnCopiarCard.addEventListener("click", () => {
+        copiarParaClipboard(myRefUrl, spanTextCard || btnCopiarCard, "Copiar Link");
+      });
+    }
+
+    const btnCopiarModal = document.getElementById("btnCopiarModalRef");
+    const spanTextModal = document.getElementById("btnCopiarModalRefText");
+    if (btnCopiarModal) {
+      btnCopiarModal.addEventListener("click", () => {
+        copiarParaClipboard(myRefUrl, spanTextModal || btnCopiarModal, "Copiar Link");
+      });
+    }
+
+    // Compartilhamento geral via WhatsApp
+    function compartilharWhatsApp(customMsg) {
+      const defaultMsg = `🐾 Oi! Encontrei um scanner inteligente que lê o rótulo da ração e do sachê por inteligência artificial em 5 segundos (mostra se tem carne de verdade ou só farinha de penas e aditivos ruins): ${myRefUrl} Testa com a comida do seu pet!`;
+      const msg = customMsg || defaultMsg;
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
+    }
+
+    const btnShareCard = document.getElementById("btnShareWhatsAppReferral");
+    if (btnShareCard) {
+      btnShareCard.addEventListener("click", () => compartilharWhatsApp());
+    }
+
+    const btnShareModal = document.getElementById("btnModalShareWhatsApp");
+    if (btnShareModal) {
+      btnShareModal.addEventListener("click", () => compartilharWhatsApp());
+    }
+
+    // Botão "Compartilhar Laudo" na barra superior do resultado
+    const btnCompartilharLaudo = document.getElementById("btnCompartilharLaudo");
+    if (btnCompartilharLaudo) {
+      btnCompartilharLaudo.addEventListener("click", () => {
+        const notaEl = document.getElementById("notaGeralValor");
+        const nota = notaEl ? notaEl.textContent.trim() : "";
+        const scorePart = (nota && nota !== "--") ? ` deu nota ${nota}/10!` : "!";
+        const msgLaudo = `🐾 Acabei de fazer o Raio-X da ração do meu pet no Tradutor Pet e${scorePart} 🔍 Veja o resultado ou faça o teste gratuito do rótulo da ração do seu pet aqui: ${myRefUrl}`;
+        compartilharWhatsApp(msgLaudo);
+      });
+    }
+  }
+
+  initReferralSystem();
 });
