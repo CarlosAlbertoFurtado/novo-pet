@@ -1608,91 +1608,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const pixDemoNotice = document.getElementById("pixDemoNotice");
   const btnSimularPixAprovado = document.getElementById("btnSimularPixAprovado");
 
-  // ── VALIDAÇÃO & CADASTRO DE ASSINANTE (WHATSAPP OBRIGATÓRIO) ──
-  const inputSubscriberPhone = document.getElementById("subscriberPhoneInput");
-  const inputSubscriberNome = document.getElementById("subscriberNomeInput");
-  const subscriberErrorMsg = document.getElementById("subscriberErrorMsg");
-
-  // Preenche dados salvos anteriormente se houver
-  try {
-    const salvo = JSON.parse(localStorage.getItem("pet_subscriber_info") || "null");
-    if (salvo) {
-      if (inputSubscriberNome && salvo.nome) inputSubscriberNome.value = salvo.nome;
-      if (inputSubscriberPhone && salvo.whatsapp) {
-        const v = salvo.whatsapp;
-        inputSubscriberPhone.value = v.length >= 10 ? `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}` : v;
-      }
-    }
-  } catch(e){}
-
-  // Máscara dinâmica de telefone brasileiro (DDD + 9 dígitos)
-  inputSubscriberPhone?.addEventListener("input", (e) => {
-    let v = e.target.value.replace(/\D/g, "");
-    if (v.length > 11) v = v.slice(0, 11);
-    if (v.length > 6) {
-      e.target.value = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
-    } else if (v.length > 2) {
-      e.target.value = `(${v.slice(0,2)}) ${v.slice(2)}`;
-    } else if (v.length > 0) {
-      e.target.value = `(${v}`;
-    }
-    if (subscriberErrorMsg) subscriberErrorMsg.style.display = "none";
-  });
-
-  inputSubscriberNome?.addEventListener("input", () => {
-    if (subscriberErrorMsg) subscriberErrorMsg.style.display = "none";
-  });
-
-  function validarDadosAssinante() {
-    const nome = inputSubscriberNome ? inputSubscriberNome.value.trim() : "";
-    const phone = inputSubscriberPhone ? inputSubscriberPhone.value.replace(/\D/g, "") : "";
-
-    if (!nome || nome.length < 3) {
-      if (subscriberErrorMsg) {
-        subscriberErrorMsg.textContent = "Por favor, preencha seu nome completo para ativar o plano.";
-        subscriberErrorMsg.style.display = "block";
-      }
-      inputSubscriberNome?.focus();
-      return null;
-    }
-
-    if (phone.length < 10) {
-      if (subscriberErrorMsg) {
-        subscriberErrorMsg.textContent = "Por favor, digite seu WhatsApp com DDD para receber os alertas.";
-        subscriberErrorMsg.style.display = "block";
-      }
-      inputSubscriberPhone?.focus();
-      return null;
-    }
-
-    if (subscriberErrorMsg) subscriberErrorMsg.style.display = "none";
-
-    const dados = { nome, whatsapp: phone };
-    try {
-      localStorage.setItem("pet_subscriber_info", JSON.stringify(dados));
-    } catch(e){}
-
-    return dados;
-  }
-
-  async function registrarAssinanteBackend(dados, metodo, paymentId = null) {
-    try {
-      const backendUrl = await resolveBackendUrl();
-      await fetch(`${backendUrl}/api/payment/register-subscriber`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nome: dados.nome,
-          whatsapp: dados.whatsapp,
-          method: metodo,
-          paymentId: paymentId
-        })
-      });
-    } catch(e) {
-      console.warn("[SUBSCRIBER REGISTRATION] Erro silencioso:", e);
-    }
-  }
-
   // Abas de Pagamento (Cartão Automático vs Pix)
   const tabPayPix = document.getElementById("tabPayPix");
   const tabPayCard = document.getElementById("tabPayCard");
@@ -1702,14 +1617,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Alternância entre as abas Cartão e Pix
   tabPayPix?.addEventListener("click", () => {
-    const assinante = validarDadosAssinante();
-    if (!assinante) return;
-
     tabPayPix.classList.add("active");
     tabPayCard?.classList.remove("active");
     if (viewPayPix) viewPayPix.style.display = "block";
     if (viewPayCard) viewPayCard.style.display = "none";
-    gerarChavePixModal('individual', assinante);
+    gerarChavePixModal('individual');
   });
 
   tabPayCard?.addEventListener("click", () => {
@@ -1721,12 +1633,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Checkout Seguro com Cartão de Crédito e Débito (PCI-DSS Mercado Pago)
   btnIniciarCheckoutCartao?.addEventListener("click", async () => {
-    const assinante = validarDadosAssinante();
-    if (!assinante) return;
-
-    // Registra o assinante imediatamente
-    registrarAssinanteBackend(assinante, 'cartao');
-
     try {
       btnIniciarCheckoutCartao.disabled = true;
       btnIniciarCheckoutCartao.innerHTML = `
@@ -1779,10 +1685,7 @@ document.addEventListener("DOMContentLoaded", () => {
     pixModalOverlay.style.display = "flex";
   }
 
-  async function gerarChavePixModal(tipo = 'individual', dadosAssinante = null) {
-    if (dadosAssinante) {
-      registrarAssinanteBackend(dadosAssinante, 'pix');
-    }
+  async function gerarChavePixModal(tipo = 'individual') {
     if (pixQrPlaceholder) {
       pixQrPlaceholder.style.display = "flex";
       pixQrPlaceholder.innerHTML = '<div class="spinner-small"></div><span>Gerando chave Pix no Mercado Pago...</span>';
@@ -1870,20 +1773,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ativarAssinatura(30, 'pix', false);
 
-    let assinanteInfo = null;
-    try {
-      assinanteInfo = JSON.parse(localStorage.getItem("pet_subscriber_info") || "null");
-    } catch(e){}
-
-    const zapDisplay = assinanteInfo?.whatsapp ? ` (${assinanteInfo.whatsapp})` : '';
-
     if (pixStatusText) {
-      pixStatusText.innerHTML = `
-        <div style="text-align:center; padding:8px 0;">
-          <strong style="color:#16a34a; font-size:0.95rem; display:block; margin-bottom:4px;">✓ Pagamento Aprovado! 30 Dias de Acesso Liberados!</strong>
-          <span style="font-size:0.8rem; color:#047857;">Seu WhatsApp${zapDisplay} foi cadastrado para receber alertas diários de alimentos pet! 🐾</span>
-        </div>
-      `;
+      pixStatusText.innerHTML = `<strong style="color:#16a34a;">✓ Pagamento Aprovado! 30 Dias de Acesso Ilimitado Liberados!</strong>`;
     }
 
     setTimeout(() => {
