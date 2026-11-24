@@ -7,7 +7,12 @@
   <title>Tradutor Pet | Análise de Ração, Sachê e Alimentos para Cães e Gatos</title>
   <meta name="description"
     content="Tire foto do rótulo da ração, sachê úmido, lata, patê ou petisco do seu pet e descubra se os ingredientes são saudáveis, se tem carne de verdade e se vale o preço.">
-  <link rel="stylesheet" href="style.css?v=20261122_v1">
+  <link rel="stylesheet" href="style.css?v=20261124_v1">
+  <meta name="theme-color" content="#059669">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23059669%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><circle cx=%2212%22 cy=%2214%22 r=%224%22/><circle cx=%226.5%22 cy=%229.5%22 r=%222.5%22/><circle cx=%2217.5%22 cy=%229.5%22 r=%222.5%22/><circle cx=%229%22 cy=%225.5%22 r=%222%22/><circle cx=%2215%22 cy=%225.5%22 r=%222%22/></svg>">
 </head>
@@ -1381,9 +1386,49 @@
   </div>
 
   <!-- Scripts da Aplicação com Cache Buster -->
-  <script src="species_config.js?v=20261122_v1"></script>
-  <script src="analyzer.js?v=20261122_v1"></script>
-  <script src="app.js?v=20261122_v1"></script>
+  <script src="species_config.js?v=20261124_v1"></script>
+  <script src="analyzer.js?v=20261124_v1"></script>
+  <script src="app.js?v=20261124_v1"></script>
+  <!-- ==========================================
+       PWA INSTALL BANNER (oculto por padrão)
+       ========================================== -->
+  <div id="pwaInstallBanner" class="pwa-install-banner" style="display:none;" role="alert">
+    <div class="pwa-install-inner">
+      <img src="/icon-192.png" alt="Tradutor Pet" class="pwa-install-icon" width="48" height="48">
+      <div class="pwa-install-text">
+        <strong>Instale o Tradutor Pet</strong>
+        <span>Use como app no seu celular — rápido e sem ocupar espaço!</span>
+      </div>
+      <button type="button" id="btnInstallApp" class="pwa-install-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Baixar App Grátis
+      </button>
+      <button type="button" id="btnDismissInstall" class="pwa-install-dismiss" aria-label="Fechar">&times;</button>
+    </div>
+    <!-- Instruções iOS (oculto por padrão, exibido via JS) -->
+    <div id="pwaIOSInstructions" class="pwa-ios-instructions" style="display:none;">
+      <p>📲 No Safari, toque em <strong>Compartilhar</strong> (ícone ↑) e depois em <strong>"Adicionar à Tela de Início"</strong>.</p>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       WHATSAPP NOTIFICATION OPT-IN
+       ========================================== -->
+  <div id="whatsappNotifyCard" class="whatsapp-notify-card">
+    <div class="whatsapp-notify-inner">
+      <div class="whatsapp-notify-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      </div>
+      <div class="whatsapp-notify-text">
+        <strong>🔔 Receba alertas no WhatsApp</strong>
+        <span>Rações perigosas, dicas e novidades direto no seu celular — 100% gratuito.</span>
+      </div>
+      <a href="https://wa.me/5519995864926?text=Quero+receber+alertas+e+novidades+sobre+ra%C3%A7%C3%A3o+pet+pelo+WhatsApp!+%F0%9F%90%BE" class="whatsapp-notify-btn" target="_blank" rel="noopener noreferrer">
+        Quero Receber Alertas 🐾
+      </a>
+    </div>
+  </div>
+
 </body>
 
 </html>

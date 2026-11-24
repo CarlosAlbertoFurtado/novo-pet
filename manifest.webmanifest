@@ -1,0 +1,45 @@
+{
+  "name": "Tradutor Pet - Scanner de Ração",
+  "short_name": "Tradutor Pet",
+  "description": "Descubra se a ração, sachê ou petisco do seu cão ou gato é saudável pelo rótulo.",
+  "start_url": "/?source=pwa",
+  "id": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#059669",
+  "orientation": "portrait-primary",
+  "categories": ["lifestyle", "utilities", "health"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Analisar Ração",
+      "url": "/#formSection",
+      "description": "Tirar foto do rótulo da ração"
+    },
+    {
+      "name": "Tira-Teima",
+      "url": "/#formSection",
+      "description": "Comparar duas rações"
+    }
+  ]
+}

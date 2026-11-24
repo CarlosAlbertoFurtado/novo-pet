@@ -4435,3 +4435,233 @@ body {
   }
 }
 
+
+/* ========================================================
+   PWA INSTALL BANNER
+   ======================================================== */
+.pwa-install-banner {
+  position: fixed;
+  bottom: 80px; /* acima do botão flutuante do WhatsApp */
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 520px;
+  background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(5, 150, 105, 0.35), 0 2px 8px rgba(0,0,0,0.18);
+  z-index: 9998;
+  animation: pwaSlideUp .45s cubic-bezier(.22,1,.36,1);
+  overflow: hidden;
+}
+
+@keyframes pwaSlideUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(30px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.pwa-install-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.pwa-install-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.15);
+  flex-shrink: 0;
+}
+
+.pwa-install-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pwa-install-text strong {
+  font-family: 'Outfit', sans-serif;
+  font-size: .95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.pwa-install-text span {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .78rem;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.3;
+}
+
+.pwa-install-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  color: #059669;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: .82rem;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: transform .15s, box-shadow .15s;
+}
+.pwa-install-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+.pwa-install-btn:active {
+  transform: scale(0.97);
+}
+
+.pwa-install-dismiss {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color .15s;
+}
+.pwa-install-dismiss:hover {
+  color: #fff;
+}
+
+.pwa-ios-instructions {
+  background: rgba(255,255,255,0.1);
+  padding: 10px 16px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+}
+.pwa-ios-instructions p {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .8rem;
+  color: #fff;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Mobile: empilha banner em coluna */
+@media (max-width: 520px) {
+  .pwa-install-inner {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .pwa-install-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+    font-size: .88rem;
+  }
+  .pwa-install-dismiss {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
+  .pwa-install-banner {
+    position: relative;
+  }
+}
+
+
+/* ========================================================
+   WHATSAPP NOTIFICATION OPT-IN CARD
+   ======================================================== */
+.whatsapp-notify-card {
+  max-width: 600px;
+  margin: 32px auto 24px;
+  padding: 0;
+}
+
+.whatsapp-notify-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+  border: 1.5px solid rgba(37, 211, 102, 0.3);
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+.whatsapp-notify-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(37, 211, 102, 0.15);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.whatsapp-notify-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.whatsapp-notify-text strong {
+  font-family: 'Outfit', sans-serif;
+  font-size: .92rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.whatsapp-notify-text span {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .78rem;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.3;
+}
+
+.whatsapp-notify-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #25D366;
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: .82rem;
+  padding: 11px 18px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-decoration: none;
+  transition: transform .15s, box-shadow .15s;
+}
+.whatsapp-notify-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.35);
+  color: #fff;
+}
+.whatsapp-notify-btn:active {
+  transform: scale(0.97);
+}
+
+@media (max-width: 520px) {
+  .whatsapp-notify-inner {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 16px;
+  }
+  .whatsapp-notify-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+    font-size: .88rem;
+  }
+}

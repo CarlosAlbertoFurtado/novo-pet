@@ -2080,4 +2080,66 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   initReferralSystem();
+
+  // ── PWA: SERVICE WORKER REGISTRATION ──
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('[PWA] Service Worker registrado ✓', reg.scope))
+      .catch(err => console.warn('[PWA] Falha ao registrar SW:', err));
+  }
+
+  // ── PWA: INSTALL PROMPT ──
+  let deferredPrompt = null;
+  const installBanner = document.getElementById('pwaInstallBanner');
+  const btnInstall = document.getElementById('btnInstallApp');
+  const btnDismissInstall = document.getElementById('btnDismissInstall');
+  const iosInstructions = document.getElementById('pwaIOSInstructions');
+
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+  const wasDismissed = (() => { try { return localStorage.getItem('pwa_install_dismissed') === '1'; } catch(e) { return false; } })();
+
+  // Android / Desktop Chrome — captura prompt nativo
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (!isStandalone && !wasDismissed && installBanner) {
+      installBanner.style.display = 'block';
+    }
+  });
+
+  // Clique no botão "Baixar App Grátis"
+  if (btnInstall) {
+    btnInstall.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log('[PWA] Usuário escolheu:', outcome);
+        deferredPrompt = null;
+        if (installBanner) installBanner.style.display = 'none';
+      } else if (isIOS) {
+        // iOS não tem prompt nativo, mostra instruções manuais
+        if (iosInstructions) iosInstructions.style.display = 'block';
+      }
+    });
+  }
+
+  // iOS — mostra banner com instruções manuais
+  if (isIOS && !isStandalone && !wasDismissed && installBanner) {
+    installBanner.style.display = 'block';
+    if (btnInstall) btnInstall.textContent = '📲 Como Instalar';
+  }
+
+  // Fechar / dispensar banner
+  if (btnDismissInstall && installBanner) {
+    btnDismissInstall.addEventListener('click', () => {
+      installBanner.style.display = 'none';
+      try { localStorage.setItem('pwa_install_dismissed', '1'); } catch(e) {}
+    });
+  }
+
+  // Já instalado — oculta banner
+  if (isStandalone && installBanner) {
+    installBanner.style.display = 'none';
+  }
 });
