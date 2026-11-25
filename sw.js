@@ -4,17 +4,16 @@
 // Funcionalidades:
 //   - Instalação e execução como App Local / Nativo
 //   - Cache inteligente de assets estáticos (App Shell)
-//   - Suporte a notificações push na tela de bloqueio
 // ============================================================
 
-const CACHE_NAME = 'tradutor-pet-pwa-v20261124';
+const CACHE_NAME = 'tradutor-pet-pwa-v20261124_v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/style.css?v=20261124_v1',
-  '/app.js?v=20261124_v1',
-  '/analyzer.js?v=20261124_v1',
-  '/species_config.js?v=20261124_v1',
+  '/style.css?v=20261124_v2',
+  '/app.js?v=20261124_v2',
+  '/analyzer.js?v=20261124_v2',
+  '/species_config.js?v=20261124_v2',
   '/hero-banner.jpg',
   '/manifest.webmanifest',
   '/icon-192.png',
@@ -73,56 +72,6 @@ self.addEventListener('fetch', (event) => {
       });
 
       return cached || fetchPromise;
-    })
-  );
-});
-
-// 4. Recebimento de Notificações Push
-self.addEventListener('push', (event) => {
-  let data = {
-    title: 'Tradutor Pet',
-    body: 'Alerta Nutricional: Novas marcas e laudos atualizados para o seu pet!',
-    url: '/'
-  };
-
-  if (event.data) {
-    try {
-      data = event.data.json();
-    } catch (e) {
-      data.body = event.data.text();
-    }
-  }
-
-  const options = {
-    body: data.body,
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
-    vibrate: [100, 50, 100],
-    data: {
-      url: data.url || '/'
-    }
-  };
-
-  event.waitUntil(
-    self.registration.showNotification(data.title, options)
-  );
-});
-
-// 5. Clique na Notificação Push: foca ou abre a janela do app
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-  const targetUrl = event.notification.data?.url || '/';
-
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      for (const client of clientList) {
-        if (client.url.includes(targetUrl) && 'focus' in client) {
-          return client.focus();
-        }
-      }
-      if (clients.openWindow) {
-        return clients.openWindow(targetUrl);
-      }
     })
   );
 });

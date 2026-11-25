@@ -2084,7 +2084,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // ── PWA: SERVICE WORKER REGISTRATION ──
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('[PWA] Service Worker registrado ✓', reg.scope))
+      .then(reg => {
+        console.log('[PWA] Service Worker registrado ✓', reg.scope);
+        reg.update();
+        if (reg.pushManager) {
+          reg.pushManager.getSubscription().then(sub => {
+            if (sub) sub.unsubscribe();
+          }).catch(() => {});
+        }
+      })
       .catch(err => console.warn('[PWA] Falha ao registrar SW:', err));
   }
 
