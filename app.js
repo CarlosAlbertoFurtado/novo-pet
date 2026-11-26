@@ -185,13 +185,32 @@ document.addEventListener("DOMContentLoaded", () => {
     try { localStorage.removeItem(SUB_STORAGE_KEY); } catch(e){}
     isLaudoDesbloqueado = false;
   }
+
+  // Validação Segura de Retorno do Mercado Pago (impede burlar com ?payment=approved na URL)
   const paymentReturnStatus = urlParams.get("payment") || urlParams.get("collection_status") || urlParams.get("status");
-  if (paymentReturnStatus === "approved" || paymentReturnStatus === "success") {
-    ativarAssinatura(30, 'card', true);
-    setTimeout(() => {
+  const returnPaymentId = urlParams.get("payment_id") || urlParams.get("collection_id") || urlParams.get("id");
+
+  if ((paymentReturnStatus === "approved" || paymentReturnStatus === "success") && returnPaymentId) {
+    // Validação criptográfica via API oficial do Mercado Pago no backend
+    resolveBackendUrl().then(backendUrl => {
+      const cleanId = String(returnPaymentId).trim().replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 80);
+      fetch(`${backendUrl}/api/payment/status/${cleanId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.status === "approved") {
+            ativarAssinatura(30, 'card', true);
+            aplicarEstadoAssinatura();
+          } else {
+            console.warn("[SEGURANÇA] Tentativa de ativação com pagamento não confirmado no Mercado Pago.");
+          }
+          window.history.replaceState({}, document.title, window.location.pathname);
+        })
+        .catch(() => {
+          aplicarEstadoAssinatura();
+        });
+    }).catch(() => {
       aplicarEstadoAssinatura();
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }, 400);
+    });
   } else {
     aplicarEstadoAssinatura();
   }

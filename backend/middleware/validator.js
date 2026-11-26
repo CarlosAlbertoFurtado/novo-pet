@@ -111,8 +111,11 @@ export function validateImageFile(file) {
         return { valid: false, error: 'Arquivo corrompido ou não é uma imagem PNG válida.' };
       }
     } else if (file.mimetype === 'image/webp') {
-      // WebP: deve começar com RIFF
-      if (bytes[0] !== 0x52 || bytes[1] !== 0x49 || bytes[2] !== 0x46 || bytes[3] !== 0x46) {
+      // WebP: deve começar com RIFF nos bytes 0-3 e conter WEBP nos bytes 8-11
+      const isRiff = bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46;
+      const isWebp = file.buffer.length >= 12 &&
+        file.buffer[8] === 0x57 && file.buffer[9] === 0x45 && file.buffer[10] === 0x42 && file.buffer[11] === 0x50;
+      if (!isRiff || !isWebp) {
         return { valid: false, error: 'Arquivo corrompido ou não é uma imagem WebP válida.' };
       }
     }

@@ -124,6 +124,84 @@ const paymentOrderLimiter = rateLimit({
 app.use('/api/payment/create-pix', paymentOrderLimiter);
 app.use('/api/payment/create-card-checkout', paymentOrderLimiter);
 
+// ── 3.5 SECURITY SENTINEL — Detecção Ativa de Invasão & Honeypot ─
+// Bloqueia e registra qualquer tentativa de scanner, busca de admin, SQLi, XSS ou path traversal
+const SUSPICIOUS_PATTERNS = [
+  /\.\.\//,                                                                // Path traversal (../)
+  /\.(env|git|htaccess|sql|bak|yml|yaml|ini|config|log|conf)/i,            // Leitura de credenciais
+  /(union\s+select|information_schema|waitfor\s+delay|sleep\(|drop\s+table|--)/i, // SQL injection
+  /(<script|javascript:|onerror\s*=|onload\s*=|eval\(|prompt\(|alert\()/i, // XSS em query/URL
+  /(exec\(|passthru\(|system\(|base64_decode|cmd\.exe|\/bin\/sh)/i,        // RCE
+  /(\/admin|\/wp-admin|\/administrator|\/phpmyadmin|\/actuator|\/swagger|\/telescope|\/install|\/setup)/i, // Scanners
+];
+
+const SUSPICIOUS_USER_AGENTS = /(sqlmap|nikto|acunetix|havij|nessus|masscan|zgrab)/i;
+
+const recentSecurityIncidents = [];
+
+function securitySentinel(req, res, next) {
+  const rawUrl = req.originalUrl || req.url || '';
+  let target = rawUrl;
+  try {
+    target = decodeURIComponent(rawUrl);
+  } catch (e) {}
+
+  const userAgent = String(req.headers['user-agent'] || '');
+  const ip = req.ip || req.connection?.remoteAddress || 'desconhecido';
+
+  let isSuspicious = false;
+  let reason = '';
+
+  if (SUSPICIOUS_USER_AGENTS.test(userAgent)) {
+    isSuspicious = true;
+    reason = `User-Agent suspeito: ${userAgent.slice(0, 50)}`;
+  } else {
+    for (const pattern of SUSPICIOUS_PATTERNS) {
+      if (pattern.test(target)) {
+        isSuspicious = true;
+        reason = `Assinatura maliciosa detectada: ${pattern}`;
+        break;
+      }
+    }
+  }
+
+  if (isSuspicious) {
+    const incident = {
+      timestamp: new Date().toISOString(),
+      ip,
+      method: req.method,
+      target: target.slice(0, 150),
+      userAgent: userAgent.slice(0, 80),
+      reason,
+    };
+
+    recentSecurityIncidents.unshift(incident);
+    if (recentSecurityIncidents.length > 50) recentSecurityIncidents.pop();
+
+    console.warn(`🚨 [SEGURANÇA - BLOQUEIO SENTINELA] IP: ${ip} | Rota: ${target} | Motivo: ${reason}`);
+
+    // Notificação webhook em tempo real se configurada no .env (ex: Discord, Telegram, Make, etc.)
+    if (process.env.SECURITY_ALERT_WEBHOOK) {
+      fetch(process.env.SECURITY_ALERT_WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: `🚨 **[TRADUTOR PET] Tentativa de Invasão Bloqueada!**\n- **IP:** \`${ip}\`\n- **Alvo:** \`${target}\`\n- **Motivo:** \`${reason}\`\n- **Data:** ${new Date().toLocaleString('pt-BR')}`
+        })
+      }).catch(() => {});
+    }
+
+    return res.status(403).json({
+      error: 'Acesso negado. Ação suspeita detectada e bloqueada pelo sistema de segurança do Tradutor Pet.',
+      code: 'SECURITY_SENTINEL_BLOCKED',
+    });
+  }
+
+  next();
+}
+
+app.use(securitySentinel);
+
 // ── 4. BODY PARSING SEGURO ─────────────────────────────────
 // Limitar tamanho do body JSON para evitar payload bombing
 app.use(express.json({ limit: '1kb' }));
@@ -132,12 +210,33 @@ app.use(express.urlencoded({ extended: false, limit: '1kb' }));
 // ── 5. LOGGER DE REQUISIÇÕES ───────────────────────────────
 app.use(requestLogger);
 
-// ── 6. HEALTH CHECK ────────────────────────────────────────
+// ── 6. HEALTH CHECK & STATUS DE SEGURANÇA ─────────────────
 app.get('/api/health', (_req, res) => {
   res.json({
     status: 'online',
     timestamp: new Date().toISOString(),
     uptime: Math.floor(process.uptime()),
+  });
+});
+
+app.get('/api/security-status', (_req, res) => {
+  res.json({
+    sentinel: 'active',
+    timestamp: new Date().toISOString(),
+    uptime: Math.floor(process.uptime()),
+    environment: NODE_ENV,
+    totalBlockedAttempts: recentSecurityIncidents.length,
+    recentBlockedAttempts: recentSecurityIncidents,
+    protections: {
+      rateLimiter: 'active (30 req / 15min)',
+      paymentLimiter: 'active (15 req / 10min)',
+      helmetCSP: 'active (Content-Security-Policy & HSTS)',
+      magicBytesUploadFilter: 'active (JPEG, PNG, WebP RIFF/WEBP strictly enforced)',
+      antiPromptInjection: 'active (Multimodal AI prompt guard)',
+      priceTamperingProtection: 'active (Server-side enforced R$ 12,90)',
+      databaseExposure: 'none (stateless architecture without vulnerable SQL engines)',
+      credentialsLeakRisk: 'none (all API keys strictly isolated in server memory)',
+    },
   });
 });
 
